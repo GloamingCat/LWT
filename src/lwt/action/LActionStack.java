@@ -2,7 +2,7 @@ package lwt.action;
 
 import java.util.ArrayList;
 
-import lwt.editor.LEditor;
+import lwt.editor.LView;
 import lwt.editor.LState;
 
 public class LActionStack {
@@ -19,9 +19,9 @@ public class LActionStack {
 	private int savedAction = 0;
 	private int lastAction = 0;
 	private ArrayList<Node> actions = new ArrayList<>();
-	private LEditor rootEditor;
+	private LView rootEditor;
 	
-	public LActionStack(LEditor rootEditor) {
+	public LActionStack(LView rootEditor) {
 		this.rootEditor = rootEditor;
 		LActionManager.getInstance().addStack(this);
 	}
@@ -40,6 +40,7 @@ public class LActionStack {
 			lastAction--;
 			actions.get(lastAction).state.reset();
 			actions.get(lastAction).action.undo();
+			System.out.println("lalal2");
 		}
 	}
 	

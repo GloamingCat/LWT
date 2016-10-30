@@ -5,14 +5,14 @@ import lwt.dataestructure.LPath;
 import lwt.event.LEditEvent;
 import lwt.widget.LMenuCollection;
 
-public class LEditAction implements LAction {
+public class LEditAction<T> implements LAction {
 
-	private LMenuCollection collection;
+	private LMenuCollection<?, T> collection;
 	private LPath path;
-	private Object oldData;
-	private Object newData;
+	private T oldData;
+	private T newData;
 	
-	public LEditAction(LMenuCollection collection, LPath path, Object oldData, Object newData) {
+	public LEditAction(LMenuCollection<?, T> collection, LPath path, T oldData, T newData) {
 		this.collection = collection;
 		this.path = path;
 		this.oldData = oldData;
@@ -21,13 +21,13 @@ public class LEditAction implements LAction {
 	
 	@Override
 	public void undo() {
-		LEditEvent e = new LEditEvent(path, newData, oldData);
+		LEditEvent<T> e = new LEditEvent<T>(path, newData, oldData);
 		collection.notifyEditListeners(e);
 	}
 
 	@Override
 	public void redo() {
-		LEditEvent e = new LEditEvent(path, oldData, newData);
+		LEditEvent<T> e = new LEditEvent<T>(path, oldData, newData);
 		collection.notifyEditListeners(e);
 	}
 

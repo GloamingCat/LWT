@@ -2,8 +2,8 @@ package tests;
 
 import lwt.action.LActionStack;
 import lwt.dataestructure.LDataTree;
-import lwt.editor.LEditor;
-import lwt.editor.LTreeEditor;
+import lwt.editor.LDefaultTreeEditor;
+import lwt.editor.LView;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.SashForm;
@@ -11,9 +11,9 @@ import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.layout.GridData;
 
-public class ContentTreeEditor extends LEditor {
+public class ContentTreeEditor extends LView {
 
-	private LTreeEditor<Content> treeEditor;
+	private LDefaultTreeEditor<Content> treeEditor;
 	private ContentEditor contentEditor;
 	
 	/**
@@ -31,10 +31,18 @@ public class ContentTreeEditor extends LEditor {
 		SashForm sashForm = new SashForm(this, SWT.NONE);
 		
 		final LDataTree<Content> contentTree = createExampleTree();
-		treeEditor = new LTreeEditor<Content>(sashForm, SWT.NONE) {
+		treeEditor = new LDefaultTreeEditor<Content>(sashForm, SWT.NONE) {
 			@Override
 			public LDataTree<Content> getTree() {
 				return contentTree;
+			}
+			@Override
+			public Content createNewData() {
+				return new Content("Bla", 0);
+			}
+			@Override
+			public Content duplicateData(Content original) {
+				return new Content(original.name, original.value);
 			}
 		};
 		treeEditor.setInsertNewEnabled(true);
@@ -42,11 +50,11 @@ public class ContentTreeEditor extends LEditor {
 		treeEditor.setDuplicateEnabled(true);
 		treeEditor.setDragEnabled(true);
 		treeEditor.setDeleteEnabled(true);
-		addSubEditor(treeEditor);
+		addChild(treeEditor);
 		
 		contentEditor = new ContentEditor(sashForm, SWT.NONE);
 		contentEditor.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
-		addSubEditor(contentEditor);
+		treeEditor.addChild(contentEditor);
 		
 		sashForm.setWeights(new int[] {1, 2});
 		

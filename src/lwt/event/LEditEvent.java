@@ -2,13 +2,13 @@ package lwt.event;
 
 import lwt.dataestructure.LPath;
 
-public class LEditEvent {
+public class LEditEvent<T> {
 
 	public LPath path;
-	public Object oldData;
-	public Object newData;
+	public T oldData;
+	public T newData;
 	
-	public LEditEvent(LPath path, Object newData, Object oldData) {
+	public LEditEvent(LPath path, T newData, T oldData) {
 		this.path = path;
 		this.newData = newData;
 		this.oldData = oldData;

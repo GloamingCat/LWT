@@ -4,6 +4,7 @@ import java.lang.reflect.Field;
 import java.util.HashMap;
 import java.util.Map;
 
+import lwt.action.LActionStack;
 import lwt.widget.LControl;
 
 import org.eclipse.swt.widgets.Composite;
@@ -20,7 +21,7 @@ import org.eclipse.swt.widgets.Composite;
 public class LObjectEditor extends LEditor {
 
 	protected HashMap<String, LControl> controlMap = new HashMap<>();
-	public LCollectionEditor collectionEditor;
+	public LCollectionEditor<?, ?> collectionEditor;
 	protected Object currentObject;
 	
 	/**
@@ -37,15 +38,19 @@ public class LObjectEditor extends LEditor {
 		control.setActionStack(actionStack);
 	}
 	
+	public void setActionStack(LActionStack stack) {
+		super.setActionStack(stack);
+		for(LControl control : controlMap.values()) {
+			control.setActionStack(stack);
+		}
+	}
+	
 	public void setObject(Object obj) {
 		for(Map.Entry<String, LControl> entry : controlMap.entrySet()) {
 			Object value = getFieldValue(obj, entry.getKey());
 			entry.getValue().setValue(value);
 		}
-		for(LObjectEditor subEditor : objectEditors) {
-			subEditor.setObject(obj);
-		}
-		for(LCollectionEditor subEditor : collectionEditors) {
+		for(LEditor subEditor : subEditors) {
 			subEditor.setObject(obj);
 		}
 	}
@@ -80,6 +85,5 @@ public class LObjectEditor extends LEditor {
 			e.printStackTrace();
 		}
 	}
-
 
 }

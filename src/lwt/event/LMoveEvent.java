@@ -3,15 +3,15 @@ package lwt.event;
 import lwt.dataestructure.LDataTree;
 import lwt.dataestructure.LPath;
 
-public class LMoveEvent {
+public class LMoveEvent<T> {
 
 	public LPath sourceParent;
 	public LPath destParent;
 	public int sourceIndex;
 	public int destIndex;
-	public LDataTree<String> sourceNode;
+	public LDataTree<T> sourceNode;
 	
-	public LMoveEvent(LPath sourceParent, LPath destParent, int sourceIndex, int destIndex, LDataTree<String> sourceNode) {
+	public LMoveEvent(LPath sourceParent, LPath destParent, int sourceIndex, int destIndex, LDataTree<T> sourceNode) {
 		this.sourceParent = sourceParent;
 		this.destParent = destParent;
 		this.sourceIndex = sourceIndex;

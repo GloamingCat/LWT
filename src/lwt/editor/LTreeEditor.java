@@ -14,10 +14,9 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.widgets.Composite;
 
-public abstract class LTreeEditor<T> extends LCollectionEditor {
+public abstract class LTreeEditor<T, ST> extends LCollectionEditor<T, ST> {
 
-	private LObjectDialog<T> editDialog = null;
-	private LTree tree;
+	private LObjectDialog<ST> editDialog = null;
 	
 	/**
 	 * Create the composite.
@@ -27,69 +26,102 @@ public abstract class LTreeEditor<T> extends LCollectionEditor {
 	public LTreeEditor(Composite parent, int style) {
 		super(parent, style);
 		
-		LTreeEditor<T> self = this;
-		tree = new LTree(this, SWT.NONE) {
+		LTreeEditor<T, ST> self = this;
+		LTree<T, ST> tree = new LTree<T, ST>(this, SWT.NONE) {
 			@Override
-			public LEditEvent editTreeItem(LPath path) {
-				LDataTree<T> node = self.getTree().getNode(path);
-				T newData = editDialog.open(node.data);
-				if (newData != null) {
-					return new LEditEvent(path, node.data, newData);
-				}
-				return null;
+			public LEditEvent<ST> editTreeItem(LPath path) {
+				return onEditItem(path);
+			}
+			@Override
+			public Object toObject(LPath path) {
+				LDataTree<T> node = getTree().getNode(path);
+				if (node == null)
+					return null;
+				return node.data;
+			}
+			@Override
+			public LDataTree<T> emptyNode() {
+				return new LDataTree<T>(createNewData());
+			}
+			@Override
+			public LDataTree<T> duplicateNode(LPath nodePath) {
+				return self.duplicateNode(getTree().getNode(nodePath));
+			}
+			@Override
+			public LDataTree<T> toNode(LPath path) {
+				return getTree().getNode(path);
 			}
 		};
 		setCollection(tree);
 		tree.setLayout(new FillLayout(SWT.HORIZONTAL));
 		
-		tree.addInsertListener(new LCollectionListener() {
-			public void onInsert(LInsertEvent event) {
-				
+		tree.addInsertListener(new LCollectionListener<T>() {
+			public void onInsert(LInsertEvent<T> event) {
+				getTree().insert(event.parentPath, event.index, event.node);
 			}
 		});
 		
-		tree.addDeleteListener(new LCollectionListener() {
-			public void onDelete(LDeleteEvent event) {
-				
+		tree.addDeleteListener(new LCollectionListener<T>() {
+			public void onDelete(LDeleteEvent<T> event) {
+				getTree().delete(event.parentPath, event.index);
 			}
 		});
 		
-		tree.addMoveListener(new LCollectionListener() {
-			public void onMove(LMoveEvent event) {
-				
+		tree.addMoveListener(new LCollectionListener<T>() {
+			public void onMove(LMoveEvent<T> event) {
+				getTree().move(event.sourceParent, event.sourceIndex, 
+						event.destParent, event.destIndex);
 			}
 		});
 		
-		tree.addEditListener(new LCollectionListener() {
-			public void onEdit(LEditEvent event) {
-				
+		tree.addEditListener(new LCollectionListener<ST>() {
+			public void onEdit(LEditEvent<ST> event) {
+				setEditableData(event.path, event.newData);
 			}
 		});
 	}
 	
-	public void setObjectDialog(LObjectDialog<T> dialog) {
+	public void setObjectDialog(LObjectDialog<ST> dialog) {
 		this.editDialog = dialog;
 	}
 	
 	public void onVisible() {
-		setTree(getTree());
+		collection.setItems(getTree().toStringNode());
 		super.onVisible();
 	}
-	
-	public void setTree(LDataTree<T> node) {
-		collection.clear();
-		for(LDataTree<?> child : node.children) {
-			LDataTree<String> stringNode = child.toStringNode();
-			collection.createTreeItem(null, -1, stringNode);
-		}
-	}
-	
-	public abstract LDataTree<T> getTree();
 
 	public void setObject(Object obj) {
 		@SuppressWarnings("unchecked")
 		LDataTree<T> db = (LDataTree<T>) obj;
-		setTree(db);
+		collection.setItems(db.toStringNode());
 	}
+	
+	public LDataTree<T> duplicateNode(LDataTree<T> node) {
+		LDataTree<T> copy = new LDataTree<T>(duplicateData(node.data));
+		for(LDataTree<T> child : node.children) {
+			LDataTree<T> childCopy = duplicateNode(child);
+			childCopy.setParent(copy);
+		}
+		return copy;
+	}
+	
+	public LEditEvent<ST> onEditItem(LPath path) {
+		ST oldData = getEditableData(path);
+		ST newData = editDialog.open(oldData);
+		if (newData != null) {
+			return new LEditEvent<ST>(path, oldData, newData);
+		}
+		return null;
+	}
+	
+	public abstract LDataTree<T> getTree();
+	
+	public abstract T createNewData();
+	
+	public abstract T duplicateData(T original);
+	
+	public abstract ST getEditableData(LPath path);
+	
+	public abstract void setEditableData(LPath path, ST data);
 	
 }

@@ -26,7 +26,37 @@ public class LPath {
 			p = p.child;
 		}
 		return p;
-		
+	}
+	
+	public boolean equals(Object obj) {
+		if (obj == null)
+			return false;
+		if (obj instanceof LPath) {
+			LPath path = (LPath) obj;
+			if (path.index != index) {
+				return false;
+			}
+			if (child == null) {
+				if (path.child == null) {
+					return true;
+				} else {
+					return false;
+				}
+			}
+			System.out.println("oi");
+			return child.equals(path.child);
+		} else {
+			return false;
+		}
+	}
+	
+	public void print() {
+		LPath path = this;
+		while(path != null) {
+			System.out.print(path.index + " ");
+			path = path.child;
+		}
+		System.out.println();
 	}
 	
 }

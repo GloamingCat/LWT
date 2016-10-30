@@ -1,14 +1,16 @@
 package lwt.event;
 
-import org.eclipse.swt.widgets.TreeItem;
+import lwt.dataestructure.LPath;
 
 public class LSelectionEvent {
 
-	public TreeItem item;
+	public LPath path;
+	public Object data;
 	public int detail;
 	
-	public LSelectionEvent(TreeItem item) {
-		this.item = item;
+	public LSelectionEvent(LPath path, Object data) {
+		this.path = path;
+		this.data = data;
 	}
 	
 }

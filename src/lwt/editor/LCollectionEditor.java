@@ -2,6 +2,7 @@ package lwt.editor;
 
 import java.util.ArrayList;
 
+import lwt.action.LActionStack;
 import lwt.dataestructure.LPath;
 import lwt.event.LSelectionEvent;
 import lwt.event.listener.LSelectionListener;
@@ -17,9 +18,9 @@ import org.eclipse.swt.widgets.Composite;
  *
  */
 
-public abstract class LCollectionEditor extends LEditor {
+public abstract class LCollectionEditor<T, ST> extends LEditor {
 	
-	public LMenuCollection collection;
+	public LMenuCollection<T, ST> collection;
 	public String fieldName = "";
 	
 	/**
@@ -52,18 +53,18 @@ public abstract class LCollectionEditor extends LEditor {
 		collection.setDragEnabled(value);
 	}
 	
-	public void addSubEditor(LObjectEditor editor) {
+	public void addChild(LObjectEditor editor) {
 		collection.addSelectionListener(new LSelectionListener() {
 			@Override
 			public void onSelect(LSelectionEvent e) {
-				editor.setObject(e.item.getData());
+				editor.setObject(collection.getSelectedObject());
 			}
 		});
 		editor.collectionEditor = this;
-		super.addSubEditor(editor);
+		addChild((LEditor) editor);
 	}
 
-	public void setCollection(LMenuCollection collection) {
+	public void setCollection(LMenuCollection<T, ST> collection) {
 		this.collection = collection;
 		collection.setActionStack(actionStack);
 	}
@@ -87,6 +88,9 @@ public abstract class LCollectionEditor extends LEditor {
 		};
 	}
 	
-	public abstract void setObject(Object object);
-
+	public void setActionStack(LActionStack stack) {
+		super.setActionStack(stack);
+		collection.setActionStack(stack);
+	}
+	
 }

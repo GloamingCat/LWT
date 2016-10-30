@@ -27,8 +27,24 @@ public class LDataTree<T> implements Serializable {
 		if (this.parent != null) {
 			this.parent.children.remove(this);
 		}
-		parent.children.add(this);
+		if (parent != null) {
+			parent.children.add(this);
+		}
 		this.parent = parent;
+	}
+	
+	public void setParent(LDataTree<T> parent, int index) {
+		if (index == -1) {
+			setParent(parent);
+		} else {
+			if (this.parent != null) {
+				this.parent.children.remove(this);
+			}
+			if (parent != null) {
+				parent.children.add(index, this);
+			}
+			this.parent = parent;
+		}
 	}
 	
 	public void restoreParents() {
@@ -38,13 +54,39 @@ public class LDataTree<T> implements Serializable {
 		}
 	}
 	
+	public void insert(LPath path, int index, LDataTree<T> node) {
+		LDataTree<T> parentNode = getNode(path);
+		node.setParent(parentNode, index);
+	}
+	
+	public void move(LPath sourcePath, int sourceIndex, LPath destPath, int destIndex) {
+		LDataTree<T> sourceNode = getNode(sourcePath, sourceIndex);
+		sourceNode.setParent(null);
+		LDataTree<T> parentNode = getNode(destPath);
+		sourceNode.setParent(parentNode, destIndex);
+	}
+	
+	public void delete(LPath path, int index) {
+		LDataTree<T> node = getNode(path, index);
+		node.setParent(null);
+	}
+	
 	public LDataTree<T> getNode(LPath path) {
+		if (path == null)
+			return this;
 		LDataTree<T> child = children.get(path.index);
 		while(path.child != null) {
 			path = path.child;
 			child = child.children.get(path.index);
 		}
 		return child;
+	}
+	
+	public LDataTree<T> getNode(LPath parentPath, int index) {
+		LDataTree<T> parentNode = getNode(parentPath);
+		if (index == -1)
+			index = parentNode.children.size() - 1;
+		return parentNode.children.get(index);
 	}
 	
 	public LPath toPath() {
@@ -57,7 +99,8 @@ public class LDataTree<T> implements Serializable {
 	}
 	
 	public LDataTree<String> toStringNode() {
-		LDataTree<String> node = new LDataTree<>(data.toString());
+		String name = data == null ? "NULL" : data.toString();
+		LDataTree<String> node = new LDataTree<>(name);
 		for(LDataTree<T> child : children) {
 			child.toStringNode().setParent(node);
 		}

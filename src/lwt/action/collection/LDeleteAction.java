@@ -7,29 +7,29 @@ import lwt.event.LDeleteEvent;
 import lwt.event.LInsertEvent;
 import lwt.widget.LMenuCollection;
 
-public class LDeleteAction implements LAction {
+public class LDeleteAction<T> implements LAction {
 
-	private LMenuCollection collection;
+	private LMenuCollection<T, ?> collection;
 	private LPath parentPath;
 	private int index;
-	private LDataTree<String> stringNode;
+	private LDataTree<T> node;
 	
-	public LDeleteAction(LMenuCollection c, LPath parentPath, int index, LDataTree<String> stringNode) {
+	public LDeleteAction(LMenuCollection<T, ?> c, LPath parentPath, int index, LDataTree<T> node) {
 		collection = c;
 		this.parentPath = parentPath;
 		this.index = index;
-		this.stringNode = stringNode;
+		this.node = node;
 	}
 	
 	@Override
 	public void undo() {
-		LInsertEvent e = collection.insertTreeItem(parentPath, index, stringNode);
+		LInsertEvent<T> e = collection.insertTreeItem(parentPath, index, node);
 		collection.notifyInsertListeners(e);
 	}
 
 	@Override
 	public void redo() {
-		LDeleteEvent e = collection.deleteTreeItem(parentPath, index);
+		LDeleteEvent<T> e = collection.deleteTreeItem(parentPath, index);
 		collection.notifyDeleteListeners(e);
 	}
 

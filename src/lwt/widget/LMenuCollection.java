@@ -20,7 +20,7 @@ import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.MenuItem;
 import org.eclipse.swt.widgets.TreeItem;
 
-public abstract class LMenuCollection extends LCollection {
+public abstract class LMenuCollection<T, ST> extends LCollection<T> {
 
 	protected Menu menu;
 	protected MenuItem mntmEdit;
@@ -39,21 +39,25 @@ public abstract class LMenuCollection extends LCollection {
 	    tree.setMenu(menu);
 	}
 	
-	public LInsertEvent insertTreeItem(LPath parentPath, int index, LDataTree<String> stringNode) {
+	public LInsertEvent<T> insertTreeItem(LPath parentPath, int index, LDataTree<T> node) {
 		TreeItem parent = toTreeItem(parentPath);
-		createTreeItem(parent, index, stringNode);
-		return new LInsertEvent(parentPath, index, stringNode);
+		createTreeItem(parent, index, node.toStringNode());
+		return new LInsertEvent<T>(parentPath, index, node);
 	}
 	
-	public LDeleteEvent deleteTreeItem(LPath parentPath, int index) {
+	public LDeleteEvent<T> deleteTreeItem(LPath parentPath, int index) {
 		TreeItem item = toTreeItem(parentPath, index);
-		LDataTree<String> node = disposeTreeItem(item);
-		return new LDeleteEvent(parentPath, index, node);
+		LDataTree<T> node = disposeTreeItem(item);
+		return new LDeleteEvent<T>(parentPath, index, node);
 	}
 	
-	public LEditEvent editTreeItem(LPath path) {
+	public LEditEvent<ST> editTreeItem(LPath path) {
 		return null;
 	}
+	
+	public abstract LDataTree<T> emptyNode();
+	
+	public abstract LDataTree<T> duplicateNode(LPath nodePath);
 	
 	//-------------------------------------------------------------------------------------
 	// Modify Menu
@@ -61,7 +65,7 @@ public abstract class LMenuCollection extends LCollection {
 	
 	public void setEditEnabled(boolean value) {
 		if (value) {
-			LMenuCollection self = this;
+			LMenuCollection<T, ST> self = this;
 			if (mntmEdit == null) {
 			    mntmEdit = new MenuItem(menu, SWT.NONE);
 			    mntmEdit.addSelectionListener(new SelectionAdapter() {
@@ -70,10 +74,10 @@ public abstract class LMenuCollection extends LCollection {
 			    		if (tree.getSelectionCount() > 0) {
 			    			TreeItem item = tree.getSelection()[0];
 			    			LPath path = toPath(item);
-			    			LEditEvent event = editTreeItem(path);
+			    			LEditEvent<ST> event = editTreeItem(path);
 			    			if (event != null) {
 				    			if (actionStack != null) {
-				    				LEditAction action = new LEditAction(self, path, event.oldData, event.newData);
+				    				LEditAction<ST> action = new LEditAction<ST>(self, path, event.oldData, event.newData);
 				    				actionStack.newAction(action);
 				    			}
 				    			notifyEditListeners(event);
@@ -92,7 +96,7 @@ public abstract class LMenuCollection extends LCollection {
 	
 	public void setInsertNewEnabled(boolean value) {
 		if (value) {
-			LMenuCollection self = this;
+			LMenuCollection<T, ST> self = this;
 			if (mntmInsertNew == null) {
 			    mntmInsertNew = new MenuItem(menu, SWT.NONE);
 			    mntmInsertNew.addSelectionListener(new SelectionAdapter() {
@@ -100,16 +104,16 @@ public abstract class LMenuCollection extends LCollection {
 			    	public void widgetSelected(SelectionEvent arg0) {
 			    		LPath parentPath = null;
 			    		int index = -1;
-			    		LDataTree<String> stringNode = new LDataTree<>("New Item");
+			    		LDataTree<T> newNode = emptyNode();
 			    		if (tree.getSelectionCount() > 0) {
 			    			TreeItem item = tree.getSelection()[0];
 			    			parentPath = toPath(item.getParentItem());
-			    			index = indexOf(item);
+			    			index = indexOf(item) + 1;
 			    		}
-		    			LInsertEvent event = insertTreeItem(parentPath, index, stringNode);
+		    			LInsertEvent<T> event = insertTreeItem(parentPath, index, newNode);
 		    			if (event != null) {
 				    		if (actionStack != null) {
-				    			LInsertAction action = new LInsertAction(self, parentPath, index, stringNode); 
+				    			LInsertAction<T> action = new LInsertAction<T>(self, parentPath, index, newNode); 
 				    			actionStack.newAction(action);
 				    		}
 			    			notifyInsertListeners(event);
@@ -127,7 +131,7 @@ public abstract class LMenuCollection extends LCollection {
 	
 	public void setDuplicateEnabled(boolean value) {
 		if (value) {
-			LMenuCollection self = this;
+			LMenuCollection<T, ST> self = this;
 			if (mntmDuplicate == null) {
 			    mntmDuplicate = new MenuItem(menu, SWT.NONE);
 			    mntmDuplicate.addSelectionListener(new SelectionAdapter() {
@@ -135,13 +139,14 @@ public abstract class LMenuCollection extends LCollection {
 			    	public void widgetSelected(SelectionEvent arg0) {
 			    		if (tree.getSelectionCount() > 0) {
 			    			TreeItem item = tree.getSelection()[0];
-			    			LDataTree<String> node = toStringNode(item);
+			    			LPath itemPath = toPath(item);
+			    			LDataTree<T> node = duplicateNode(itemPath);
 			    			LPath parentPath = toPath(item.getParentItem());
-			    			LInsertEvent event = insertTreeItem(parentPath, indexOf(item), node);
+			    			LInsertEvent<T> event = insertTreeItem(parentPath, indexOf(item), node);
 			    			if (event != null) {
 				    			event.detail = 1;
 				    			if (actionStack != null) {
-				    				LInsertAction action = new LInsertAction(self, parentPath, event.index, node);
+				    				LInsertAction<T> action = new LInsertAction<T>(self, parentPath, event.index, node);
 				    				actionStack.newAction(action);
 				    			}
 				    			notifyInsertListeners(event);
@@ -160,7 +165,7 @@ public abstract class LMenuCollection extends LCollection {
 	
 	public void setDeleteEnabled(boolean value) {
 		if (value) {
-			LMenuCollection self = this;
+			LMenuCollection<T, ST> self = this;
 			if (mntmDelete == null) {
 			    mntmDelete = new MenuItem(menu, SWT.NONE);
 			    mntmDelete.addSelectionListener(new SelectionAdapter() {
@@ -169,10 +174,10 @@ public abstract class LMenuCollection extends LCollection {
 			    		if (tree.getSelectionCount() > 0) {
 			    			TreeItem item = tree.getSelection()[0];
 			    			LPath parentPath = toPath(item.getParentItem());
-			    			LDeleteEvent event = deleteTreeItem(parentPath, indexOf(item));
+			    			LDeleteEvent<T> event = deleteTreeItem(parentPath, indexOf(item));
 			    			if (event != null) {
 				    			if (actionStack != null) {
-				    				LDeleteAction action = new LDeleteAction(self, parentPath, event.index, event.stringNode);
+				    				LDeleteAction<T> action = new LDeleteAction<T>(self, parentPath, event.index, event.stringNode);
 				    				actionStack.newAction(action);
 				    			}
 				    			notifyDeleteListeners(event);
@@ -193,18 +198,18 @@ public abstract class LMenuCollection extends LCollection {
 	// Listeners
 	//-------------------------------------------------------------------------------------
 	
-	protected ArrayList<LCollectionListener> editListeners = new ArrayList<>();
-	public void addEditListener(LCollectionListener listener) {
+	protected ArrayList<LCollectionListener<ST>> editListeners = new ArrayList<>();
+	public void addEditListener(LCollectionListener<ST> listener) {
 		editListeners.add(listener);
 	}
 	
-	protected ArrayList<LCollectionListener> insertListeners = new ArrayList<>();
-	public void addInsertListener(LCollectionListener listener) {
+	protected ArrayList<LCollectionListener<T>> insertListeners = new ArrayList<>();
+	public void addInsertListener(LCollectionListener<T> listener) {
 		insertListeners.add(listener);
 	}
 		
-	protected ArrayList<LCollectionListener> deleteListeners = new ArrayList<>();
-	public void addDeleteListener(LCollectionListener listener) {
+	protected ArrayList<LCollectionListener<T>> deleteListeners = new ArrayList<>();
+	public void addDeleteListener(LCollectionListener<T> listener) {
 		deleteListeners.add(listener);
 	}
 	
@@ -212,20 +217,20 @@ public abstract class LMenuCollection extends LCollection {
 	// Listener Notify
 	//-------------------------------------------------------------------------------------
 	
-	public void notifyEditListeners(LEditEvent event) {
-		for(LCollectionListener listener : editListeners) {
+	public void notifyEditListeners(LEditEvent<ST> event) {
+		for(LCollectionListener<ST> listener : editListeners) {
 			listener.onEdit(event);
 		}
 	}
 	
-	public void notifyInsertListeners(LInsertEvent event) {
-		for(LCollectionListener listener : insertListeners) {
+	public void notifyInsertListeners(LInsertEvent<T> event) {
+		for(LCollectionListener<T> listener : insertListeners) {
 			listener.onInsert(event);
 		}
 	}
 	
-	public void notifyDeleteListeners(LDeleteEvent event) {
-		for(LCollectionListener listener : deleteListeners) {
+	public void notifyDeleteListeners(LDeleteEvent<T> event) {
+		for(LCollectionListener<T> listener : deleteListeners) {
 			listener.onDelete(event);
 		}
 	}

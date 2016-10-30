@@ -6,11 +6,11 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.layout.GridData;
 
-import lwt.editor.LEditor;
+import lwt.editor.LView;
 import lwt.widget.LSpinner;
 import lwt.widget.LText;
 
-public class ContentEditor extends LEditor {
+public class ContentEditor extends LView {
 
 	/**
 	 * Create the composite.

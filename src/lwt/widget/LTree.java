@@ -5,7 +5,7 @@ import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.widgets.Composite;
 
-public abstract class LTree extends LMenuCollection {
+public abstract class LTree<T, ST> extends LMenuCollection<T, ST> {
 	
 	/**
 	 * Create the composite.

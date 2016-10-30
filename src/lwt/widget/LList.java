@@ -4,7 +4,7 @@ import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.widgets.Composite;
 
-public abstract class LList extends LMenuCollection {
+public abstract class LList<T, ST> extends LMenuCollection<T, ST> {
 	
 	/**
 	 * Create the composite.

@@ -5,11 +5,11 @@ import lwt.event.LEditEvent;
 import lwt.event.LInsertEvent;
 import lwt.event.LMoveEvent;
 
-public class LCollectionListener {
+public class LCollectionListener<T> {
 
-	public void onInsert(LInsertEvent event) {}
-	public void onDelete(LDeleteEvent event) {}
-	public void onMove(LMoveEvent event) {}
-	public void onEdit(LEditEvent event) {}
+	public void onInsert(LInsertEvent<T> event) {}
+	public void onDelete(LDeleteEvent<T> event) {}
+	public void onMove(LMoveEvent<T> event) {}
+	public void onEdit(LEditEvent<T> event) {}
 	
 }
