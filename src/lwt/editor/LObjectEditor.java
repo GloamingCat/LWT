@@ -5,6 +5,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 import lwt.action.LActionStack;
+import lwt.event.LControlEvent;
+import lwt.event.listener.LControlListener;
 import lwt.widget.LControl;
 
 import org.eclipse.swt.widgets.Composite;
@@ -36,6 +38,16 @@ public class LObjectEditor extends LEditor {
 	protected void addControl(String key, LControl control) {
 		controlMap.put(key, control);
 		control.setActionStack(actionStack);
+		control.addModiftyListener(new LControlListener() {
+			@Override
+			public void onModify(LControlEvent event) {
+				if (currentObject != null) {
+					setFieldValue(currentObject, key, event.newValue);
+					if (collectionEditor != null)
+						collectionEditor.renameCurrentItem();
+				}
+			}
+		});
 	}
 	
 	public void setActionStack(LActionStack stack) {
@@ -46,6 +58,7 @@ public class LObjectEditor extends LEditor {
 	}
 	
 	public void setObject(Object obj) {
+		currentObject = obj;
 		for(Map.Entry<String, LControl> entry : controlMap.entrySet()) {
 			Object value = getFieldValue(obj, entry.getKey());
 			entry.getValue().setValue(value);

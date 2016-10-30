@@ -6,11 +6,11 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.layout.GridData;
 
-import lwt.editor.LView;
+import lwt.editor.LObjectEditor;
 import lwt.widget.LSpinner;
 import lwt.widget.LText;
 
-public class ContentEditor extends LView {
+public class ContentEditor extends LObjectEditor {
 
 	/**
 	 * Create the composite.
@@ -27,12 +27,14 @@ public class ContentEditor extends LView {
 		
 		LText text = new LText(this, SWT.NONE);
 		text.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+		addControl("name", text);
 		
 		Label lblValue = new Label(this, SWT.NONE);
 		lblValue.setText("Value");
 		
 		LSpinner spinner = new LSpinner(this, SWT.NONE);
 		spinner.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+		addControl("value", spinner);
 		
 	}
 	

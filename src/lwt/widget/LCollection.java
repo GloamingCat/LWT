@@ -37,7 +37,7 @@ public abstract class LCollection<T> extends LWidget {
 	
 	protected Tree tree;
 	private LDataTree<T> dragNode;
-	private LPath dragParentPath;
+	private TreeItem dragParent;
 	private int dragIndex;
 	
 	public LCollection(Composite parent, int style) {
@@ -50,7 +50,7 @@ public abstract class LCollection<T> extends LWidget {
 	    		if (tree.getSelectionCount() > 0) {
 	    			TreeItem item = tree.getSelection()[0];
 	    			LPath path = toPath(item);
-	    			path.print();
+	    			//path.print();
 	    			LSelectionEvent event = new LSelectionEvent(path, toObject(path));
 	    			event.detail = arg0.detail;
 	    			notifySelectionListeners(event);
@@ -75,10 +75,10 @@ public abstract class LCollection<T> extends LWidget {
 	    		if (selection.length > 0) {
 	    			dragNode = toNode(selection[0]);
 	    			if (selection[0].getParentItem() != null) {
-	    				dragParentPath = toPath(selection[0].getParentItem());
+	    				dragParent = selection[0].getParentItem();
 	    				dragIndex = selection[0].getParentItem().indexOf(selection[0]);
 	    			} else {
-	    				dragParentPath = null;
+	    				dragParent = null;
 	    				dragIndex = tree.indexOf(selection[0]);
 	    			}
 	    			selection[0].dispose();
@@ -95,9 +95,9 @@ public abstract class LCollection<T> extends LWidget {
 			public void dragFinished(DragSourceEvent event) {
 				if (event.detail == DND.DROP_NONE) {
 					System.out.println("Drag cancelled");
-					createTreeItem(toTreeItem(dragParentPath), dragIndex, dragNode.toStringNode());
+					createTreeItem(dragParent, dragIndex, dragNode);
 				}
-				dragParentPath = null;
+				dragParent = null;
 				dragIndex = -1;
 				dragNode = null;
 			}
@@ -143,7 +143,7 @@ public abstract class LCollection<T> extends LWidget {
 	    		}
 	    		TreeItem dragDest = (TreeItem) event.item;
 	    		if (dragDest == null) {
-	    			LMoveEvent<T> e = moveTreeItem(dragNode, dragParentPath, dragIndex, null, -1);
+	    			LMoveEvent<T> e = moveTreeItem(dragNode, dragParent, dragIndex, null, -1);
 	    			if (e == null) {
 	    				event.detail = DND.DROP_NONE;
 	    				return;
@@ -164,7 +164,7 @@ public abstract class LCollection<T> extends LWidget {
 				Rectangle bounds = dragDest.getBounds();
 				int d = indexByBounds(pt, bounds);
 				if (d == -1) {
-					LMoveEvent<T> e = moveTreeItem(dragNode, dragParentPath, dragIndex, dragDest, -1);
+					LMoveEvent<T> e = moveTreeItem(dragNode, dragParent, dragIndex, dragDest, -1);
 	    			if (e == null) {
 	    				event.detail = DND.DROP_NONE;
 	    				return;
@@ -183,7 +183,7 @@ public abstract class LCollection<T> extends LWidget {
 				} else {
 					index += tree.indexOf(dragDest);
 				}
-				LMoveEvent<T> e = moveTreeItem(dragNode, dragParentPath, dragIndex, parent, index);
+				LMoveEvent<T> e = moveTreeItem(dragNode, dragParent, dragIndex, parent, index);
     			if (e == null) {
     				event.detail = DND.DROP_NONE;
     				return;
@@ -217,7 +217,7 @@ public abstract class LCollection<T> extends LWidget {
 	// Internal operations
 	//-------------------------------------------------------------------------------------
 
-	protected TreeItem createTreeItem(TreeItem parent, int index, LDataTree<String> stringNode) {
+	protected TreeItem createTreeItem(TreeItem parent, int index, LDataTree<T> node) {
 		TreeItem newItem;
 		if (index == -1) {
 			if (parent == null) {
@@ -232,7 +232,7 @@ public abstract class LCollection<T> extends LWidget {
 				newItem = new TreeItem(parent, SWT.NONE, index);
 			}
 		}
-		fromStringNode(newItem, stringNode);
+		setItemNode(newItem, node);
 		return newItem;
 	}
 	
@@ -242,20 +242,12 @@ public abstract class LCollection<T> extends LWidget {
 		return stringNode;
 	}
 	
-	protected LMoveEvent<T> moveTreeItem(LDataTree<T> node, LPath sourceParent, int sourceIndex, 
-			TreeItem parent, int destIndex) {
-		LPath destParent = toPath(parent);
-		System.out.println(sourceIndex + " " + destIndex);
-		if (sourceIndex == destIndex) {
-			if (destParent != null && sourceParent != null) {
-				if (destParent.equals(sourceParent)) {
-					return null;
-				}
-			} else if (destParent == sourceParent)
-				return null;
-		}
-		createTreeItem(parent, destIndex, node.toStringNode());
-		return new LMoveEvent<T>(sourceParent, destParent, sourceIndex, destIndex, node);
+	protected LMoveEvent<T> moveTreeItem(LDataTree<T> node, TreeItem sourceParent, int sourceIndex, 
+			TreeItem destParent, int destIndex) {
+		if (sourceParent == destParent && destIndex == sourceIndex)
+			return null;
+		createTreeItem(destParent, destIndex, node);
+		return new LMoveEvent<T>(toPath(sourceParent), sourceIndex, toPath(destParent), destIndex, node);
 	}
 	
 	//-------------------------------------------------------------------------------------
@@ -313,7 +305,6 @@ public abstract class LCollection<T> extends LWidget {
 			indexes.push(parent.indexOf(item));
 			item = parent;
 			parent = item.getParentItem();
-			System.out.println("bla " + indexes.peek());
 		}
 		LPath root = new LPath(tree.indexOf(item));
 		LPath path = root;
@@ -329,9 +320,18 @@ public abstract class LCollection<T> extends LWidget {
 	// String Node
 	//-------------------------------------------------------------------------------------
 	
-	public void setItems(LDataTree<String> root) {
+	public void renameCurrentItem() {
+		TreeItem[] s = tree.getSelection();
+		if (s.length > 0) {
+			LPath path = toPath(s[0]);
+			s[0].setText(toObject(path).toString());
+			System.out.println("nfisnfudi");
+		}
+	}
+	
+	public void setItems(LDataTree<T> root) {
 		clear();
-		for(LDataTree<String> child : root.children) {
+		for(LDataTree<T> child : root.children) {
 			createTreeItem(null, -1, child);
 		}
 	}
@@ -344,11 +344,11 @@ public abstract class LCollection<T> extends LWidget {
 		return node;
 	}
 	
-	public void fromStringNode(TreeItem item, LDataTree<String> node) {
-		item.setText(node.data);
-		for(LDataTree<String> child : node.children) {
+	public void setItemNode(TreeItem item, LDataTree<T> node) {
+		item.setText(node.data.toString());
+		for(LDataTree<T> child : node.children) {
 			TreeItem newItem = new TreeItem(item, item.getStyle());
-			fromStringNode(newItem, child);
+			setItemNode(newItem, child);
 		}
 	}
 	
@@ -364,9 +364,8 @@ public abstract class LCollection<T> extends LWidget {
 	
 	public LMoveEvent<T> move(LPath sourceParent, int sourceIndex, LPath destParent, int destIndex) {
 		TreeItem sourceItem = toTreeItem(sourceParent, sourceIndex);
-		LDataTree<T> stringNode = disposeTreeItem(sourceItem);
-		TreeItem destParentItem = toTreeItem(destParent);
-		return moveTreeItem(stringNode, sourceParent, sourceIndex, destParentItem, destIndex);
+		LDataTree<T> node = disposeTreeItem(sourceItem);
+		return moveTreeItem(node, toTreeItem(sourceParent), sourceIndex, toTreeItem(destParent), destIndex);
 	}
 	
 	//-------------------------------------------------------------------------------------

@@ -63,20 +63,17 @@ public class ContentTreeEditor extends LView {
 	private LDataTree<Content> createExampleTree() {
 		LDataTree<Content> root = new LDataTree<>();
 		for (int i = 0; i < 3; i++) {
-			LDataTree<Content> node = new LDataTree<>();
 			String name = "item " + i;
-			root.children.add(node);
-			node.data = new Content(name, i);
+			Content data = new Content(name, i);
+			LDataTree<Content> node = new LDataTree<Content>(data, root);
 			for (int j = 0; j < 3; j++) {
-				LDataTree<Content> subNode = new LDataTree<>();
 				name = "item " + i + " " + j;
-				node.children.add(subNode);
-				subNode.data = new Content(name, j);
+				data = new Content(name, j);
+				LDataTree<Content> subnode = new LDataTree<Content>(data, node);
 				for (int k = 0; k < 3; k++) {
-					LDataTree<Content> subsubNode = new LDataTree<>();
 					name = "item " + i + " " + j + " " + k;
-					subNode.children.add(subsubNode);
-					subsubNode.data = new Content(name, k);
+					data = new Content(name, k);
+					new LDataTree<Content>(data, subnode);
 				}
 			}
 	    }

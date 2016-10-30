@@ -43,7 +43,6 @@ public class LPath {
 					return false;
 				}
 			}
-			System.out.println("oi");
 			return child.equals(path.child);
 		} else {
 			return false;

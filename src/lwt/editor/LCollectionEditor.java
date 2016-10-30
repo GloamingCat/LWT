@@ -69,6 +69,10 @@ public abstract class LCollectionEditor<T, ST> extends LEditor {
 		collection.setActionStack(actionStack);
 	}
 	
+	public void renameCurrentItem() {
+		collection.renameCurrentItem();
+	}
+	
 	@Override
 	public void onVisible() {
 		collection.refresh();

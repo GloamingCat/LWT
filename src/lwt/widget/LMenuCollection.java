@@ -41,7 +41,7 @@ public abstract class LMenuCollection<T, ST> extends LCollection<T> {
 	
 	public LInsertEvent<T> insertTreeItem(LPath parentPath, int index, LDataTree<T> node) {
 		TreeItem parent = toTreeItem(parentPath);
-		createTreeItem(parent, index, node.toStringNode());
+		createTreeItem(parent, index, node);
 		return new LInsertEvent<T>(parentPath, index, node);
 	}
 	

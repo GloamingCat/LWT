@@ -86,14 +86,14 @@ public abstract class LTreeEditor<T, ST> extends LCollectionEditor<T, ST> {
 	}
 	
 	public void onVisible() {
-		collection.setItems(getTree().toStringNode());
+		collection.setItems(getTree());
 		super.onVisible();
 	}
 
 	public void setObject(Object obj) {
 		@SuppressWarnings("unchecked")
 		LDataTree<T> db = (LDataTree<T>) obj;
-		collection.setItems(db.toStringNode());
+		collection.setItems(db);
 	}
 	
 	public LDataTree<T> duplicateNode(LDataTree<T> node) {

@@ -11,7 +11,7 @@ public class LMoveEvent<T> {
 	public int destIndex;
 	public LDataTree<T> sourceNode;
 	
-	public LMoveEvent(LPath sourceParent, LPath destParent, int sourceIndex, int destIndex, LDataTree<T> sourceNode) {
+	public LMoveEvent(LPath sourceParent, int sourceIndex, LPath destParent, int destIndex, LDataTree<T> sourceNode) {
 		this.sourceParent = sourceParent;
 		this.destParent = destParent;
 		this.sourceIndex = sourceIndex;
