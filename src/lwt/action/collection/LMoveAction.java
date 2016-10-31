@@ -16,8 +16,8 @@ public class LMoveAction<T> implements LAction {
 	public LMoveAction(LCollection<T> collection, LPath sourceParent, int sourceIndex, LPath destParent, int destIndex) {
 		this.collection = collection;
 		this.sourceParent = sourceParent;
-		this.destParent = destParent;
 		this.sourceIndex = sourceIndex;
+		this.destParent = destParent;
 		this.destIndex = destIndex;
 	}
 	

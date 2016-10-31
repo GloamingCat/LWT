@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import lwt.action.LActionStack;
+import lwt.dataestructure.LPath;
 import lwt.event.LControlEvent;
 import lwt.event.listener.LControlListener;
 import lwt.widget.LControl;
@@ -25,6 +26,7 @@ public class LObjectEditor extends LEditor {
 	protected HashMap<String, LControl> controlMap = new HashMap<>();
 	public LCollectionEditor<?, ?> collectionEditor;
 	protected Object currentObject;
+	protected LPath currentPath;
 	
 	/**
 	 * Create the composite.
@@ -38,13 +40,13 @@ public class LObjectEditor extends LEditor {
 	protected void addControl(String key, LControl control) {
 		controlMap.put(key, control);
 		control.setActionStack(actionStack);
-		control.addModiftyListener(new LControlListener() {
+		control.addModifyListener(new LControlListener() {
 			@Override
 			public void onModify(LControlEvent event) {
 				if (currentObject != null) {
 					setFieldValue(currentObject, key, event.newValue);
-					if (collectionEditor != null)
-						collectionEditor.renameCurrentItem();
+					if (collectionEditor != null && currentPath != null)
+						collectionEditor.renameItem(currentPath);
 				}
 			}
 		});
@@ -58,6 +60,8 @@ public class LObjectEditor extends LEditor {
 	}
 	
 	public void setObject(Object obj) {
+		if (currentObject != null)
+			saveObjectValues();
 		currentObject = obj;
 		for(Map.Entry<String, LControl> entry : controlMap.entrySet()) {
 			Object value = getFieldValue(obj, entry.getKey());
@@ -65,6 +69,18 @@ public class LObjectEditor extends LEditor {
 		}
 		for(LEditor subEditor : subEditors) {
 			subEditor.setObject(obj);
+		}
+	}
+	
+	public void setObject(Object obj, LPath path) {
+		setObject(obj);
+		currentPath = path;
+	}
+	
+	public void saveObjectValues() {
+		for(Map.Entry<String, LControl> entry : controlMap.entrySet()) {
+			Object controlValue = entry.getValue().getValue();
+			entry.getValue().notifyListeners(new LControlEvent(null, controlValue));
 		}
 	}
 	

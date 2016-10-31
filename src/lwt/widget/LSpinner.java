@@ -25,6 +25,8 @@ public class LSpinner extends LControl {
 		spinner.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent arg0) {
+				if (spinner.getSelection() == (Integer)currentValue)
+					return;
 				LControlEvent event = new LControlEvent(currentValue, spinner.getSelection());
 				newAction(new LControlAction(self, event));
 				notifyListeners(event);

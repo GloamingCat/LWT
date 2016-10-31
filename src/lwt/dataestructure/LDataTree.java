@@ -62,10 +62,8 @@ public class LDataTree<T> implements Serializable {
 	public void move(LPath sourcePath, int sourceIndex, LPath destPath, int destIndex) {
 		LDataTree<T> sourceNode = getNode(sourcePath, sourceIndex);
 		sourceNode.setParent(null);
-		System.out.println("size: " + children.size());
 		LDataTree<T> parentNode = getNode(destPath);
 		sourceNode.setParent(parentNode, destIndex);
-		System.out.println("oi " + sourceNode.data.toString());
 	}
 	
 	public void delete(LPath path, int index) {

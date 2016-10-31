@@ -19,7 +19,6 @@ public abstract class LControl extends LWidget {
 	 */
 	public LControl(Composite parent, int style) {
 		super(parent, style);
-
 	}
 	
 	public void notifyListeners(LControlEvent event) {
@@ -28,7 +27,7 @@ public abstract class LControl extends LWidget {
 		}
 	}
 	
-	public void addModiftyListener(LControlListener listener) {
+	public void addModifyListener(LControlListener listener) {
 		modifyListeners.add(listener);
 	}
 	

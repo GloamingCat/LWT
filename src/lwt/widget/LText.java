@@ -14,8 +14,7 @@ import org.eclipse.swt.widgets.Text;
 public class LText extends LControl {
 	
 	private Text text;
-	private Object currentValue;
-	
+
 	/**
 	 * Create the composite.
 	 * @param parent
@@ -23,29 +22,31 @@ public class LText extends LControl {
 	 */
 	public LText(Composite parent, int style) {
 		super(parent, style);
-		LText self = this;
 		text = new Text(this, SWT.BORDER);
 		
 		text.addFocusListener(new FocusAdapter() {
 			@Override
 			public void focusLost(FocusEvent arg0) {
-				LControlEvent event = new LControlEvent(currentValue, text.getText());
-				newAction(new LControlAction(self, event));
-				notifyListeners(event);
-				currentValue = event.newValue;
+				onTextModify();
 			}
 		});
 		text.addKeyListener(new KeyAdapter() {
 			@Override
 			public void keyPressed(KeyEvent arg0) {
 				if (arg0.keyCode == 13) {
-					LControlEvent event = new LControlEvent(currentValue, text.getText());
-					newAction(new LControlAction(self, event));
-					notifyListeners(event);
-					currentValue = event.newValue;
+					onTextModify();
 				}
 			}
 		});
+	}
+	
+	private void onTextModify() {
+		if (!text.getText().equals(currentValue)) {
+			LControlEvent event = new LControlEvent(currentValue, text.getText());
+			newAction(new LControlAction(this, event));
+			notifyListeners(event);
+			currentValue = event.newValue;
+		}
 	}
 	
 	@Override

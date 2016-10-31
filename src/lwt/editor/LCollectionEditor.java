@@ -57,7 +57,8 @@ public abstract class LCollectionEditor<T, ST> extends LEditor {
 		collection.addSelectionListener(new LSelectionListener() {
 			@Override
 			public void onSelect(LSelectionEvent e) {
-				editor.setObject(collection.getSelectedObject());
+				LPath path = collection.getSelectedPath();
+				editor.setObject(collection.toObject(path), path);
 			}
 		});
 		editor.collectionEditor = this;
@@ -69,8 +70,8 @@ public abstract class LCollectionEditor<T, ST> extends LEditor {
 		collection.setActionStack(actionStack);
 	}
 	
-	public void renameCurrentItem() {
-		collection.renameCurrentItem();
+	public void renameItem(LPath path) {
+		collection.renameItem(path);
 	}
 	
 	@Override

@@ -246,8 +246,26 @@ public abstract class LCollection<T> extends LWidget {
 			TreeItem destParent, int destIndex) {
 		if (sourceParent == destParent && destIndex == sourceIndex)
 			return null;
+		LPath sourceParentPath = toPath(sourceParent);
+		LPath destParentPath = toPath(destParent);
 		createTreeItem(destParent, destIndex, node);
-		return new LMoveEvent<T>(toPath(sourceParent), sourceIndex, toPath(destParent), destIndex, node);
+		return new LMoveEvent<T>(sourceParentPath, sourceIndex, destParentPath, destIndex, node);
+	}
+	
+	//-------------------------------------------------------------------------------------
+	// Tree Events
+	//-------------------------------------------------------------------------------------
+	
+	public LSelectionEvent select(LPath path) {
+		TreeItem item = toTreeItem(path);
+		tree.setSelection(item);
+		return new LSelectionEvent(path, toObject(path));
+	}
+	
+	public LMoveEvent<T> move(LPath sourceParent, int sourceIndex, LPath destParent, int destIndex) {
+		TreeItem sourceItem = toTreeItem(sourceParent, sourceIndex);
+		LDataTree<T> node = disposeTreeItem(sourceItem);
+		return moveTreeItem(node, toTreeItem(sourceParent), sourceIndex, toTreeItem(destParent), destIndex);
 	}
 	
 	//-------------------------------------------------------------------------------------
@@ -320,12 +338,10 @@ public abstract class LCollection<T> extends LWidget {
 	// String Node
 	//-------------------------------------------------------------------------------------
 	
-	public void renameCurrentItem() {
-		TreeItem[] s = tree.getSelection();
-		if (s.length > 0) {
-			LPath path = toPath(s[0]);
-			s[0].setText(toObject(path).toString());
-			System.out.println("nfisnfudi");
+	public void renameItem(LPath path) {
+		TreeItem item = toTreeItem(path);
+		if (item != null) {
+			item.setText(toObject(path).toString());
 		}
 	}
 	
@@ -350,22 +366,6 @@ public abstract class LCollection<T> extends LWidget {
 			TreeItem newItem = new TreeItem(item, item.getStyle());
 			setItemNode(newItem, child);
 		}
-	}
-	
-	//-------------------------------------------------------------------------------------
-	// Tree Events
-	//-------------------------------------------------------------------------------------
-	
-	public LSelectionEvent select(LPath path) {
-		TreeItem item = toTreeItem(path);
-		tree.setSelection(item);
-		return new LSelectionEvent(path, toObject(path));
-	}
-	
-	public LMoveEvent<T> move(LPath sourceParent, int sourceIndex, LPath destParent, int destIndex) {
-		TreeItem sourceItem = toTreeItem(sourceParent, sourceIndex);
-		LDataTree<T> node = disposeTreeItem(sourceItem);
-		return moveTreeItem(node, toTreeItem(sourceParent), sourceIndex, toTreeItem(destParent), destIndex);
 	}
 	
 	//-------------------------------------------------------------------------------------
