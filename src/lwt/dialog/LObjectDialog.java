@@ -3,11 +3,14 @@ package lwt.dialog;
 import org.eclipse.swt.widgets.Dialog;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
+import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.SWT;
 
-public class LObjectDialog<T> extends Dialog {
+public abstract class LObjectDialog<T> extends Dialog {
 
 	protected T result;
-	protected Shell shell;
+	protected LObjectShell<T> shell;
+	protected Composite content;
 
 	/**
 	 * Create the dialog.
@@ -15,8 +18,12 @@ public class LObjectDialog<T> extends Dialog {
 	 * @param style
 	 */
 	public LObjectDialog(Shell parent, int style) {
-		super(parent, style);
-		setText("SWT Dialog");
+		super(parent, style | SWT.APPLICATION_MODAL);
+		setText("Object Dialog");
+	}
+	
+	public LObjectDialog(Shell parent) {
+		this(parent, parent.getStyle());
 	}
 
 	/**
@@ -24,7 +31,7 @@ public class LObjectDialog<T> extends Dialog {
 	 * @return the result
 	 */
 	public T open(T initial) {
-		createContents(initial);
+		shell = createShell(initial);
 		shell.open();
 		shell.layout();
 		Display display = getParent().getDisplay();
@@ -33,17 +40,9 @@ public class LObjectDialog<T> extends Dialog {
 				display.sleep();
 			}
 		}
-		return result;
+		return shell.getResult();
 	}
-
-	/**
-	 * Create contents of the dialog.
-	 */
-	private void createContents(T initial) {
-		shell = new Shell(getParent(), getStyle());
-		shell.setSize(450, 300);
-		shell.setText(getText());
-
-	}
-
+	
+	protected abstract LObjectShell<T> createShell(T initial);
+	
 }

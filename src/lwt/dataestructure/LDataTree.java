@@ -1,14 +1,13 @@
 package lwt.dataestructure;
 
 import java.io.Serializable;
-import java.util.ArrayList;
 
-public class LDataTree<T> implements Serializable {
+public class LDataTree<T> implements Serializable, LDataCollection<T> {
 
 	private static final long serialVersionUID = 2898742643380172905L;
 	
 	public transient LDataTree<T> parent;
-	public ArrayList<LDataTree<T>> children = new ArrayList<>();
+	public LDataList<LDataTree<T>> children = new LDataList<>();
 	public T data;
 	
 	public LDataTree() {}

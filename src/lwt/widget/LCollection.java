@@ -50,7 +50,6 @@ public abstract class LCollection<T> extends LWidget {
 	    		if (tree.getSelectionCount() > 0) {
 	    			TreeItem item = tree.getSelection()[0];
 	    			LPath path = toPath(item);
-	    			//path.print();
 	    			LSelectionEvent event = new LSelectionEvent(path, toObject(path));
 	    			event.detail = arg0.detail;
 	    			notifySelectionListeners(event);
