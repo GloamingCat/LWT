@@ -52,6 +52,14 @@ public class LActionStack {
 		}
 	}
 	
+	public boolean canUndo() {
+		return lastAction > 0;
+	}
+	
+	public boolean canRedo() {
+		return lastAction < actions.size();
+	}
+	
 	public void onSave() {
 		savedAction = lastAction;
 	}

@@ -14,12 +14,14 @@ import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.widgets.DirectoryDialog;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Event;
+import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.MenuItem;
 import org.eclipse.swt.widgets.MessageBox;
 import org.eclipse.swt.widgets.Shell;
 
-public abstract class DefaultApplicationShell extends Shell {
+public abstract class LDefaultApplicationShell extends Shell {
 
 	protected LProject project = null;
 	protected String applicationName;
@@ -37,7 +39,7 @@ public abstract class DefaultApplicationShell extends Shell {
 	 * Create the shell.
 	 * @param display
 	 */
-	public DefaultApplicationShell(Display display) {
+	public LDefaultApplicationShell(Display display) {
 		super(display, SWT.SHELL_TRIM);
 		
 		applicationName = getText();
@@ -46,6 +48,12 @@ public abstract class DefaultApplicationShell extends Shell {
 		
 		stackLayout = new StackLayout();
 		setLayout(stackLayout);
+		
+		addListener(SWT.Close, new Listener() {
+			public void handleEvent(Event event) {
+		        event.doit = askSave();
+		    }
+		});
 		
 		Menu menu = new Menu(this, SWT.BAR);
 		setMenuBar(menu);
@@ -94,6 +102,12 @@ public abstract class DefaultApplicationShell extends Shell {
 		new MenuItem(menuProject, SWT.SEPARATOR);
 		
 		MenuItem mntmExit = new MenuItem(menuProject, SWT.NONE);
+		mntmExit.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent arg0) {
+				close();
+			}
+		});
 		mntmExit.setText("Exit \t Alt + F4");
 		mntmExit.setAccelerator(SWT.ALT | SWT.F4);
 		
@@ -122,6 +136,19 @@ public abstract class DefaultApplicationShell extends Shell {
 		});
 		mntmRedo.setAccelerator(SWT.MOD1 | 'Y');
 		mntmRedo.setText("Redo \t Ctrl + &Y");
+		
+		menuEdit.addMenuListener(new MenuAdapter() {
+			@Override
+			public void menuShown(MenuEvent arg0) {
+				if (currentView == null) {
+					mntmUndo.setEnabled(false);
+					mntmRedo.setEnabled(false);
+				} else {
+					mntmUndo.setEnabled(currentView.getActionStack().canUndo());
+					mntmRedo.setEnabled(currentView.getActionStack().canRedo());
+				}
+			}
+		});
 		
 		mntmView = new MenuItem(menu, SWT.CASCADE);
 		mntmView.setText("View");

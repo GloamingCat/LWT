@@ -1,6 +1,6 @@
 package myeditor;
 
-import lwt.DefaultApplicationShell;
+import lwt.LDefaultApplicationShell;
 import lwt.dataserialization.LProject;
 import myeditor.project.Project;
 import myeditor.views.ContentListEditor;
@@ -12,7 +12,7 @@ import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.MenuItem;
 
-public class ApplicationShell extends DefaultApplicationShell {
+public class ApplicationShell extends LDefaultApplicationShell {
 
 	/**
 	 * Launch the application.
