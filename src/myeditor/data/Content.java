@@ -1,4 +1,4 @@
-package tests;
+package myeditor.data;
 
 public class Content {
 

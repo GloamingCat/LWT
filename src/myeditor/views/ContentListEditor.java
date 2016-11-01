@@ -1,9 +1,10 @@
-package tests;
+package myeditor.views;
 
 import lwt.action.LActionStack;
 import lwt.dataestructure.LDataList;
 import lwt.editor.LDefaultListEditor;
 import lwt.editor.LView;
+import myeditor.data.Content;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.SashForm;
