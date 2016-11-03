@@ -1,10 +1,8 @@
 package lwt.dataserialization;
 
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileReader;
-import java.io.FileWriter;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 
 public class LFileManager {
 	
@@ -21,17 +19,16 @@ public class LFileManager {
 		}
 	}
 
-	public static String load(String path) {
+	public static byte[] load(String path) {
 		path = path.replace("\\", File.separator);
 		path = path.replace("/", File.separator);
 		try {
-			BufferedReader br = new BufferedReader(new FileReader(path));
-			String allLines = "";
-			for(String line = br.readLine(); line != null; line = br.readLine()) {
-				allLines += line;
-			}
-			br.close();
-			return allLines;
+			File file = new File(path);
+			FileInputStream reader = new FileInputStream(file);
+			byte[] array = new byte[(int) file.length()];
+			reader.read(array);
+			reader.close();
+			return array;
 		} catch(Exception e) {
 			System.out.println("couldn't load: " + path);
 			e.printStackTrace();
@@ -39,15 +36,14 @@ public class LFileManager {
 		}
 	}
 	
-	public static boolean save(String path, String content) {
+	public static boolean save(String path, byte[] content) {
 		path = path.replace("\\", File.separator);
 		path = path.replace("/", File.separator);
 		try {
 			File file = new File(path);
 			file.getParentFile().mkdirs();
-			BufferedWriter writer = new BufferedWriter(new FileWriter(file));
+			FileOutputStream writer = new FileOutputStream(file);
 		    writer.write(content);
-		    writer.newLine();
 		    writer.close();
 		    return true;
 		} catch(Exception e) {

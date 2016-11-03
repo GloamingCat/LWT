@@ -1,8 +1,8 @@
 package myeditor.project;
 
-import lwt.dataserialization.LProject;
+import lwt.dataserialization.LSerializer;
 
-public class Project implements LProject {
+public class Project implements LSerializer {
 
 	public static Project current = null;
 	public String path;
@@ -35,12 +35,7 @@ public class Project implements LProject {
 	}
 
 	@Override
-	public boolean hasChanges() {
-		return true;
-	}
-
-	@Override
-	public boolean isDataFile(String path) {
+	public boolean isDataFolder(String path) {
 		return false;
 	}
 	

@@ -1,9 +1,8 @@
 package lwt;
 
-import java.io.File;
-
+import lwt.action.LActionManager;
 import lwt.dataserialization.LFileManager;
-import lwt.dataserialization.LProject;
+import lwt.dataserialization.LSerializer;
 import lwt.editor.LView;
 
 import org.eclipse.swt.SWT;
@@ -23,7 +22,7 @@ import org.eclipse.swt.widgets.Shell;
 
 public abstract class LDefaultApplicationShell extends Shell {
 
-	protected LProject project = null;
+	protected LSerializer project = null;
 	protected String applicationName;
 	
 	protected LView currentView;
@@ -59,7 +58,7 @@ public abstract class LDefaultApplicationShell extends Shell {
 		setMenuBar(menu);
 		
 		MenuItem mntmProject = new MenuItem(menu, SWT.CASCADE);
-		mntmProject.setText("Project");
+		mntmProject.setText(Vocab.instance.PROJECT);
 		
 		menuProject = new Menu(mntmProject);
 		mntmProject.setMenu(menuProject);
@@ -71,8 +70,7 @@ public abstract class LDefaultApplicationShell extends Shell {
 				project = newProject();
 			}
 		});
-		mntmNew.setText("New");
-		mntmNew.setText("New\tAlt + &N");
+		mntmNew.setText(Vocab.instance.NEW + "\tAlt + &N");
 		
 		MenuItem mntmOpen = new MenuItem(menuProject, SWT.NONE);
 		mntmOpen.addSelectionListener(new SelectionAdapter() {
@@ -81,7 +79,7 @@ public abstract class LDefaultApplicationShell extends Shell {
 				project = openProject();
 			}
 		});
-		mntmOpen.setText("Open\tAlt + &O");
+		mntmOpen.setText(Vocab.instance.OPEN + "\tAlt + &O");
 		
 		MenuItem mntmSave = new MenuItem(menuProject, SWT.NONE);
 		mntmSave.addSelectionListener(new SelectionAdapter() {
@@ -90,12 +88,12 @@ public abstract class LDefaultApplicationShell extends Shell {
 				saveProject();
 			}
 		});
-		mntmSave.setText("Save\tAlt + &S");
+		mntmSave.setText(Vocab.instance.SAVE + "\tAlt + &S");
 		
 		menuProject.addMenuListener(new MenuAdapter() {
 			@Override
 			public void menuShown(MenuEvent arg0) {
-				mntmSave.setEnabled(project != null && project.hasChanges());
+				mntmSave.setEnabled(project != null && LActionManager.getInstance().hasChanges());
 			}
 		});
 		
@@ -108,11 +106,11 @@ public abstract class LDefaultApplicationShell extends Shell {
 				close();
 			}
 		});
-		mntmExit.setText("Exit \t Alt + F4");
+		mntmExit.setText(Vocab.instance.EXIT + "\t Alt + F4");
 		mntmExit.setAccelerator(SWT.ALT | SWT.F4);
 		
 		MenuItem mntmEdit = new MenuItem(menu, SWT.CASCADE);
-		mntmEdit.setText("Edit");
+		mntmEdit.setText(Vocab.instance.EDIT);
 		
 		menuEdit = new Menu(mntmEdit);
 		mntmEdit.setMenu(menuEdit);
@@ -125,7 +123,7 @@ public abstract class LDefaultApplicationShell extends Shell {
 			}
 		});
 		mntmUndo.setAccelerator(SWT.MOD1 | 'Z');
-		mntmUndo.setText("Undo \t Ctrl + &Z");
+		mntmUndo.setText(Vocab.instance.UNDO + "\t Ctrl + &Z");
 		
 		MenuItem mntmRedo = new MenuItem(menuEdit, SWT.NONE);
 		mntmRedo.addSelectionListener(new SelectionAdapter() {
@@ -135,7 +133,7 @@ public abstract class LDefaultApplicationShell extends Shell {
 			}
 		});
 		mntmRedo.setAccelerator(SWT.MOD1 | 'Y');
-		mntmRedo.setText("Redo \t Ctrl + &Y");
+		mntmRedo.setText(Vocab.instance.REDO + "\t Ctrl + &Y");
 		
 		menuEdit.addMenuListener(new MenuAdapter() {
 			@Override
@@ -151,13 +149,13 @@ public abstract class LDefaultApplicationShell extends Shell {
 		});
 		
 		mntmView = new MenuItem(menu, SWT.CASCADE);
-		mntmView.setText("View");
+		mntmView.setText(Vocab.instance.VIEW);
 		
 		menuView = new Menu(mntmView);
 		mntmView.setMenu(menuView);
 		
 		MenuItem mntmHelp = new MenuItem(menu, SWT.CASCADE);
-		mntmHelp.setText("Help");
+		mntmHelp.setText(Vocab.instance.HELP);
 		
 		menuHelp = new Menu(mntmHelp);
 		mntmHelp.setMenu(menuHelp);
@@ -174,94 +172,78 @@ public abstract class LDefaultApplicationShell extends Shell {
 		currentView.onVisible();
 	}
 	
-	protected abstract LProject createProject(String path);
+	protected abstract LSerializer createProject(String path);
 	
-	public LProject newProject() {
+	public LSerializer newProject() {
 		if (!askSave()) {
 			return project;
 		}
 		DirectoryDialog dialog = new DirectoryDialog(this);
-		dialog.setText("New Project");
-		dialog.setMessage("Select a folder to save the project.");
+		dialog.setText(Vocab.instance.NEWPROJECT);
+		dialog.setMessage(Vocab.instance.NEWMSG);
 		dialog.setFilterPath(LFileManager.applicationPath());
 		String resultPath = dialog.open();
 		if (resultPath == null)
 			return project;
-		
-		File folder = new File(resultPath);
-		boolean hasProject = false;
-		for(File entry : folder.listFiles()) {
-			if (entry.isDirectory() && entry.getName().equals("data")) {
-				for (File entry2 : entry.listFiles()) {
-					if (entry.isFile() && project.isDataFile(entry2.getName())) {
-						hasProject = true;
-						break;
-					}
-					if (entry2.isDirectory() && entry2.getName().equals("fields")) {
-						hasProject = true;
-						break;
-					}
-				}
-			}
-			if (hasProject) break;
-		}
-		if (hasProject) {
+		if (project.isDataFolder(resultPath)) {
 			MessageBox msg = new MessageBox(this, SWT.ICON_QUESTION | SWT.YES | SWT.NO | SWT.CANCEL);
-			msg.setText("Existing project");
-			msg.setMessage("There's already a project in this folder. Would you like to override it anyway?");
+			msg.setText(Vocab.instance.EXISTINGPROJECT);
+			msg.setMessage(Vocab.instance.EXISTINGMSG);
 			int result = msg.open();
 			if (result != SWT.YES) {
 				return project;
 			}
 		}
-		LProject newProject = createProject(resultPath);
+		LSerializer newProject = createProject(resultPath);
 		newProject.save();
 		mntmView.setEnabled(true);
 		return newProject;
 	}
 	
-	public LProject openProject() {
+	public LSerializer openProject() {
 		if (!askSave()) {
 			return project;
 		}
 		DirectoryDialog dialog = new DirectoryDialog(this);
-		dialog.setText("Open Project");
-		dialog.setMessage("Select the projects folder.");
+		dialog.setText(Vocab.instance.OPENPROJECT);
+		dialog.setMessage(Vocab.instance.OPENMSG);
 		dialog.setFilterPath(LFileManager.applicationPath());
 		String resultPath = dialog.open();
 		if (resultPath == null)
 			return project;
-		LProject previous = project;
+		LSerializer previous = project;
 		project = createProject(resultPath);
 		if (!project.load()) {
 			MessageBox msg = new MessageBox(this, SWT.ICON_ERROR | SWT.OK);
-			msg.setText("Load error");
-			msg.setMessage("Couldn't load the project files.");
+			msg.setText(Vocab.instance.LOADERROR);
+			msg.setMessage(Vocab.instance.LOADERRORMSG);
 			msg.open();
 			project = previous;
 		} else {
 			mntmView.setEnabled(true);
-			LFileManager.save(LFileManager.appDataPath(applicationName) + "lattest.txt", resultPath);
+			String path = LFileManager.appDataPath(applicationName) + "lattest.txt";
+			byte[] bytes = resultPath.getBytes();
+			LFileManager.save(path, bytes);
 		}
 		return project;
 	}
 	
 	public void saveProject() {
-		if (project == null || !project.hasChanges())
+		if (project == null || !LActionManager.getInstance().hasChanges())
 			return;
 		if (!project.save()) {
 			MessageBox msg = new MessageBox(this, SWT.APPLICATION_MODAL | SWT.ICON_ERROR | SWT.OK);
-			msg.setText("Save error");
-			msg.setMessage("Couldn't save project.");
+			msg.setText(Vocab.instance.SAVEERROR);
+			msg.setMessage(Vocab.instance.SAVEERRORMSG);
 			msg.open();
 		}
 	}
 	
 	protected boolean askSave() {
-		if (project != null && project.hasChanges()) {
+		if (project != null && LActionManager.getInstance().hasChanges()) {
 			MessageBox msg = new MessageBox(this, SWT.APPLICATION_MODAL | SWT.YES | SWT.NO | SWT.CANCEL);
-			msg.setText("Unsaved project");
-			msg.setMessage("There're some changes in the current project. Would you like to save it first?");
+			msg.setText(Vocab.instance.UNSAVEDPROJECT);
+			msg.setMessage(Vocab.instance.UNSAVEDMSG);
 			int result = msg.open();
 			if (result == SWT.YES) {
 				saveProject();

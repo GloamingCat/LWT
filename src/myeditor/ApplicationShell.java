@@ -1,7 +1,7 @@
 package myeditor;
 
 import lwt.LDefaultApplicationShell;
-import lwt.dataserialization.LProject;
+import lwt.dataserialization.LSerializer;
 import myeditor.project.Project;
 import myeditor.views.ContentListEditor;
 import myeditor.views.ContentTreeEditor;
@@ -66,7 +66,7 @@ public class ApplicationShell extends LDefaultApplicationShell {
 	}
 	
 	@Override
-	protected LProject createProject(String path) {
+	protected LSerializer createProject(String path) {
 		return new Project(path);
 	}
 	

@@ -1,21 +1,34 @@
 package lwt.dataserialization;
 
-public class LObjectSerializer<T> implements LSerializer {
+import java.io.File;
 
-	protected String fileName;
+public abstract class LObjectSerializer<T> implements LSerializer {
+
+	protected String path;
 	protected Class<T> type;
 	protected T data;
 	
-	public LObjectSerializer(String fileName, Class<T> type) {
-		this.fileName = fileName;
+	public LObjectSerializer(String path, Class<T> type) {
+		this.path = path;
 		this.type = type;
+	}
+	
+	@Override
+	public boolean isDataFolder(String path) {
+		File folder = new File(path);
+		for(File entry : folder.listFiles()) {
+			if (entry.isFile() && entry.getPath().equals(this.path)) {
+				return true;
+			}
+		}
+		return false;
 	}
 
 	@Override
 	public boolean save() {
 		try {
-			String jsonString = toString();
-			LFileManager.save(fileName + ".json", jsonString);
+			byte[] bytes = toByteArray();
+			LFileManager.save(path, bytes);
 			return true;
 		} catch(Exception e) {
 			e.printStackTrace();
@@ -26,8 +39,8 @@ public class LObjectSerializer<T> implements LSerializer {
 	@Override
 	public boolean load() {
 		try {
-			String jsonString = LFileManager.load(fileName + ".json");
-			fromString(jsonString);
+			byte[] bytes = LFileManager.load(path);
+			fromByteArray(bytes);
 			return true;
 		} catch(Exception e) {
 			e.printStackTrace();
@@ -35,12 +48,7 @@ public class LObjectSerializer<T> implements LSerializer {
 		}
 	}
 	
-	public String toString() {
-		return gson.toJson(data, type);
-	}
-	
-	public void fromString(String jsonString) {
-		data = gson.fromJson(jsonString, type);
-	}
+	protected abstract byte[] toByteArray();
+	protected abstract void fromByteArray(byte[] bytes);
 
 }
