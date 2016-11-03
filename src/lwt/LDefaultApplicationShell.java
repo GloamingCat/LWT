@@ -41,6 +41,8 @@ public abstract class LDefaultApplicationShell extends Shell {
 	public LDefaultApplicationShell(Display display) {
 		super(display, SWT.SHELL_TRIM);
 		
+		LVocab vocab = getVocab();
+		
 		applicationName = getText();
 		
 		setSize(632, 400);
@@ -58,7 +60,7 @@ public abstract class LDefaultApplicationShell extends Shell {
 		setMenuBar(menu);
 		
 		MenuItem mntmProject = new MenuItem(menu, SWT.CASCADE);
-		mntmProject.setText(Vocab.instance.PROJECT);
+		mntmProject.setText(vocab.PROJECT);
 		
 		menuProject = new Menu(mntmProject);
 		mntmProject.setMenu(menuProject);
@@ -70,7 +72,7 @@ public abstract class LDefaultApplicationShell extends Shell {
 				project = newProject();
 			}
 		});
-		mntmNew.setText(Vocab.instance.NEW + "\tAlt + &N");
+		mntmNew.setText(vocab.NEW + "\tAlt + &N");
 		
 		MenuItem mntmOpen = new MenuItem(menuProject, SWT.NONE);
 		mntmOpen.addSelectionListener(new SelectionAdapter() {
@@ -79,7 +81,7 @@ public abstract class LDefaultApplicationShell extends Shell {
 				project = openProject();
 			}
 		});
-		mntmOpen.setText(Vocab.instance.OPEN + "\tAlt + &O");
+		mntmOpen.setText(vocab.OPEN + "\tAlt + &O");
 		
 		MenuItem mntmSave = new MenuItem(menuProject, SWT.NONE);
 		mntmSave.addSelectionListener(new SelectionAdapter() {
@@ -88,7 +90,7 @@ public abstract class LDefaultApplicationShell extends Shell {
 				saveProject();
 			}
 		});
-		mntmSave.setText(Vocab.instance.SAVE + "\tAlt + &S");
+		mntmSave.setText(vocab.SAVE + "\tAlt + &S");
 		
 		menuProject.addMenuListener(new MenuAdapter() {
 			@Override
@@ -106,11 +108,11 @@ public abstract class LDefaultApplicationShell extends Shell {
 				close();
 			}
 		});
-		mntmExit.setText(Vocab.instance.EXIT + "\t Alt + F4");
+		mntmExit.setText(vocab.EXIT + "\t Alt + F4");
 		mntmExit.setAccelerator(SWT.ALT | SWT.F4);
 		
 		MenuItem mntmEdit = new MenuItem(menu, SWT.CASCADE);
-		mntmEdit.setText(Vocab.instance.EDIT);
+		mntmEdit.setText(vocab.EDIT);
 		
 		menuEdit = new Menu(mntmEdit);
 		mntmEdit.setMenu(menuEdit);
@@ -123,7 +125,7 @@ public abstract class LDefaultApplicationShell extends Shell {
 			}
 		});
 		mntmUndo.setAccelerator(SWT.MOD1 | 'Z');
-		mntmUndo.setText(Vocab.instance.UNDO + "\t Ctrl + &Z");
+		mntmUndo.setText(vocab.UNDO + "\t Ctrl + &Z");
 		
 		MenuItem mntmRedo = new MenuItem(menuEdit, SWT.NONE);
 		mntmRedo.addSelectionListener(new SelectionAdapter() {
@@ -133,7 +135,7 @@ public abstract class LDefaultApplicationShell extends Shell {
 			}
 		});
 		mntmRedo.setAccelerator(SWT.MOD1 | 'Y');
-		mntmRedo.setText(Vocab.instance.REDO + "\t Ctrl + &Y");
+		mntmRedo.setText(vocab.REDO + "\t Ctrl + &Y");
 		
 		menuEdit.addMenuListener(new MenuAdapter() {
 			@Override
@@ -149,13 +151,13 @@ public abstract class LDefaultApplicationShell extends Shell {
 		});
 		
 		mntmView = new MenuItem(menu, SWT.CASCADE);
-		mntmView.setText(Vocab.instance.VIEW);
+		mntmView.setText(vocab.VIEW);
 		
 		menuView = new Menu(mntmView);
 		mntmView.setMenu(menuView);
 		
 		MenuItem mntmHelp = new MenuItem(menu, SWT.CASCADE);
-		mntmHelp.setText(Vocab.instance.HELP);
+		mntmHelp.setText(vocab.HELP);
 		
 		menuHelp = new Menu(mntmHelp);
 		mntmHelp.setMenu(menuHelp);
@@ -178,23 +180,24 @@ public abstract class LDefaultApplicationShell extends Shell {
 		if (!askSave()) {
 			return project;
 		}
+		LVocab vocab = getVocab();
 		DirectoryDialog dialog = new DirectoryDialog(this);
-		dialog.setText(Vocab.instance.NEWPROJECT);
-		dialog.setMessage(Vocab.instance.NEWMSG);
+		dialog.setText(vocab.NEWPROJECT);
+		dialog.setMessage(vocab.NEWMSG);
 		dialog.setFilterPath(LFileManager.applicationPath());
 		String resultPath = dialog.open();
 		if (resultPath == null)
 			return project;
-		if (project.isDataFolder(resultPath)) {
+		LSerializer newProject = createProject(resultPath);
+		if (newProject.isDataFolder(resultPath)) {
 			MessageBox msg = new MessageBox(this, SWT.ICON_QUESTION | SWT.YES | SWT.NO | SWT.CANCEL);
-			msg.setText(Vocab.instance.EXISTINGPROJECT);
-			msg.setMessage(Vocab.instance.EXISTINGMSG);
+			msg.setText(vocab.EXISTINGPROJECT);
+			msg.setMessage(vocab.EXISTINGMSG);
 			int result = msg.open();
 			if (result != SWT.YES) {
 				return project;
 			}
 		}
-		LSerializer newProject = createProject(resultPath);
 		newProject.save();
 		mntmView.setEnabled(true);
 		return newProject;
@@ -204,9 +207,10 @@ public abstract class LDefaultApplicationShell extends Shell {
 		if (!askSave()) {
 			return project;
 		}
+		LVocab vocab = getVocab();
 		DirectoryDialog dialog = new DirectoryDialog(this);
-		dialog.setText(Vocab.instance.OPENPROJECT);
-		dialog.setMessage(Vocab.instance.OPENMSG);
+		dialog.setText(vocab.OPENPROJECT);
+		dialog.setMessage(vocab.OPENMSG);
 		dialog.setFilterPath(LFileManager.applicationPath());
 		String resultPath = dialog.open();
 		if (resultPath == null)
@@ -215,8 +219,8 @@ public abstract class LDefaultApplicationShell extends Shell {
 		project = createProject(resultPath);
 		if (!project.load()) {
 			MessageBox msg = new MessageBox(this, SWT.ICON_ERROR | SWT.OK);
-			msg.setText(Vocab.instance.LOADERROR);
-			msg.setMessage(Vocab.instance.LOADERRORMSG);
+			msg.setText(vocab.LOADERROR);
+			msg.setMessage(vocab.LOADERRORMSG);
 			msg.open();
 			project = previous;
 		} else {
@@ -232,18 +236,20 @@ public abstract class LDefaultApplicationShell extends Shell {
 		if (project == null || !LActionManager.getInstance().hasChanges())
 			return;
 		if (!project.save()) {
+			LVocab vocab = getVocab();
 			MessageBox msg = new MessageBox(this, SWT.APPLICATION_MODAL | SWT.ICON_ERROR | SWT.OK);
-			msg.setText(Vocab.instance.SAVEERROR);
-			msg.setMessage(Vocab.instance.SAVEERRORMSG);
+			msg.setText(vocab.SAVEERROR);
+			msg.setMessage(vocab.SAVEERRORMSG);
 			msg.open();
 		}
 	}
 	
 	protected boolean askSave() {
 		if (project != null && LActionManager.getInstance().hasChanges()) {
+			LVocab vocab = getVocab();
 			MessageBox msg = new MessageBox(this, SWT.APPLICATION_MODAL | SWT.YES | SWT.NO | SWT.CANCEL);
-			msg.setText(Vocab.instance.UNSAVEDPROJECT);
-			msg.setMessage(Vocab.instance.UNSAVEDMSG);
+			msg.setText(vocab.UNSAVEDPROJECT);
+			msg.setMessage(vocab.UNSAVEDMSG);
 			int result = msg.open();
 			if (result == SWT.YES) {
 				saveProject();
@@ -256,6 +262,10 @@ public abstract class LDefaultApplicationShell extends Shell {
 		} else {
 			return true;
 		}
+	}
+	
+	protected LVocab getVocab() {
+		return new LVocab();
 	}
 	
 }

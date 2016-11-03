@@ -1,8 +1,6 @@
 package lwt;
 
-public class Vocab {
-
-	public static final Vocab instance = new Vocab();
+public class LVocab {
 	
 	public String PROJECT = "Project";
 	public String NEW = "New";
