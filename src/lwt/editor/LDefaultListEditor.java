@@ -13,7 +13,6 @@ public abstract class LDefaultListEditor<T> extends LListEditor<T, T> {
 	 */
 	public LDefaultListEditor(Composite parent, int style) {
 		super(parent, style);
-
 	}
 
 	public T getEditableData(LPath path) {

@@ -23,14 +23,16 @@ public class LInsertAction<T> implements LAction {
 	
 	@Override
 	public void undo() {
-		LDeleteEvent<T> e = collection.deleteTreeItem(parent, index);
+		LDeleteEvent<T> e = collection.delete(parent, index);
 		collection.notifyDeleteListeners(e);
+		collection.notifySelectionListeners(collection.select(e.parentPath, e.index));
 	}
 
 	@Override
 	public void redo() {
-		LInsertEvent<T> e = collection.insertTreeItem(parent, index, node);
+		LInsertEvent<T> e = collection.insert(parent, index, node);
 		collection.notifyInsertListeners(e);
+		collection.notifySelectionListeners(collection.select(e.parentPath, e.index));
 	}
 	
 }

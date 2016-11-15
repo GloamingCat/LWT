@@ -25,12 +25,14 @@ public class LMoveAction<T> implements LAction {
 	public void undo() {
 		LMoveEvent<T> e = collection.move(destParent, destIndex, sourceParent, sourceIndex);
 		collection.notifyMoveListeners(e);
+		collection.notifySelectionListeners(collection.select(e.destParent, e.destIndex));
 	}
 
 	@Override
 	public void redo() {
 		LMoveEvent<T> e = collection.move(sourceParent, sourceIndex, destParent, destIndex);
 		collection.notifyMoveListeners(e);
+		collection.notifySelectionListeners(collection.select(e.destParent, e.destIndex));
 	}
 
 }

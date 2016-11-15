@@ -51,9 +51,15 @@ public class LText extends LControl {
 	
 	@Override
 	public void setValue(Object value) {
-		String s = (String) value;
-		text.setText(s);
-		currentValue = s;
+		if (value != null) {
+			String s = (String) value;
+			text.setEnabled(true);
+			text.setText(s);
+		} else {
+			text.setEnabled(false);
+			text.setText("");
+		}
+		currentValue = value;
 	}
 
 }

@@ -9,7 +9,7 @@ import org.eclipse.swt.layout.GridData;
 import lwt.editor.LObjectEditor;
 import lwt.widget.LSpinner;
 import lwt.widget.LText;
-import myeditor.Vocab;
+import myeditor.MyVocab;
 
 public class ContentEditor extends LObjectEditor {
 
@@ -24,18 +24,18 @@ public class ContentEditor extends LObjectEditor {
 		setLayout(new GridLayout(2, false));
 		
 		Label lblName = new Label(this, SWT.NONE);
-		lblName.setText(Vocab.instance.NAME);
+		lblName.setText(MyVocab.instance.NAME);
 		
 		LText text = new LText(this, SWT.NONE);
 		text.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
-		addControl("name", text);
+		addControl(text, "name");
 		
 		Label lblValue = new Label(this, SWT.NONE);
-		lblValue.setText(Vocab.instance.VALUE);
+		lblValue.setText(MyVocab.instance.VALUE);
 		
 		LSpinner spinner = new LSpinner(this, SWT.NONE);
 		spinner.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
-		addControl("value", spinner);
+		addControl(spinner, "value");
 		
 	}
 	

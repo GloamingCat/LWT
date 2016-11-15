@@ -22,7 +22,7 @@ public abstract class LTreeEditor<T, ST> extends LCollectionEditor<T, ST> {
 		LTreeEditor<T, ST> self = this;
 		LTree<T, ST> tree = new LTree<T, ST>(this, SWT.NONE) {
 			@Override
-			public LEditEvent<ST> editTreeItem(LPath path) {
+			public LEditEvent<ST> edit(LPath path) {
 				return onEditItem(path);
 			}
 			@Override
@@ -46,7 +46,7 @@ public abstract class LTreeEditor<T, ST> extends LCollectionEditor<T, ST> {
 			}
 		};
 		setCollection(tree);
-		setEditListeners();
+		setListeners();
 	}
 	
 	public void onVisible() {

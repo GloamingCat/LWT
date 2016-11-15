@@ -7,20 +7,15 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 
 public abstract class LObjectShell<T> extends Shell {
 
 	protected Composite content;
 	protected T result;
-
-	/**
-	 * Create the shell.
-	 * @param display
-	 */
-	public LObjectShell(Display display, final T initial) {
-		super(display, SWT.SHELL_TRIM);
+	
+	public LObjectShell(Shell parent) {
+		super(parent, parent.getStyle());
 		
 		setSize(450, 300);
 		setText(getText());
@@ -37,7 +32,7 @@ public abstract class LObjectShell<T> extends Shell {
 		btnOk.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent arg0) {
-				result = createResult(initial);
+				result = createResult(result);
 				close();
 			}
 		});
@@ -54,6 +49,11 @@ public abstract class LObjectShell<T> extends Shell {
 		});
 		btnCancel.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false, 1, 1));
 		btnCancel.setText("Cancel");
+	}
+
+	public void open(T initial) {
+		result = initial;
+		open();
 	}
 	
 	public T getResult() {

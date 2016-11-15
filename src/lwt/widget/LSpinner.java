@@ -36,9 +36,15 @@ public class LSpinner extends LControl {
 	}
 	
 	public void setValue(Object obj) {
-		Integer i = (Integer) obj;
-		spinner.setSelection(i);
-		currentValue = i;
+		if (obj != null) {
+			Integer i = (Integer) obj;
+			spinner.setEnabled(true);
+			spinner.setSelection(i);
+		} else {
+			spinner.setEnabled(false);
+			spinner.setSelection(0);
+		}
+		currentValue = obj;
 	}
 
 }

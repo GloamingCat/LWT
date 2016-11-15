@@ -1,7 +1,6 @@
 package myeditor;
 
 import lwt.LDefaultApplicationShell;
-import lwt.LVocab;
 import lwt.dataserialization.LSerializer;
 import myeditor.project.Project;
 import myeditor.views.ContentListEditor;
@@ -54,7 +53,7 @@ public class ApplicationShell extends LDefaultApplicationShell {
 				setCurrentView(listEditor);
 			}
 		});
-		mntmContentList.setText(Vocab.instance.CONTENTLIST);
+		mntmContentList.setText(MyVocab.instance.CONTENTLIST);
 		
 		MenuItem mntmContentTree = new MenuItem(menuView, SWT.NONE);
 		mntmContentTree.addSelectionListener(new SelectionAdapter() {
@@ -63,12 +62,7 @@ public class ApplicationShell extends LDefaultApplicationShell {
 				setCurrentView(treeEditor);
 			}
 		});
-		mntmContentTree.setText(Vocab.instance.CONTENTTREE);
-	}
-	
-	@Override
-	protected LVocab getVocab() {
-		return Vocab.instance;
+		mntmContentTree.setText(MyVocab.instance.CONTENTTREE);
 	}
 	
 	@Override

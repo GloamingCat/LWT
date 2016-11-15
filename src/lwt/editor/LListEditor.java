@@ -12,6 +12,8 @@ import org.eclipse.swt.widgets.Composite;
 
 public abstract class LListEditor<T, ST> extends LCollectionEditor<T, ST> {
 	
+	protected LList<T, ST> list;
+	
 	/**
 	 * Create the composite.
 	 * @param parent
@@ -20,13 +22,15 @@ public abstract class LListEditor<T, ST> extends LCollectionEditor<T, ST> {
 	public LListEditor(Composite parent, int style) {
 		super(parent, style);
 		
-		LList<T, ST> list = new LList<T, ST>(this, SWT.NONE) {
+		list = new LList<T, ST>(this, SWT.NONE) {
 			@Override
-			public LEditEvent<ST> editTreeItem(LPath path) {
+			public LEditEvent<ST> edit(LPath path) {
 				return onEditItem(path);
 			}
 			@Override
 			public Object toObject(LPath path) {
+				if (path == null)
+					return null;
 				return getList().get(path.index);
 			}
 			@Override
@@ -43,8 +47,12 @@ public abstract class LListEditor<T, ST> extends LCollectionEditor<T, ST> {
 			}
 		};
 		setCollection(list);
-		setEditListeners();
+		setListeners();
 		
+	}
+	
+	public void setIncludeID(boolean value) {
+		list.setIncludeID(value);
 	}
 	
 	public void onVisible() {
@@ -53,9 +61,15 @@ public abstract class LListEditor<T, ST> extends LCollectionEditor<T, ST> {
 	}
 
 	public void setObject(Object obj) {
-		@SuppressWarnings("unchecked")
-		LDataList<T> db = (LDataList<T>) obj;
-		collection.setItems(db.toTree());
+		if (obj == null) {
+			collection.setItems(new LDataTree<T>());
+			setList(null);
+		} else {
+			@SuppressWarnings("unchecked")
+			LDataList<T> db = (LDataList<T>) obj;
+			collection.setItems(db.toTree());
+			setList(db);
+		}
 	}
 	
 	public LDataTree<T> duplicateNode(LDataTree<T> node) {
@@ -66,6 +80,8 @@ public abstract class LListEditor<T, ST> extends LCollectionEditor<T, ST> {
 		}
 		return copy;
 	}
+	
+	protected void setList(LDataList<T> list) {}
 	
 	public abstract LDataList<T> getList();
 	

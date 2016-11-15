@@ -39,19 +39,21 @@ public abstract class LMenuCollection<T, ST> extends LCollection<T> {
 	    tree.setMenu(menu);
 	}
 	
-	public LInsertEvent<T> insertTreeItem(LPath parentPath, int index, LDataTree<T> node) {
+	public LInsertEvent<T> insert(LPath parentPath, int index, LDataTree<T> node) {
 		TreeItem parent = toTreeItem(parentPath);
 		createTreeItem(parent, index, node);
+		refreshItems();
 		return new LInsertEvent<T>(parentPath, index, node);
 	}
 	
-	public LDeleteEvent<T> deleteTreeItem(LPath parentPath, int index) {
+	public LDeleteEvent<T> delete(LPath parentPath, int index) {
 		TreeItem item = toTreeItem(parentPath, index);
 		LDataTree<T> node = disposeTreeItem(item);
+		refreshItems();
 		return new LDeleteEvent<T>(parentPath, index, node);
 	}
 	
-	public LEditEvent<ST> editTreeItem(LPath path) {
+	public LEditEvent<ST> edit(LPath path) {
 		return null;
 	}
 	
@@ -74,13 +76,15 @@ public abstract class LMenuCollection<T, ST> extends LCollection<T> {
 			    		if (tree.getSelectionCount() > 0) {
 			    			TreeItem item = tree.getSelection()[0];
 			    			LPath path = toPath(item);
-			    			LEditEvent<ST> event = editTreeItem(path);
+			    			LEditEvent<ST> event = edit(path);
 			    			if (event != null) {
 				    			if (actionStack != null) {
 				    				LEditAction<ST> action = new LEditAction<ST>(self, path, event.oldData, event.newData);
 				    				actionStack.newAction(action);
 				    			}
 				    			notifyEditListeners(event);
+				    			renameItem(path);
+				    			notifySelectionListeners(select(event.path));
 			    			}
 			    		}
 			    	}
@@ -110,13 +114,14 @@ public abstract class LMenuCollection<T, ST> extends LCollection<T> {
 			    			parentPath = toPath(item.getParentItem());
 			    			index = indexOf(item) + 1;
 			    		}
-		    			LInsertEvent<T> event = insertTreeItem(parentPath, index, newNode);
+		    			LInsertEvent<T> event = insert(parentPath, index, newNode);
 		    			if (event != null) {
 				    		if (actionStack != null) {
 				    			LInsertAction<T> action = new LInsertAction<T>(self, parentPath, index, newNode); 
 				    			actionStack.newAction(action);
 				    		}
 			    			notifyInsertListeners(event);
+			    			notifySelectionListeners(select(event.parentPath, event.index));
 		    			}
 			    	}
 			    });
@@ -142,7 +147,7 @@ public abstract class LMenuCollection<T, ST> extends LCollection<T> {
 			    			LPath itemPath = toPath(item);
 			    			LDataTree<T> node = duplicateNode(itemPath);
 			    			LPath parentPath = toPath(item.getParentItem());
-			    			LInsertEvent<T> event = insertTreeItem(parentPath, indexOf(item), node);
+			    			LInsertEvent<T> event = insert(parentPath, indexOf(item), node);
 			    			if (event != null) {
 				    			event.detail = 1;
 				    			if (actionStack != null) {
@@ -150,6 +155,7 @@ public abstract class LMenuCollection<T, ST> extends LCollection<T> {
 				    				actionStack.newAction(action);
 				    			}
 				    			notifyInsertListeners(event);
+				    			notifySelectionListeners(select(event.parentPath, event.index));
 			    			}
 			    		}
 			    	}
@@ -174,13 +180,14 @@ public abstract class LMenuCollection<T, ST> extends LCollection<T> {
 			    		if (tree.getSelectionCount() > 0) {
 			    			TreeItem item = tree.getSelection()[0];
 			    			LPath parentPath = toPath(item.getParentItem());
-			    			LDeleteEvent<T> event = deleteTreeItem(parentPath, indexOf(item));
+			    			LDeleteEvent<T> event = delete(parentPath, indexOf(item));
 			    			if (event != null) {
 				    			if (actionStack != null) {
 				    				LDeleteAction<T> action = new LDeleteAction<T>(self, parentPath, event.index, event.stringNode);
 				    				actionStack.newAction(action);
 				    			}
 				    			notifyDeleteListeners(event);
+				    			notifySelectionListeners(select(event.parentPath, event.index));
 			    			}
 			    		}
 			    	}

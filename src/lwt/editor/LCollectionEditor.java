@@ -6,6 +6,7 @@ import lwt.action.LActionStack;
 import lwt.dataestructure.LDataCollection;
 import lwt.dataestructure.LPath;
 import lwt.dialog.LObjectDialog;
+import lwt.dialog.LObjectShell;
 import lwt.event.LDeleteEvent;
 import lwt.event.LEditEvent;
 import lwt.event.LInsertEvent;
@@ -29,7 +30,7 @@ public abstract class LCollectionEditor<T, ST> extends LEditor {
 	
 	public LMenuCollection<T, ST> collection;
 	public String fieldName = "";
-	private LObjectDialog<ST> editDialog = null;
+	protected LObjectDialog<ST> editDialog = null;
 	
 	/**
 	 * Create the composite.
@@ -41,7 +42,8 @@ public abstract class LCollectionEditor<T, ST> extends LEditor {
 		setLayout(new FillLayout());
 	}
 	
-	protected void setEditListeners() {
+	protected void setListeners() {
+		
 		collection.addInsertListener(new LCollectionListener<T>() {
 			public void onInsert(LInsertEvent<T> event) {
 				getDataCollection().insert(event.parentPath, event.index, event.node);
@@ -69,11 +71,13 @@ public abstract class LCollectionEditor<T, ST> extends LEditor {
 		
 	}
 	
-	public void setObjectDialog(LObjectDialog<ST> dialog) {
-		this.editDialog = dialog;
+	public void setObjectShell(Class<? extends LObjectShell<ST>> type) {
+		editDialog = new LObjectDialog<ST>(getShell(), getShell().getStyle());
+		editDialog.setShell(type);
 	}
 	
 	public LEditEvent<ST> onEditItem(LPath path) {
+		System.out.println("bla");
 		ST oldData = getEditableData(path);
 		ST newData = editDialog.open(oldData);
 		if (newData != null) {
@@ -129,7 +133,7 @@ public abstract class LCollectionEditor<T, ST> extends LEditor {
 	
 	@Override
 	public void onVisible() {
-		collection.refresh();
+		collection.refreshSelection();
 	}
 
 	@Override

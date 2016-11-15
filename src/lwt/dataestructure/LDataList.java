@@ -6,9 +6,21 @@ public class LDataList<T> extends ArrayList<T> implements LDataCollection<T> {
 
 	private static final long serialVersionUID = -6494822823659233992L;
 
+	public LDataList() {
+		super();
+	}
+	
+	public LDataList(int i) {
+		super(i);
+	}
+
 	@Override
 	public void insert(LPath parentPath, int index, LDataTree<T> node) {
-		add(index, node.data);
+		if (index == -1)  {
+			add(node.data);
+		} else {
+			add(index, node.data);
+		}
 	}
 
 	@Override

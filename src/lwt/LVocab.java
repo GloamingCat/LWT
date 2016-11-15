@@ -2,6 +2,8 @@ package lwt;
 
 public class LVocab {
 	
+	public static LVocab instance = new LVocab();
+	
 	public String PROJECT = "Project";
 	public String NEW = "New";
 	public String OPEN = "Open";
@@ -34,5 +36,6 @@ public class LVocab {
 	
 	public String OK = "OK";
 	public String CANCEL = "Cancel";
+	public String SELECT = "Select";
 	
 }

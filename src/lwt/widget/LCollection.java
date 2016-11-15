@@ -13,6 +13,7 @@ import org.eclipse.swt.dnd.DropTargetAdapter;
 import org.eclipse.swt.dnd.DropTargetEvent;
 import org.eclipse.swt.dnd.TextTransfer;
 import org.eclipse.swt.dnd.Transfer;
+import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.widgets.Composite;
@@ -36,6 +37,7 @@ public abstract class LCollection<T> extends LWidget {
 	protected final String BLOCK = "block";
 	
 	protected Tree tree;
+	
 	private LDataTree<T> dragNode;
 	private TreeItem dragParent;
 	private int dragIndex;
@@ -43,7 +45,7 @@ public abstract class LCollection<T> extends LWidget {
 	public LCollection(Composite parent, int style) {
 		super(parent, style);
 
-	    tree = new Tree(this, SWT.BORDER);
+	    tree = new Tree(this, SWT.BORDER | SWT.VIRTUAL);
 	    tree.addSelectionListener(new SelectionAdapter() {
 	    	@Override
 	    	public void widgetSelected(SelectionEvent arg0) {
@@ -88,14 +90,19 @@ public abstract class LCollection<T> extends LWidget {
 	    	};
 
 			public void dragSetData(DragSourceEvent event) {
-				event.data = dragNode.data.toString();
+				event.data = "bla";
 			}
 
 			public void dragFinished(DragSourceEvent event) {
 				if (event.detail == DND.DROP_NONE) {
 					System.out.println("Drag cancelled");
-					createTreeItem(dragParent, dragIndex, dragNode);
+					TreeItem item = createTreeItem(dragParent, dragIndex, dragNode);
+					notifySelectionListeners(selectTreeItem(item));
+				} else {
+					TreeItem item = toTreeItem(dragParent, dragIndex);
+					notifySelectionListeners(selectTreeItem(item));
 				}
+				refreshItems();
 				dragParent = null;
 				dragIndex = -1;
 				dragNode = null;
@@ -193,7 +200,6 @@ public abstract class LCollection<T> extends LWidget {
     			}
 				notifyMoveListeners(e);
 	    	}
-	    
 	    });
 	    return target;
 	}
@@ -216,6 +222,17 @@ public abstract class LCollection<T> extends LWidget {
 	// Internal operations
 	//-------------------------------------------------------------------------------------
 
+	protected LSelectionEvent selectTreeItem(TreeItem item) {
+		if (item == null) {
+			tree.deselectAll();
+			return new LSelectionEvent(null, null);
+		} else {
+			tree.setSelection(item);
+			LPath path = toPath(item);
+			return new LSelectionEvent(path, toObject(path));
+		}
+	}
+	
 	protected TreeItem createTreeItem(TreeItem parent, int index, LDataTree<T> node) {
 		TreeItem newItem;
 		if (index == -1) {
@@ -231,6 +248,7 @@ public abstract class LCollection<T> extends LWidget {
 				newItem = new TreeItem(parent, SWT.NONE, index);
 			}
 		}
+		newItem.setImage((Image) null);
 		setItemNode(newItem, node);
 		return newItem;
 	}
@@ -255,7 +273,15 @@ public abstract class LCollection<T> extends LWidget {
 	// Tree Events
 	//-------------------------------------------------------------------------------------
 	
+	public LSelectionEvent select(LPath parent, int index) {
+		TreeItem item = toTreeItem(parent, index);
+		return selectTreeItem(item);
+	}
+	
 	public LSelectionEvent select(LPath path) {
+		if (path == null) {
+			return new LSelectionEvent(null, null);
+		}
 		TreeItem item = toTreeItem(path);
 		tree.setSelection(item);
 		return new LSelectionEvent(path, toObject(path));
@@ -264,6 +290,7 @@ public abstract class LCollection<T> extends LWidget {
 	public LMoveEvent<T> move(LPath sourceParent, int sourceIndex, LPath destParent, int destIndex) {
 		TreeItem sourceItem = toTreeItem(sourceParent, sourceIndex);
 		LDataTree<T> node = disposeTreeItem(sourceItem);
+		refreshItems();
 		return moveTreeItem(node, toTreeItem(sourceParent), sourceIndex, toTreeItem(destParent), destIndex);
 	}
 	
@@ -282,15 +309,35 @@ public abstract class LCollection<T> extends LWidget {
 	// Path
 	//-------------------------------------------------------------------------------------
 	
+	public TreeItem toTreeItem(TreeItem parent, int index) {
+		if (index == -1) {
+			if (parent == null) {
+				return tree.getItem(tree.getItemCount() - 1);
+			} else {
+				return parent.getItem(parent.getItemCount() - 1);
+			}
+		} else {
+			if (parent == null) {
+				return tree.getItem(index);
+			} else {
+				return parent.getItem(index);
+			}
+		}
+	}
+	
 	public TreeItem toTreeItem(LPath parentPath, int index) {
 		if (parentPath == null) {
 			if (index == -1)
 				index = tree.getItemCount() - 1;
+			else if (index >= tree.getItemCount())
+				return null;
 			return tree.getItem(index);
 		} else {
 			TreeItem parent = toTreeItem(parentPath);
 			if (index == -1)
 				index = parent.getItemCount() - 1;
+			else if (index >= parent.getItemCount())
+				return null;
 			return parent.getItem(index);
 		}
 	}
@@ -301,6 +348,7 @@ public abstract class LCollection<T> extends LWidget {
 		}
 		if (path.index == -1)
 			path.index = tree.getItemCount() - 1;
+		System.out.println(path.index);
 		TreeItem item = tree.getItem(path.index);
 		path = path.child;
 		while(path != null) {
@@ -351,16 +399,9 @@ public abstract class LCollection<T> extends LWidget {
 		}
 	}
 	
-	public LDataTree<String> toStringNode(TreeItem item) {
-		LDataTree<String> node = new LDataTree<>(item.getText());
-		for(TreeItem child : item.getItems()) {
-			toStringNode(child).setParent(node);
-		}
-		return node;
-	}
-	
 	public void setItemNode(TreeItem item, LDataTree<T> node) {
 		item.setText(node.data.toString());
+		item.setData(node.data);
 		for(LDataTree<T> child : node.children) {
 			TreeItem newItem = new TreeItem(item, item.getStyle());
 			setItemNode(newItem, child);
@@ -421,7 +462,7 @@ public abstract class LCollection<T> extends LWidget {
 	// Refresh
 	//-------------------------------------------------------------------------------------
 	
-	public void refresh() {
+	public void refreshSelection() {
 		if (tree.getSelectionCount() > 0) {
 			TreeItem item = tree.getSelection()[0];
 			LPath path = toPath(item);
@@ -434,6 +475,8 @@ public abstract class LCollection<T> extends LWidget {
 			notifySelectionListeners(new LSelectionEvent(null, null));
 		}
 	}
+	
+	public void refreshItems() { }
 	
 	public void clear() {
 		for(TreeItem item : tree.getItems()) {

@@ -1,44 +1,44 @@
 package lwt.dataserialization;
 
+import java.util.HashMap;
+
 import lwt.dataestructure.LDataTree;
 
-public abstract class LTreeSerializer<N, T> extends LObjectSerializer<LDataTree<N>> {
+public abstract class LTreeSerializer<Node> extends LObjectSerializer {
 
-	protected LDataTree<LObjectSerializer<T>> root = new LDataTree<LObjectSerializer<T>>();
+	protected LDataTree<Node> root = new LDataTree<Node>();
 	
-	public LTreeSerializer(String path, Class<LDataTree<N>> type) {
+	protected HashMap<Object, LObjectSerializer> serializers = new HashMap<>();	
+	
+	public LTreeSerializer(String path, Class<?> type) {
 		super(path, type);
 	}
 	
-	@Override
-	public boolean isDataFolder(String path) {
-		return super.isDataFolder(path) || isDataFolder(root, path);
+	public LDataTree<Node> getTree() {
+		return root;
 	}
-	
-	private boolean isDataFolder(LDataTree<LObjectSerializer<T>> node, String path) {
-		for(LDataTree<LObjectSerializer<T>> child : root.children) {
-			if (child.data.path.equals(path) || isDataFolder(child, path)) {
-				return true;
-			}
-		}
-		return false;
-	}
-	
+
 	@Override
 	public boolean save() {
 		if (!super.save()) {
 			return false;
 		}
-		return saveNode(root);
-	}
-	
-	private boolean saveNode(LDataTree<LObjectSerializer<T>> node) {
-		for(LDataTree<LObjectSerializer<T>> child : node.children) {
-			if (!child.data.save() || !saveNode(node)) {
+		for(LObjectSerializer os : serializers.values()) {
+			if (!os.save())
 				return false;
-			}
 		}
 		return true;
 	}
+	
+	public LObjectSerializer load(Node node) {
+		LObjectSerializer s = serializers.get(node);
+		if (s == null) {
+			s = createNodeSerializer(node);
+			serializers.put(node, s);
+		}
+		return s;
+	}
+	
+	protected abstract LObjectSerializer createNodeSerializer(Node node);
 
 }

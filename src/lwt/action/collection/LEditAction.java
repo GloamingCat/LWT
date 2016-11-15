@@ -23,12 +23,16 @@ public class LEditAction<T> implements LAction {
 	public void undo() {
 		LEditEvent<T> e = new LEditEvent<T>(path, newData, oldData);
 		collection.notifyEditListeners(e);
+		collection.renameItem(path);
+		collection.notifySelectionListeners(collection.select(e.path));
 	}
 
 	@Override
 	public void redo() {
 		LEditEvent<T> e = new LEditEvent<T>(path, oldData, newData);
 		collection.notifyEditListeners(e);
+		collection.renameItem(path);
+		collection.notifySelectionListeners(collection.select(e.path));
 	}
 
 }

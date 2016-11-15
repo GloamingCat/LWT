@@ -12,8 +12,6 @@ import org.eclipse.swt.widgets.Composite;
  * It is associated to an Action Stack. If it's the root 
  * editor, it must create a new stack and handle the undo/redo
  * shortcuts.
- * 
- * @author Luisa
  *
  */
 
@@ -39,7 +37,9 @@ public abstract class LView extends Composite {
 			parent.children.remove(editor);
 		}
 		editor.parent = this;
-		editor.setActionStack(actionStack);
+		if (editor.getActionStack() == null) {
+			editor.setActionStack(actionStack);
+		}
 		children.add(editor);
 	}
 	

@@ -32,7 +32,7 @@ public abstract class LDefaultApplicationShell extends Shell {
 	protected Menu menuEdit;
 	protected Menu menuView;
 	protected Menu menuHelp;
-	private MenuItem mntmView;
+	protected MenuItem mntmView;
 	
 	/**
 	 * Create the shell.
@@ -41,7 +41,7 @@ public abstract class LDefaultApplicationShell extends Shell {
 	public LDefaultApplicationShell(Display display) {
 		super(display, SWT.SHELL_TRIM);
 		
-		LVocab vocab = getVocab();
+		LVocab vocab = LVocab.instance;
 		
 		applicationName = getText();
 		
@@ -167,6 +167,26 @@ public abstract class LDefaultApplicationShell extends Shell {
 		
 	}
 	
+	protected boolean loadDefault() {
+		String dataPath = LFileManager.appDataPath(applicationName) + "lattest.txt";
+		byte[] bytes = LFileManager.load(dataPath);
+		if (bytes != null && bytes.length > 0) {
+			LSerializer project = createProject(new String(bytes));
+			if (!project.load()) {
+				MessageBox msg = new MessageBox(getShell(), SWT.ICON_ERROR | SWT.OK);
+				msg.setText("Load error");
+				msg.setMessage("Couldn't load the project files.");
+				msg.open();
+				return false;
+			} else {
+				this.project = project;
+				mntmView.setEnabled(true);
+				return true;
+			}
+		}
+		return false;
+	}
+	
 	protected void setCurrentView(LView view) {
 		currentView = view;
 		stackLayout.topControl = currentView;
@@ -180,7 +200,7 @@ public abstract class LDefaultApplicationShell extends Shell {
 		if (!askSave()) {
 			return project;
 		}
-		LVocab vocab = getVocab();
+		LVocab vocab = LVocab.instance;
 		DirectoryDialog dialog = new DirectoryDialog(this);
 		dialog.setText(vocab.NEWPROJECT);
 		dialog.setMessage(vocab.NEWMSG);
@@ -188,6 +208,7 @@ public abstract class LDefaultApplicationShell extends Shell {
 		String resultPath = dialog.open();
 		if (resultPath == null)
 			return project;
+		resultPath += "/";
 		LSerializer newProject = createProject(resultPath);
 		if (newProject.isDataFolder(resultPath)) {
 			MessageBox msg = new MessageBox(this, SWT.ICON_QUESTION | SWT.YES | SWT.NO | SWT.CANCEL);
@@ -207,7 +228,7 @@ public abstract class LDefaultApplicationShell extends Shell {
 		if (!askSave()) {
 			return project;
 		}
-		LVocab vocab = getVocab();
+		LVocab vocab = LVocab.instance;
 		DirectoryDialog dialog = new DirectoryDialog(this);
 		dialog.setText(vocab.OPENPROJECT);
 		dialog.setMessage(vocab.OPENMSG);
@@ -216,6 +237,7 @@ public abstract class LDefaultApplicationShell extends Shell {
 		if (resultPath == null)
 			return project;
 		LSerializer previous = project;
+		resultPath += "/";
 		project = createProject(resultPath);
 		if (!project.load()) {
 			MessageBox msg = new MessageBox(this, SWT.ICON_ERROR | SWT.OK);
@@ -236,7 +258,7 @@ public abstract class LDefaultApplicationShell extends Shell {
 		if (project == null || !LActionManager.getInstance().hasChanges())
 			return;
 		if (!project.save()) {
-			LVocab vocab = getVocab();
+			LVocab vocab = LVocab.instance;
 			MessageBox msg = new MessageBox(this, SWT.APPLICATION_MODAL | SWT.ICON_ERROR | SWT.OK);
 			msg.setText(vocab.SAVEERROR);
 			msg.setMessage(vocab.SAVEERRORMSG);
@@ -246,7 +268,7 @@ public abstract class LDefaultApplicationShell extends Shell {
 	
 	protected boolean askSave() {
 		if (project != null && LActionManager.getInstance().hasChanges()) {
-			LVocab vocab = getVocab();
+			LVocab vocab = LVocab.instance;
 			MessageBox msg = new MessageBox(this, SWT.APPLICATION_MODAL | SWT.YES | SWT.NO | SWT.CANCEL);
 			msg.setText(vocab.UNSAVEDPROJECT);
 			msg.setMessage(vocab.UNSAVEDMSG);
@@ -262,10 +284,6 @@ public abstract class LDefaultApplicationShell extends Shell {
 		} else {
 			return true;
 		}
-	}
-	
-	protected LVocab getVocab() {
-		return new LVocab();
 	}
 	
 }
