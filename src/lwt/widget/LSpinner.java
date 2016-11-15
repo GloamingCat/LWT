@@ -46,5 +46,13 @@ public class LSpinner extends LControl {
 		}
 		currentValue = obj;
 	}
+	
+	public void setMinimum(int i) {
+		spinner.setMinimum(i);
+	}
+	
+	public void setMaximum(int i) {
+		spinner.setMaximum(i);
+	}
 
 }

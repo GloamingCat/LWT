@@ -56,7 +56,11 @@ public abstract class LListEditor<T, ST> extends LCollectionEditor<T, ST> {
 	}
 	
 	public void onVisible() {
-		collection.setItems(getList().toTree());
+		if (getList() != null) {
+			collection.setItems(getList().toTree());
+		} else {
+			collection.setItems(new LDataTree<>());
+		}
 		super.onVisible();
 	}
 

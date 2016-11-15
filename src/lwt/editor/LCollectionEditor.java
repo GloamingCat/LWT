@@ -6,7 +6,7 @@ import lwt.action.LActionStack;
 import lwt.dataestructure.LDataCollection;
 import lwt.dataestructure.LPath;
 import lwt.dialog.LObjectDialog;
-import lwt.dialog.LObjectShell;
+import lwt.dialog.LShellFactory;
 import lwt.event.LDeleteEvent;
 import lwt.event.LEditEvent;
 import lwt.event.LInsertEvent;
@@ -71,9 +71,9 @@ public abstract class LCollectionEditor<T, ST> extends LEditor {
 		
 	}
 	
-	public void setObjectShell(Class<? extends LObjectShell<ST>> type) {
+	public void setShellFactory(LShellFactory<ST> factory) {
 		editDialog = new LObjectDialog<ST>(getShell(), getShell().getStyle());
-		editDialog.setShell(type);
+		editDialog.setFactory(factory);
 	}
 	
 	public LEditEvent<ST> onEditItem(LPath path) {
@@ -129,11 +129,6 @@ public abstract class LCollectionEditor<T, ST> extends LEditor {
 	
 	public void renameItem(LPath path) {
 		collection.renameItem(path);
-	}
-	
-	@Override
-	public void onVisible() {
-		collection.refreshSelection();
 	}
 
 	@Override

@@ -3,7 +3,7 @@ package lwt.widget;
 import lwt.LVocab;
 import lwt.action.LControlAction;
 import lwt.dialog.LObjectDialog;
-import lwt.dialog.LObjectShell;
+import lwt.dialog.LShellFactory;
 import lwt.event.LControlEvent;
 
 import org.eclipse.swt.SWT;
@@ -55,9 +55,9 @@ public class LStringButton extends LControl {
 		this.label = label;
 	}
 	
-	public void setShell(Class<? extends LObjectShell<String>> type) {
+	public void setShellFactory(LShellFactory<String> factory) {
 		LObjectDialog<String> dialog = new LObjectDialog<String>(getShell(), getShell().getStyle());
-		dialog.setShell(type);
+		dialog.setFactory(factory);
 		this.dialog = dialog;
 	}
 

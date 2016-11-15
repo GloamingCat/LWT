@@ -1,8 +1,5 @@
 package lwt.dialog;
 
-import java.lang.reflect.Constructor;
-import java.lang.reflect.InvocationTargetException;
-
 import org.eclipse.swt.widgets.Dialog;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
@@ -13,7 +10,7 @@ public class LObjectDialog<T> extends Dialog {
 
 	protected T result;
 	protected Composite content;
-	protected Constructor<? extends LObjectShell<T>> constructor;
+	protected LShellFactory<T> factory;
 
 	/**
 	 * Create the dialog.
@@ -34,7 +31,7 @@ public class LObjectDialog<T> extends Dialog {
 	 * @return the result
 	 */
 	public T open(T initial) {
-		LObjectShell<T> shell = createShell();
+		LObjectShell<T> shell = factory.createShell(getParent().getShell());
 		shell.open(initial);
 		shell.layout();
 		Display display = getParent().getDisplay();
@@ -46,25 +43,8 @@ public class LObjectDialog<T> extends Dialog {
 		return shell.getResult();
 	}
 	
-	protected LObjectShell<T> createShell() {
-		try {
-			return constructor.newInstance(getParent().getShell());
-		} catch (InstantiationException | IllegalAccessException
-				| IllegalArgumentException | InvocationTargetException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-			return null;
-		}
-	}
-	
-	public void setShell(Class<? extends LObjectShell<T>> type) {
-		try {
-			constructor = type.getConstructor(Shell.class);
-		} catch (NoSuchMethodException | SecurityException 
-				| IllegalArgumentException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+	public void setFactory(LShellFactory<T> factory) {
+		this.factory = factory;
 	}
 	
 }
