@@ -72,7 +72,8 @@ public abstract class LDefaultApplicationShell extends Shell {
 				project = newProject();
 			}
 		});
-		mntmNew.setText(vocab.NEW + "\tAlt + &N");
+		mntmNew.setText(vocab.NEW + "\tCtrl + &N");
+		mntmNew.setAccelerator(SWT.MOD1 | 'N');
 		
 		MenuItem mntmOpen = new MenuItem(menuProject, SWT.NONE);
 		mntmOpen.addSelectionListener(new SelectionAdapter() {
@@ -81,7 +82,8 @@ public abstract class LDefaultApplicationShell extends Shell {
 				project = openProject();
 			}
 		});
-		mntmOpen.setText(vocab.OPEN + "\tAlt + &O");
+		mntmOpen.setText(vocab.OPEN + "\tCtrl + &O");
+		mntmOpen.setAccelerator(SWT.MOD1 | 'O');
 		
 		MenuItem mntmSave = new MenuItem(menuProject, SWT.NONE);
 		mntmSave.addSelectionListener(new SelectionAdapter() {
@@ -90,7 +92,8 @@ public abstract class LDefaultApplicationShell extends Shell {
 				saveProject();
 			}
 		});
-		mntmSave.setText(vocab.SAVE + "\tAlt + &S");
+		mntmSave.setText(vocab.SAVE + "\tCtrl + &S");
+		mntmSave.setAccelerator(SWT.MOD1 | 'S');
 		
 		menuProject.addMenuListener(new MenuAdapter() {
 			@Override
@@ -121,7 +124,7 @@ public abstract class LDefaultApplicationShell extends Shell {
 		mntmUndo.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent arg0) {
-				currentView.getActionStack().undo();
+				currentView.undo();
 			}
 		});
 		mntmUndo.setAccelerator(SWT.MOD1 | 'Z');
@@ -131,7 +134,7 @@ public abstract class LDefaultApplicationShell extends Shell {
 		mntmRedo.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent arg0) {
-				currentView.getActionStack().redo();
+				currentView.redo();
 			}
 		});
 		mntmRedo.setAccelerator(SWT.MOD1 | 'Y');
@@ -144,8 +147,8 @@ public abstract class LDefaultApplicationShell extends Shell {
 					mntmUndo.setEnabled(false);
 					mntmRedo.setEnabled(false);
 				} else {
-					mntmUndo.setEnabled(currentView.getActionStack().canUndo());
-					mntmRedo.setEnabled(currentView.getActionStack().canRedo());
+					mntmUndo.setEnabled(currentView.canUndo());
+					mntmRedo.setEnabled(currentView.canRedo());
 				}
 			}
 		});
@@ -263,6 +266,8 @@ public abstract class LDefaultApplicationShell extends Shell {
 			msg.setText(vocab.SAVEERROR);
 			msg.setMessage(vocab.SAVEERRORMSG);
 			msg.open();
+		} else {
+			LActionManager.getInstance().onSave();
 		}
 	}
 	

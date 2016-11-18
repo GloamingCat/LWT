@@ -24,7 +24,7 @@ public class LViewFolder extends LView {
 				int i = tabFolder.getSelectionIndex();
 				if (children != null && currentTab != i && i >= 0 && i < children.size()) {
 					currentTab = i;
-					setTab(children.get(i));
+					children.get(i).onVisible();
 				}
 			}
 		});
@@ -36,10 +36,25 @@ public class LViewFolder extends LView {
 		tbtm.setText(name);
 		tbtm.setControl(child);
 	}
+
+	public TabFolder getTabFolder() {
+		return tabFolder;
+	}
 	
-	public void setTab(LView view) {
-		actionStack = view.getActionStack();
-		view.onVisible();
+	public void undo() {
+		children.get(currentTab).undo();
+	}
+	
+	public void redo() {
+		children.get(currentTab).redo();
+	}
+	
+	public boolean canUndo() {
+		return children.get(currentTab).canUndo();
+	}
+
+	public boolean canRedo() {
+		return children.get(currentTab).canRedo();
 	}
 
 }

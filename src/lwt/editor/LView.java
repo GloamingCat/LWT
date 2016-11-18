@@ -88,5 +88,21 @@ public abstract class LView extends Composite {
 	public LActionStack getActionStack() {
 		return actionStack;
 	}
+	
+	public void undo() {
+		actionStack.undo();
+	}
+	
+	public void redo() {
+		actionStack.redo();
+	}
+
+	public boolean canUndo() {
+		return actionStack.canUndo();
+	}
+
+	public boolean canRedo() {
+		return actionStack.canRedo();
+	}
 
 }

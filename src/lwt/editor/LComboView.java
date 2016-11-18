@@ -8,7 +8,7 @@ import lwt.widget.LControl;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
 
-public abstract class LComboView extends LControlView {
+public class LComboView extends LControlView {
 
 	protected LCombo combo;
 	
@@ -34,6 +34,6 @@ public abstract class LComboView extends LControlView {
 		return combo;
 	}
 	
-	protected abstract ArrayList<?> getArray();
+	protected ArrayList<?> getArray() { return new ArrayList<Object>(); }
 	
 }
