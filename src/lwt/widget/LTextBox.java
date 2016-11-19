@@ -11,7 +11,7 @@ import org.eclipse.swt.events.KeyAdapter;
 import org.eclipse.swt.events.KeyEvent;
 import org.eclipse.swt.widgets.Composite;
 
-public class LStyledText extends LControl {
+public class LTextBox extends LControl {
 	
 	private StyledText text;
 
@@ -20,7 +20,7 @@ public class LStyledText extends LControl {
 	 * @param parent
 	 * @param style
 	 */
-	public LStyledText(Composite parent, int style) {
+	public LTextBox(Composite parent, int style) {
 		super(parent, style);
 		text = new StyledText(this, SWT.BORDER);
 		

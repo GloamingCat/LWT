@@ -1,12 +1,15 @@
 package lwt.editor;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
 import lwt.action.LActionStack;
 import lwt.dataestructure.LPath;
 import lwt.event.LControlEvent;
+import lwt.event.LSelectionEvent;
 import lwt.event.listener.LControlListener;
+import lwt.event.listener.LSelectionListener;
 import lwt.widget.LControl;
 
 import org.eclipse.swt.widgets.Composite;
@@ -24,6 +27,7 @@ public class LObjectEditor extends LEditor {
 	public LCollectionEditor<?, ?> collectionEditor;
 	protected Object currentObject;
 	protected LPath currentPath;
+	protected ArrayList<LSelectionListener> selectionListeners = new ArrayList<>();
 	
 	/**
 	 * Create the composite.
@@ -82,6 +86,9 @@ public class LObjectEditor extends LEditor {
 		for(LEditor subEditor : subEditors) {
 			subEditor.setObject(obj);
 		}
+		for(LSelectionListener listener : selectionListeners) {
+			listener.onSelect(new LSelectionEvent(currentPath, obj));
+		}
 	}
 	
 	public void setObject(Object obj, LPath path) {
@@ -97,6 +104,10 @@ public class LObjectEditor extends LEditor {
 			event.detail = -1;
 			control.notifyListeners(event);
 		}
+	}
+	
+	public void addSelectionListener(LSelectionListener listener) {
+		selectionListeners.add(listener);
 	}
 
 }
