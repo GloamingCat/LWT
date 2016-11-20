@@ -25,6 +25,9 @@ public class LDataList<T> extends ArrayList<T> implements LDataCollection<T> {
 
 	@Override
 	public void delete(LPath parentPath, int index) {
+		if (index == -1) {
+			index = size() - 1;
+		}
 		remove(index);
 	}
 

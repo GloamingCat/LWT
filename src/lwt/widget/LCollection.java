@@ -327,17 +327,17 @@ public abstract class LCollection<T> extends LWidget {
 	
 	public TreeItem toTreeItem(LPath parentPath, int index) {
 		if (parentPath == null) {
+			if (index >= tree.getItemCount() || tree.getItemCount() == 0)
+				return null;
 			if (index == -1)
 				index = tree.getItemCount() - 1;
-			else if (index >= tree.getItemCount())
-				return null;
 			return tree.getItem(index);
 		} else {
 			TreeItem parent = toTreeItem(parentPath);
+			if (index >= parent.getItemCount() || parent.getItemCount() == 0)
+				return null;
 			if (index == -1)
 				index = parent.getItemCount() - 1;
-			else if (index >= parent.getItemCount())
-				return null;
 			return parent.getItem(index);
 		}
 	}
@@ -476,6 +476,10 @@ public abstract class LCollection<T> extends LWidget {
 			tree.select(item);
 			notifySelectionListeners(new LSelectionEvent(path, toObject(path)));
 		}
+	}
+	
+	public void forceSelection(LPath parent, int index) {
+		
 	}
 	
 	public void refreshSelection() {

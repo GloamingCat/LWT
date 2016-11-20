@@ -1,5 +1,7 @@
 package lwt.dialog;
 
+import java.util.ArrayList;
+
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
@@ -12,7 +14,8 @@ import org.eclipse.swt.widgets.Shell;
 public abstract class LObjectShell<T> extends Shell {
 
 	protected Composite content;
-	protected T result;
+	protected T result = null;
+	protected T initial = null;
 	
 	public LObjectShell(Shell parent) {
 		super(parent, parent.getStyle());
@@ -32,7 +35,7 @@ public abstract class LObjectShell<T> extends Shell {
 		btnOk.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent arg0) {
-				result = createResult(result);
+				result = createResult(initial);
 				close();
 			}
 		});
@@ -52,12 +55,24 @@ public abstract class LObjectShell<T> extends Shell {
 	}
 
 	public void open(T initial) {
-		result = initial;
+		this.result = null;
+		this.initial = initial;
 		open();
 	}
 	
 	public T getResult() {
 		return result;
+	}
+	
+	protected String[] getItems(ArrayList<?> array) {
+		String[] items = new String[array.size()];
+		int id = 0;
+		for(Object obj : array) {
+			String item = String.format("[%03d]", id);
+			items[id] = item + obj.toString();
+			id++;
+		}
+		return items;
 	}
 	
 	protected abstract T createResult(T initial);
