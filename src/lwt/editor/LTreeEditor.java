@@ -50,8 +50,22 @@ public abstract class LTreeEditor<T, ST> extends LCollectionEditor<T, ST> {
 	}
 	
 	public void onVisible() {
-		collection.setItems(getTree());
-		super.onVisible();
+		onChildVisible();
+		forceFirstSelection();
+	}
+	
+	public void forceFirstSelection() {
+		if (getTree() != null) {
+			collection.setItems(getTree());
+			if (getTree().children.size() > 0) {
+				collection.forceSelection(new LPath(0));
+			} else {
+				collection.forceSelection(null);
+			}
+		} else {
+			collection.setItems(new LDataTree<>());
+			collection.forceSelection(null);
+		}
 	}
 
 	public void setObject(Object obj) {

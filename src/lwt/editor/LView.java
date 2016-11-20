@@ -49,6 +49,10 @@ public abstract class LView extends Composite {
 	}
 	
 	public void onVisible() {
+		onChildVisible();
+	}
+	
+	public void onChildVisible() {
 		for(LView child : children) {
 			child.onVisible();
 		}

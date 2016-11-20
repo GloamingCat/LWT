@@ -394,8 +394,13 @@ public abstract class LCollection<T> extends LWidget {
 	
 	public void setItems(LDataTree<T> root) {
 		clear();
-		for(LDataTree<T> child : root.children) {
-			createTreeItem(null, -1, child);
+		if (root == null) {
+			tree.setEnabled(false);
+		} else {
+			tree.setEnabled(true);
+			for(LDataTree<T> child : root.children) {
+				createTreeItem(null, -1, child);
+			}
 		}
 	}
 	
@@ -461,6 +466,17 @@ public abstract class LCollection<T> extends LWidget {
 	//-------------------------------------------------------------------------------------
 	// Refresh
 	//-------------------------------------------------------------------------------------
+	
+	public void forceSelection(LPath path) {
+		TreeItem item = toTreeItem(path);
+		if (item == null) {
+			tree.deselectAll();
+			notifySelectionListeners(new LSelectionEvent(null, null));
+		} else {
+			tree.select(item);
+			notifySelectionListeners(new LSelectionEvent(path, toObject(path)));
+		}
+	}
 	
 	public void refreshSelection() {
 		if (tree.getSelectionCount() > 0) {

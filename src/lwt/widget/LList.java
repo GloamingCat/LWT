@@ -61,7 +61,7 @@ public abstract class LList<T, ST> extends LMenuCollection<T, ST> {
 		}
 	}
 	
-	private String stringID(int i) {
+	protected String stringID(int i) {
 		return String.format("[%03d]", i);
 	}
 	

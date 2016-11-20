@@ -56,17 +56,27 @@ public abstract class LListEditor<T, ST> extends LCollectionEditor<T, ST> {
 	}
 	
 	public void onVisible() {
+		onChildVisible();
+		forceFirstSelection();
+	}
+	
+	public void forceFirstSelection() {
 		if (getList() != null) {
 			collection.setItems(getList().toTree());
+			if (getList().size() > 0) {
+				collection.forceSelection(new LPath(0));
+			} else {
+				collection.forceSelection(null);
+			}
 		} else {
-			collection.setItems(new LDataTree<>());
+			collection.setItems(null);
+			collection.forceSelection(null);
 		}
-		super.onVisible();
 	}
 
 	public void setObject(Object obj) {
 		if (obj == null) {
-			collection.setItems(new LDataTree<T>());
+			collection.setItems(null);
 			setList(null);
 		} else {
 			@SuppressWarnings("unchecked")

@@ -14,7 +14,6 @@ public abstract class LDefaultTreeEditor<T> extends LTreeEditor<T, T> {
 	 */
 	public LDefaultTreeEditor(Composite parent, int style) {
 		super(parent, style);
-
 	}
 
 	public T getEditableData(LPath path) {
