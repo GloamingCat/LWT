@@ -46,11 +46,11 @@ public class ContentTreeEditor extends LView {
 				return new Content(original.name, original.value);
 			}
 		};
-		treeEditor.setInsertNewEnabled(true);
-		treeEditor.setEditEnabled(false);
-		treeEditor.setDuplicateEnabled(true);
-		treeEditor.setDragEnabled(true);
-		treeEditor.setDeleteEnabled(true);
+		treeEditor.getCollection().setInsertNewEnabled(true);
+		treeEditor.getCollection().setEditEnabled(false);
+		treeEditor.getCollection().setDuplicateEnabled(true);
+		treeEditor.getCollection().setDragEnabled(true);
+		treeEditor.getCollection().setDeleteEnabled(true);
 		addChild(treeEditor);
 		
 		contentEditor = new ContentEditor(sashForm, SWT.NONE);

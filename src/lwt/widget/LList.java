@@ -8,7 +8,7 @@ import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.TreeItem;
 
-public abstract class LList<T, ST> extends LMenuCollection<T, ST> {
+public abstract class LList<T, ST> extends LTree<T, ST> {
 	
 	protected boolean includeID = false;
 	
@@ -36,7 +36,7 @@ public abstract class LList<T, ST> extends LMenuCollection<T, ST> {
 	
 	public void setItems(LDataTree<T> root) {
 		super.setItems(root);
-		refreshItems();
+		refreshAll();
 	}
 	
 	public void renameItem(LPath path) {
@@ -50,7 +50,7 @@ public abstract class LList<T, ST> extends LMenuCollection<T, ST> {
 		}
 	}
 	
-	public void refreshItems() {
+	public void refreshAll() {
 		if (includeID) {
 			int i = 0;
 			for(TreeItem item : tree.getItems()) {

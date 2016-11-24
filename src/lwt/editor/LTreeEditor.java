@@ -9,7 +9,9 @@ import lwt.widget.LTree;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
 
-public abstract class LTreeEditor<T, ST> extends LCollectionEditor<T, ST> {
+public abstract class LTreeEditor<T, ST> extends LAbstractTreeEditor<T, ST> {
+	
+	protected LTree<T, ST> tree;
 	
 	/**
 	 * Create the composite.
@@ -18,15 +20,14 @@ public abstract class LTreeEditor<T, ST> extends LCollectionEditor<T, ST> {
 	 */
 	public LTreeEditor(Composite parent, int style) {
 		super(parent, style);
-		
 		LTreeEditor<T, ST> self = this;
-		LTree<T, ST> tree = new LTree<T, ST>(this, SWT.NONE) {
+		tree = new LTree<T, ST>(this, SWT.NONE) {
 			@Override
 			public LEditEvent<ST> edit(LPath path) {
 				return onEditItem(path);
 			}
 			@Override
-			public Object toObject(LPath path) {
+			public T toObject(LPath path) {
 				LDataTree<T> node = getTree().getNode(path);
 				if (node == null)
 					return null;
@@ -45,53 +46,33 @@ public abstract class LTreeEditor<T, ST> extends LCollectionEditor<T, ST> {
 				return getTree().getNode(path);
 			}
 		};
-		setCollection(tree);
 		setListeners();
-	}
-	
-	public void onVisible() {
-		onChildVisible();
-		forceFirstSelection();
+		tree.setActionStack(getActionStack());
 	}
 	
 	public void forceFirstSelection() {
 		if (getTree() != null) {
-			collection.setItems(getTree());
+			tree.setItems(getTree());
 			if (getTree().children.size() > 0) {
-				collection.forceSelection(new LPath(0));
+				tree.forceSelection(new LPath(0));
 			} else {
-				collection.forceSelection(null);
+				tree.forceSelection(null);
 			}
 		} else {
-			collection.setItems(new LDataTree<>());
-			collection.forceSelection(null);
+			tree.setItems(new LDataTree<>());
+			tree.forceSelection(null);
 		}
 	}
-
-	public void setObject(Object obj) {
-		@SuppressWarnings("unchecked")
-		LDataTree<T> db = (LDataTree<T>) obj;
-		collection.setItems(db);
+	
+	public LTree<T, ST> getCollection() {
+		return tree;
 	}
-	
-	public LDataTree<T> duplicateNode(LDataTree<T> node) {
-		LDataTree<T> copy = new LDataTree<T>(duplicateData(node.data));
-		for(LDataTree<T> child : node.children) {
-			LDataTree<T> childCopy = duplicateNode(child);
-			childCopy.setParent(copy);
-		}
-		return copy;
-	}
-	
-	public abstract LDataTree<T> getTree();
-	
-	public abstract T createNewData();
-	
-	public abstract T duplicateData(T original);
 	
 	protected LDataCollection<T> getDataCollection() {
 		return getTree();
 	}
 	
-	
+	public void setTree(LDataTree<T> tree) {}
+	public abstract LDataTree<T> getTree();
+
 }

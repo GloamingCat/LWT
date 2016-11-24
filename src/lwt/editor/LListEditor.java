@@ -1,6 +1,5 @@
 package lwt.editor;
 
-import lwt.dataestructure.LDataCollection;
 import lwt.dataestructure.LDataList;
 import lwt.dataestructure.LDataTree;
 import lwt.dataestructure.LPath;
@@ -10,7 +9,7 @@ import lwt.widget.LList;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
 
-public abstract class LListEditor<T, ST> extends LCollectionEditor<T, ST> {
+public abstract class LListEditor<T, ST> extends LAbstractTreeEditor<T, ST> {
 	
 	protected LList<T, ST> list;
 	
@@ -28,7 +27,7 @@ public abstract class LListEditor<T, ST> extends LCollectionEditor<T, ST> {
 				return onEditItem(path);
 			}
 			@Override
-			public Object toObject(LPath path) {
+			public T toObject(LPath path) {
 				if (path == null)
 					return null;
 				return getList().get(path.index);
@@ -46,65 +45,38 @@ public abstract class LListEditor<T, ST> extends LCollectionEditor<T, ST> {
 				return new LDataTree<T> (getList().get(path.index));
 			}
 		};
-		setCollection(list);
 		setListeners();
-		
+		list.setActionStack(getActionStack());
+	}
+	
+	public LList<T, ST> getCollection() {
+		return list;
 	}
 	
 	public void setIncludeID(boolean value) {
 		list.setIncludeID(value);
 	}
 	
-	public void onVisible() {
-		onChildVisible();
-		forceFirstSelection();
-	}
-	
+	@Override
 	public void forceFirstSelection() {
 		if (getList() != null) {
-			collection.setItems(getList().toTree());
+			list.setItems(getList().toTree());
 			if (getList().size() > 0) {
-				collection.forceSelection(new LPath(0));
+				list.forceSelection(new LPath(0));
 			} else {
-				collection.forceSelection(null);
+				list.forceSelection(null);
 			}
 		} else {
-			collection.setItems(null);
-			collection.forceSelection(null);
-		}
-	}
-
-	public void setObject(Object obj) {
-		if (obj == null) {
-			collection.setItems(null);
-			setList(null);
-		} else {
-			@SuppressWarnings("unchecked")
-			LDataList<T> db = (LDataList<T>) obj;
-			collection.setItems(db.toTree());
-			setList(db);
+			list.setItems(null);
+			list.forceSelection(null);
 		}
 	}
 	
-	public LDataTree<T> duplicateNode(LDataTree<T> node) {
-		LDataTree<T> copy = new LDataTree<T>(duplicateData(node.data));
-		for(LDataTree<T> child : node.children) {
-			LDataTree<T> childCopy = duplicateNode(child);
-			childCopy.setParent(copy);
-		}
-		return copy;
-	}
-	
-	protected void setList(LDataList<T> list) {}
-	
-	public abstract LDataList<T> getList();
-	
-	public abstract T createNewData();
-	
-	public abstract T duplicateData(T original);
-	
-	protected LDataCollection<T> getDataCollection() {
+	protected LDataList<T> getDataCollection() {
 		return getList();
 	}
+	
+	public void setList(LDataList<T> list) {}
+	public abstract LDataList<T> getList();
 	
 }

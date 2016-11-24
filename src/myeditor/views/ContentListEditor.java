@@ -46,11 +46,11 @@ public class ContentListEditor extends LView {
 				return new Content(original.name, original.value);
 			}
 		};
-		listEditor.setInsertNewEnabled(true);
-		listEditor.setEditEnabled(false);
-		listEditor.setDuplicateEnabled(true);
-		listEditor.setDragEnabled(true);
-		listEditor.setDeleteEnabled(true);
+		listEditor.getCollection().setInsertNewEnabled(true);
+		listEditor.getCollection().setEditEnabled(false);
+		listEditor.getCollection().setDuplicateEnabled(true);
+		listEditor.getCollection().setDragEnabled(true);
+		listEditor.getCollection().setDeleteEnabled(true);
 		addChild(listEditor);
 		
 		contentEditor = new ContentEditor(sashForm, SWT.NONE);

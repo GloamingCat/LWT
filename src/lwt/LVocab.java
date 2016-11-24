@@ -37,5 +37,9 @@ public class LVocab {
 	public String OK = "OK";
 	public String CANCEL = "Cancel";
 	public String SELECT = "Select";
+
+	public String INSERTNEW = "Insert new";
+	public String DUPLICATE = "Duplicate";
+	public String DELETE = "Delete";
 	
 }

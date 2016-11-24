@@ -96,5 +96,10 @@ public class LDataTree<T> implements Serializable, LDataCollection<T> {
 		LPath path = new LPath(parent.children.indexOf(this), parentPath);
 		return path;
 	}
+
+	@Override
+	public LDataTree<T> toTree() {
+		return this;
+	}
 	
 }

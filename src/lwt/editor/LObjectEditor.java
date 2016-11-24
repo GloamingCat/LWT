@@ -52,7 +52,7 @@ public class LObjectEditor extends LEditor {
 				if (currentObject != null) {
 					setFieldValue(currentObject, key, event.newValue);
 					if (collectionEditor != null && currentPath != null && event.detail >= 0)
-						collectionEditor.renameItem(currentPath);
+						collectionEditor.refreshObject(currentPath);
 				}
 			}
 		});
