@@ -3,6 +3,7 @@ package myeditor;
 import lwt.LDefaultApplicationShell;
 import lwt.dataserialization.LSerializer;
 import myeditor.project.Project;
+import myeditor.views.ContentGridEditor;
 import myeditor.views.ContentListEditor;
 import myeditor.views.ContentTreeEditor;
 
@@ -45,6 +46,7 @@ public class ApplicationShell extends LDefaultApplicationShell {
 		
 		ContentTreeEditor treeEditor = new ContentTreeEditor(this, SWT.NONE);
 		ContentListEditor listEditor = new ContentListEditor(this, SWT.NONE);
+		ContentGridEditor gridEditor = new ContentGridEditor(this, SWT.NONE);
 		
 		MenuItem mntmContentList = new MenuItem(menuView, SWT.NONE);
 		mntmContentList.addSelectionListener(new SelectionAdapter() {
@@ -63,6 +65,15 @@ public class ApplicationShell extends LDefaultApplicationShell {
 			}
 		});
 		mntmContentTree.setText(MyVocab.instance.CONTENTTREE);
+		
+		MenuItem mntmContentGrid = new MenuItem(menuView, SWT.NONE);
+		mntmContentGrid.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent arg0) {
+				setCurrentView(gridEditor);
+			}
+		});
+		mntmContentGrid.setText(MyVocab.instance.CONTENTGRID);
 	}
 	
 	@Override

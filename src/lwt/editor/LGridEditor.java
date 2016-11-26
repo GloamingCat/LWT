@@ -1,6 +1,7 @@
 package lwt.editor;
 
 import lwt.dataestructure.LDataList;
+import lwt.dataestructure.LDataTree;
 import lwt.dataestructure.LPath;
 import lwt.event.LEditEvent;
 import lwt.widget.LGrid;
@@ -15,6 +16,7 @@ public abstract class LGridEditor<T, ST> extends LCollectionEditor<T, ST> {
 	public LGridEditor(Composite parent, int style) {
 		super(parent, style);
 
+		LGridEditor<T, ST> self = this;
 		grid = new LGrid<T, ST>(this, SWT.NONE) {
 			@Override
 			public LEditEvent<ST> edit(LPath path) {
@@ -24,35 +26,45 @@ public abstract class LGridEditor<T, ST> extends LCollectionEditor<T, ST> {
 			public T toObject(LPath path) {
 				if (path == null)
 					return null;
-				return getList().get(path.index);
+				return getDataCollection().get(path.index);
+			}
+			@Override
+			public LDataTree<T> emptyNode() {
+				return new LDataTree<T>(createNewData());
+			}
+			@Override
+			public LDataTree<T> duplicateNode(LPath path) {
+				return new LDataTree<T> (duplicateData(getDataCollection().get(path.index)));
 			}
 			@Override
 			protected String getImagePath(int i) {
-				// TODO Auto-generated method stub
-				return null;
+				return self.getImagePath(i);
 			}
 		};
 		setListeners();
-		grid.setActionStack(getActionStack());
 	}
 
 	@Override
 	public void setObject(Object obj) {
 		@SuppressWarnings("unchecked")
 		LDataList<T> db = (LDataList<T>) obj;
-		getCollection().setList(db);
+		getCollectionWidget().setList(db);
 	}
 	
+	
+	public void onVisible() {
+		onChildVisible();
+		grid.setDataCollection(getDataCollection());
+	}
+		
 	@Override
-	public LGrid<T, ST> getCollection() {
+	public LGrid<T, ST> getCollectionWidget() {
 		return grid;
 	}
-
-	protected LDataList<T> getDataCollection() {
-		return getList();
-	}
+	protected abstract T createNewData();
+	protected abstract T duplicateData(T original);
+	protected abstract String getImagePath(int i);
 	
-	public void setList(LDataList<T> list) {}
-	public abstract LDataList<T> getList();
+	protected abstract LDataList<T> getDataCollection();
 
 }

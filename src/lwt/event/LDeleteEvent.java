@@ -7,12 +7,12 @@ public class LDeleteEvent<T> {
 
 	public LPath parentPath;
 	public int index;
-	public LDataTree<T> stringNode;
+	public LDataTree<T> data;
 	
 	public LDeleteEvent(LPath parentPath, int index, LDataTree<T> node) {
 		this.parentPath = parentPath;
 		this.index = index;
-		this.stringNode = node;
+		this.data = node;
 	}
 	
 }

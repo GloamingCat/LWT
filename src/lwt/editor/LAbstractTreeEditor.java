@@ -27,48 +27,50 @@ public abstract class LAbstractTreeEditor<T, ST> extends LCollectionEditor<T, ST
 	
 	protected void setListeners() {
 		super.setListeners();
-		getCollection().addInsertListener(new LCollectionListener<T>() {
+		getCollectionWidget().addInsertListener(new LCollectionListener<T>() {
 			public void onInsert(LInsertEvent<T> event) {
-				getCollection().forceSelection(event.parentPath, event.index);
+				getCollectionWidget().forceSelection(event.parentPath, event.index);
 			}
 		});
-		getCollection().addDeleteListener(new LCollectionListener<T>() {
+		getCollectionWidget().addDeleteListener(new LCollectionListener<T>() {
 			public void onDelete(LDeleteEvent<T> event) {
-				getCollection().forceSelection(event.parentPath, event.index);
+				getCollectionWidget().forceSelection(event.parentPath, event.index);
 			}
 		});
-		getCollection().addMoveListener(new LCollectionListener<T>() {
+		getCollectionWidget().addMoveListener(new LCollectionListener<T>() {
 			public void onMove(LMoveEvent<T> event) {
-				getCollection().forceSelection(event.destParent, event.destIndex);
+				getCollectionWidget().forceSelection(event.destParent, event.destIndex);
 			}
 		});
-		getCollection().addEditListener(new LCollectionListener<ST>() {
+		getCollectionWidget().addEditListener(new LCollectionListener<ST>() {
 			public void onEdit(LEditEvent<ST> event) {
-				getCollection().forceSelection(event.path);
+				getCollectionWidget().forceSelection(event.path);
 			}
 		});
 	}
 	
 	public void addChild(LObjectEditor editor) {
-		getCollection().addSelectionListener(new LSelectionListener() {
+		getCollectionWidget().addSelectionListener(new LSelectionListener() {
 			@Override
 			public void onSelect(LSelectionEvent event) {
-				LPath path = getCollection().getSelectedPath();
-				editor.setObject(getCollection().toObject(path), path);
+				LPath path = getCollectionWidget().getSelectedPath();
+				editor.setObject(getCollectionWidget().toObject(path), path);
 			}
 		});
 		editor.collectionEditor = this;
 		addChild((LEditor) editor);
 	}
 	
-	public abstract LTree<T, ST> getCollection();
-	public abstract T createNewData();
-	public abstract T duplicateData(T original);
+	
+	
+	public abstract LTree<T, ST> getCollectionWidget();
+	protected abstract T createNewData();
+	protected abstract T duplicateData(T original);
 	
 	public void setObject(Object obj) {
 		@SuppressWarnings("unchecked")
 		LDataCollection<T> db = (LDataCollection<T>) obj;
-		getCollection().setItems(db.toTree());
+		setDataCollection(db);
 	}
 	
 	public LDataTree<T> duplicateNode(LDataTree<T> node) {
@@ -85,6 +87,19 @@ public abstract class LAbstractTreeEditor<T, ST> extends LCollectionEditor<T, ST
 		forceFirstSelection();
 	}
 	
-	public abstract void forceFirstSelection();
+	public void forceFirstSelection() {
+		if (getDataCollection() != null) {
+			LDataTree<T> tree = getDataCollection().toTree();
+			getCollectionWidget().setItems(tree);
+			if (tree.children.size() > 0) {
+				getCollectionWidget().forceSelection(new LPath(0));
+			} else {
+				getCollectionWidget().forceSelection(null);
+			}
+		} else {
+			getCollectionWidget().setItems(null);
+			getCollectionWidget().forceSelection(null);
+		}
+	}
 	
 }

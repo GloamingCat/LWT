@@ -28,9 +28,9 @@ public abstract class LListEditor<T, ST> extends LAbstractTreeEditor<T, ST> {
 			}
 			@Override
 			public T toObject(LPath path) {
-				if (path == null)
+				if (path == null || path.index == -1)
 					return null;
-				return getList().get(path.index);
+				return getDataCollection().get(path.index);
 			}
 			@Override
 			public LDataTree<T> emptyNode() {
@@ -38,18 +38,18 @@ public abstract class LListEditor<T, ST> extends LAbstractTreeEditor<T, ST> {
 			}
 			@Override
 			public LDataTree<T> duplicateNode(LPath path) {
-				return new LDataTree<T> (getList().get(path.index));
+				return new LDataTree<T> (duplicateData(getDataCollection().get(path.index)));
 			}
 			@Override
 			public LDataTree<T> toNode(LPath path) {
-				return new LDataTree<T> (getList().get(path.index));
+				return new LDataTree<T> (getDataCollection().get(path.index));
 			}
 		};
 		setListeners();
 		list.setActionStack(getActionStack());
 	}
 	
-	public LList<T, ST> getCollection() {
+	public LList<T, ST> getCollectionWidget() {
 		return list;
 	}
 	
@@ -57,26 +57,6 @@ public abstract class LListEditor<T, ST> extends LAbstractTreeEditor<T, ST> {
 		list.setIncludeID(value);
 	}
 	
-	@Override
-	public void forceFirstSelection() {
-		if (getList() != null) {
-			list.setItems(getList().toTree());
-			if (getList().size() > 0) {
-				list.forceSelection(new LPath(0));
-			} else {
-				list.forceSelection(null);
-			}
-		} else {
-			list.setItems(null);
-			list.forceSelection(null);
-		}
-	}
-	
-	protected LDataList<T> getDataCollection() {
-		return getList();
-	}
-	
-	public void setList(LDataList<T> list) {}
-	public abstract LDataList<T> getList();
+	protected abstract LDataList<T> getDataCollection();
 	
 }

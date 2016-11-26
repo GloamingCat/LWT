@@ -36,29 +36,33 @@ public abstract class LCollectionEditor<T, ST> extends LEditor {
 	}
 	
 	protected void setListeners() {
-		getCollection().addInsertListener(new LCollectionListener<T>() {
+		getCollectionWidget().addInsertListener(new LCollectionListener<T>() {
 			public void onInsert(LInsertEvent<T> event) {
 				getDataCollection().insert(event.parentPath, event.index, event.node);
+				System.out.println("bla");
 			}
 		});
-		getCollection().addDeleteListener(new LCollectionListener<T>() {
+		getCollectionWidget().addDeleteListener(new LCollectionListener<T>() {
 			public void onDelete(LDeleteEvent<T> event) {
 				getDataCollection().delete(event.parentPath, event.index);
 			}
 		});
-		getCollection().addMoveListener(new LCollectionListener<T>() {
+		getCollectionWidget().addMoveListener(new LCollectionListener<T>() {
 			public void onMove(LMoveEvent<T> event) {
 				getDataCollection().move(event.sourceParent, event.sourceIndex, 
 						event.destParent, event.destIndex);
 			}
 		});
-		getCollection().addEditListener(new LCollectionListener<ST>() {
+		getCollectionWidget().addEditListener(new LCollectionListener<ST>() {
 			public void onEdit(LEditEvent<ST> event) {
 				setEditableData(event.path, event.newData);
 			}
 		});
 	}
-
+	
+	public void setDataCollection(LDataCollection<T> db) {
+		getCollectionWidget().setDataCollection(db);
+	}
 	
 	public void setShellFactory(LShellFactory<ST> factory) {
 		editDialog = new LObjectDialog<ST>(getShell(), getShell().getStyle());
@@ -74,18 +78,23 @@ public abstract class LCollectionEditor<T, ST> extends LEditor {
 		return null;
 	}
 	
-	public abstract LCollection<T, ST> getCollection();
-	protected abstract LDataCollection<T> getDataCollection(); 
-	protected abstract ST getEditableData(LPath path);
-	protected abstract void setEditableData(LPath path, ST newData);
-
 	public void refreshObject(LPath path) {
-		getCollection().refreshObject(path);
+		getCollectionWidget().refreshObject(path);
 	}
 	
 	public void setActionStack(LActionStack stack) {
 		super.setActionStack(stack);
-		getCollection().setActionStack(stack);
+		getCollectionWidget().setActionStack(stack);
 	}
+	
+	// Widget
+	public abstract LCollection<T, ST> getCollectionWidget();
+	
+	// Data Collection
+	protected abstract LDataCollection<T> getDataCollection(); 
+	
+	// Editable Data
+	protected abstract ST getEditableData(LPath path);
+	protected abstract void setEditableData(LPath path, ST newData);
 	
 }

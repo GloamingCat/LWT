@@ -2,37 +2,32 @@ package myeditor.views;
 
 import lwt.action.LActionStack;
 import lwt.dataestructure.LDataList;
-import lwt.editor.LDefaultListEditor;
+import lwt.editor.LDefaultGridEditor;
 import lwt.editor.LView;
 import myeditor.data.Content;
 
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.custom.SashForm;
 import org.eclipse.swt.layout.FillLayout;
-import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
 
-public class ContentListEditor extends LView {
+public class ContentGridEditor extends LView {
 
-	private LDefaultListEditor<Content> listEditor;
-	private ContentEditor contentEditor;
+	private LDefaultGridEditor<Content> gridEditor;
 	
 	/**
 	 * Create the composite.
 	 * @param parent
 	 * @param style
 	 */
-	public ContentListEditor(Composite parent, int style) {
+	public ContentGridEditor(Composite parent, int style) {
 		super(parent, style);
 		
 		setLayout(new FillLayout());
 		
 		actionStack = new LActionStack(this);
 		
-		SashForm sashForm = new SashForm(this, SWT.NONE);
-		
 		final LDataList<Content> contentList = createExampleList();
-		listEditor = new LDefaultListEditor<Content>(sashForm, SWT.NONE) {
+		gridEditor = new LDefaultGridEditor<Content>(this, SWT.NONE) {
 			@Override
 			public LDataList<Content> getDataCollection() {
 				return contentList;
@@ -46,18 +41,8 @@ public class ContentListEditor extends LView {
 				return new Content(original.name, original.value);
 			}
 		};
-		listEditor.getCollectionWidget().setInsertNewEnabled(true);
-		listEditor.getCollectionWidget().setEditEnabled(false);
-		listEditor.getCollectionWidget().setDuplicateEnabled(true);
-		listEditor.getCollectionWidget().setDragEnabled(true);
-		listEditor.getCollectionWidget().setDeleteEnabled(true);
-		addChild(listEditor);
-		
-		contentEditor = new ContentEditor(sashForm, SWT.NONE);
-		contentEditor.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
-		listEditor.addChild(contentEditor);
-		
-		sashForm.setWeights(new int[] {1, 2});
+		addChild(gridEditor);
+
 	}
 	
 	private LDataList<Content> createExampleList() {

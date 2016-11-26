@@ -31,11 +31,11 @@ public abstract class LSelectableCollectionEditor<T, ST> extends LCollectionEdit
 		setLayout(new FillLayout());
 	}
 	public void addChild(LObjectEditor editor) {
-		getCollection().addSelectionListener(new LSelectionListener() {
+		getCollectionWidget().addSelectionListener(new LSelectionListener() {
 			@Override
 			public void onSelect(LSelectionEvent e) {
-				LPath path = getCollection().getSelectedPath();
-				editor.setObject(getCollection().toObject(path), path);
+				LPath path = getCollectionWidget().getSelectedPath();
+				editor.setObject(getCollectionWidget().toObject(path), path);
 			}
 		});
 		editor.collectionEditor = this;
@@ -44,18 +44,18 @@ public abstract class LSelectableCollectionEditor<T, ST> extends LCollectionEdit
 	
 	@Override
 	public LState getState() {
-		final LPath currentPath = getCollection().getSelectedPath();
+		final LPath currentPath = getCollectionWidget().getSelectedPath();
 		final ArrayList<LState> states = getChildrenStates();
 		return new LState() {
 			@Override
 			public void reset() {
-				LSelectionEvent e = getCollection().select(currentPath);
-				getCollection().notifySelectionListeners(e);
+				LSelectionEvent e = getCollectionWidget().select(currentPath);
+				getCollectionWidget().notifySelectionListeners(e);
 				resetStates(states);
 			}
 		};
 	}
 	
-	public abstract LSelectableCollection<T, ST> getCollection();
+	public abstract LSelectableCollection<T, ST> getCollectionWidget();
 
 }

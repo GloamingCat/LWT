@@ -21,6 +21,7 @@ import org.eclipse.swt.widgets.Tree;
 import org.eclipse.swt.widgets.TreeItem;
 
 import lwt.action.collection.LMoveAction;
+import lwt.dataestructure.LDataCollection;
 import lwt.dataestructure.LDataTree;
 import lwt.dataestructure.LPath;
 import lwt.event.LMoveEvent;
@@ -383,6 +384,10 @@ public abstract class LTreeBase<T, ST> extends LSelectableCollection<T, ST> {
 	// String Node
 	//-------------------------------------------------------------------------------------
 	
+	public void setDataCollection(LDataCollection<T> collection) {
+		setItems(collection.toTree());
+	}
+	
 	public void setItems(LDataTree<T> root) {
 		clear();
 		if (root == null) {
@@ -429,13 +434,17 @@ public abstract class LTreeBase<T, ST> extends LSelectableCollection<T, ST> {
 	//-------------------------------------------------------------------------------------
 	
 	public void forceSelection(LPath path) {
-		TreeItem item = toTreeItem(path);
-		if (item == null) {
-			tree.deselectAll();
-			notifySelectionListeners(new LSelectionEvent(null, null));
-		} else {
-			tree.select(item);
-			notifySelectionListeners(new LSelectionEvent(path, toObject(path)));
+		try {
+			TreeItem item = toTreeItem(path);
+			if (item == null) {
+				tree.deselectAll();
+				notifySelectionListeners(new LSelectionEvent(null, null));
+			} else {
+				tree.select(item);
+				notifySelectionListeners(new LSelectionEvent(path, toObject(path)));
+			}
+		} catch (IllegalArgumentException e) {
+			// Index out of bounds.
 		}
 	}
 	

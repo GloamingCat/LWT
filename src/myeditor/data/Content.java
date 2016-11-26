@@ -1,6 +1,8 @@
 package myeditor.data;
 
-public class Content {
+import lwt.datainterface.Graphical;
+
+public class Content implements Graphical {
 
 	public String name;
 	public int value;
@@ -14,6 +16,11 @@ public class Content {
 	
 	public String toString() {
 		return name;
+	}
+
+	@Override
+	public String getImagePath() {
+		return "bla";
 	}
 	
 }

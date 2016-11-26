@@ -34,7 +34,7 @@ public class ContentTreeEditor extends LView {
 		final LDataTree<Content> contentTree = createExampleTree();
 		treeEditor = new LDefaultTreeEditor<Content>(sashForm, SWT.NONE) {
 			@Override
-			public LDataTree<Content> getTree() {
+			public LDataTree<Content> getDataCollection() {
 				return contentTree;
 			}
 			@Override
@@ -46,11 +46,11 @@ public class ContentTreeEditor extends LView {
 				return new Content(original.name, original.value);
 			}
 		};
-		treeEditor.getCollection().setInsertNewEnabled(true);
-		treeEditor.getCollection().setEditEnabled(false);
-		treeEditor.getCollection().setDuplicateEnabled(true);
-		treeEditor.getCollection().setDragEnabled(true);
-		treeEditor.getCollection().setDeleteEnabled(true);
+		treeEditor.getCollectionWidget().setInsertNewEnabled(true);
+		treeEditor.getCollectionWidget().setEditEnabled(false);
+		treeEditor.getCollectionWidget().setDuplicateEnabled(true);
+		treeEditor.getCollectionWidget().setDragEnabled(true);
+		treeEditor.getCollectionWidget().setDeleteEnabled(true);
 		addChild(treeEditor);
 		
 		contentEditor = new ContentEditor(sashForm, SWT.NONE);

@@ -17,12 +17,12 @@ public abstract class LDefaultTreeEditor<T> extends LTreeEditor<T, T> {
 	}
 
 	public T getEditableData(LPath path) {
-		LDataTree<T> node = getTree().getNode(path);
+		LDataTree<T> node = getDataCollection().getNode(path);
 		return node.data;
 	}
 	
 	public void setEditableData(LPath path, T data) {
-		LDataTree<T> node = getTree().getNode(path);
+		LDataTree<T> node = getDataCollection().getNode(path);
 		node.data = data;
 	}
 	

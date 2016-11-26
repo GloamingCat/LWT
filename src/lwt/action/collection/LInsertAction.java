@@ -6,7 +6,6 @@ import lwt.dataestructure.LPath;
 import lwt.event.LDeleteEvent;
 import lwt.event.LInsertEvent;
 import lwt.widget.LCollection;
-import lwt.widget.LTree;
 
 public class LInsertAction<T> implements LAction {
 
@@ -15,7 +14,7 @@ public class LInsertAction<T> implements LAction {
 	private int index;
 	private LDataTree<T> node;
 	
-	public LInsertAction(LTree<T, ?> c, LPath parent, int index, LDataTree<T> node) {
+	public LInsertAction(LCollection<T, ?> c, LPath parent, int index, LDataTree<T> node) {
 		collection = c;
 		this.parent = parent;
 		this.index = index;

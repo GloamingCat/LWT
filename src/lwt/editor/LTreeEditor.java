@@ -1,6 +1,5 @@
 package lwt.editor;
 
-import lwt.dataestructure.LDataCollection;
 import lwt.dataestructure.LDataTree;
 import lwt.dataestructure.LPath;
 import lwt.event.LEditEvent;
@@ -28,7 +27,7 @@ public abstract class LTreeEditor<T, ST> extends LAbstractTreeEditor<T, ST> {
 			}
 			@Override
 			public T toObject(LPath path) {
-				LDataTree<T> node = getTree().getNode(path);
+				LDataTree<T> node = getDataCollection().getNode(path);
 				if (node == null)
 					return null;
 				return node.data;
@@ -39,40 +38,21 @@ public abstract class LTreeEditor<T, ST> extends LAbstractTreeEditor<T, ST> {
 			}
 			@Override
 			public LDataTree<T> duplicateNode(LPath nodePath) {
-				return self.duplicateNode(getTree().getNode(nodePath));
+				return self.duplicateNode(getDataCollection().getNode(nodePath));
 			}
 			@Override
 			public LDataTree<T> toNode(LPath path) {
-				return getTree().getNode(path);
+				return getDataCollection().getNode(path);
 			}
 		};
 		setListeners();
 		tree.setActionStack(getActionStack());
 	}
-	
-	public void forceFirstSelection() {
-		if (getTree() != null) {
-			tree.setItems(getTree());
-			if (getTree().children.size() > 0) {
-				tree.forceSelection(new LPath(0));
-			} else {
-				tree.forceSelection(null);
-			}
-		} else {
-			tree.setItems(new LDataTree<>());
-			tree.forceSelection(null);
-		}
-	}
-	
-	public LTree<T, ST> getCollection() {
+
+	public LTree<T, ST> getCollectionWidget() {
 		return tree;
 	}
 	
-	protected LDataCollection<T> getDataCollection() {
-		return getTree();
-	}
-	
-	public void setTree(LDataTree<T> tree) {}
-	public abstract LDataTree<T> getTree();
+	protected abstract LDataTree<T> getDataCollection();
 
 }

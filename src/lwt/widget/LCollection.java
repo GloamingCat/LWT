@@ -2,8 +2,18 @@ package lwt.widget;
 
 import java.util.ArrayList;
 
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Menu;
+import org.eclipse.swt.widgets.MenuItem;
 
+import lwt.LVocab;
+import lwt.action.collection.LDeleteAction;
+import lwt.action.collection.LEditAction;
+import lwt.action.collection.LInsertAction;
+import lwt.dataestructure.LDataCollection;
 import lwt.dataestructure.LDataTree;
 import lwt.dataestructure.LPath;
 import lwt.event.LDeleteEvent;
@@ -17,7 +27,112 @@ public abstract class LCollection<T, ST> extends LWidget {
 	public LCollection(Composite parent, int style) {
 		super(parent, style);
 	}
+	
+	public abstract void setDataCollection(LDataCollection<T> collection);
+	
+	//-------------------------------------------------------------------------------------
+	// Actions
+	//-------------------------------------------------------------------------------------
+	
+	protected LEditEvent<ST> newEditAction(LPath path) {
+		LEditEvent<ST> event = edit(path);
+		if (actionStack != null) {
+			LEditAction<ST> action = new LEditAction<ST>(this, path, event.oldData, event.newData);
+			actionStack.newAction(action);
+		}
+		notifyEditListeners(event);
+		return event;
+	}
+	
+	protected LInsertEvent<T> newInsertAction(LPath parentPath, int i, LDataTree<T> node) {
+		LInsertEvent<T> event = insert(parentPath, i, node);
+		if (event != null) {
+			if (actionStack != null) {
+				LInsertAction<T> action = new LInsertAction<T>(this, parentPath, event.index, node);
+				actionStack.newAction(action);
+			}
+			notifyInsertListeners(event);
+		}
+		return event;
+	}
+	
+	protected LDeleteEvent<T> newDeleteAction(LPath parentPath, int i) {
+		LDeleteEvent<T> event = delete(parentPath, i);
+		if (event != null) {
+			if (actionStack != null) {
+				LDeleteAction<T> action = new LDeleteAction<T>(this, parentPath, event.index, event.data);
+				actionStack.newAction(action);
+			}
+			notifyDeleteListeners(event);
+		}
+		return event;
+	}
 
+	//-------------------------------------------------------------------------------------
+	// Menu buttons
+	//-------------------------------------------------------------------------------------
+	
+	protected void setEditEnabled(Menu menu, boolean value) {
+		setMenuButton(menu, value, LVocab.instance.EDIT, "edit", new SelectionAdapter() {
+	    	@Override
+	    	public void widgetSelected(SelectionEvent arg0) {
+	    		onEditButton(menu);
+	    	}
+		});
+	}
+	
+	protected void setInsertNewEnabled(Menu menu, boolean value) {
+		setMenuButton(menu, value, LVocab.instance.INSERTNEW, "new", new SelectionAdapter() {
+	    	@Override
+	    	public void widgetSelected(SelectionEvent arg0) {
+	    		onInsertNewButton(menu);
+	    	}
+		});
+	}
+	
+	protected void setDuplicateEnabled(Menu menu, boolean value) {
+		setMenuButton(menu, value, LVocab.instance.DUPLICATE, "duplicate", new SelectionAdapter() {
+	    	@Override
+	    	public void widgetSelected(SelectionEvent arg0) {
+	    		onDuplicateButton(menu);
+	    	}
+		});
+	}
+	
+	protected void setDeleteEnabled(Menu menu, boolean value) {
+		setMenuButton(menu, value, LVocab.instance.DELETE, "delete", new SelectionAdapter() {
+	    	@Override
+	    	public void widgetSelected(SelectionEvent arg0) {
+	    		onDeleteButton(menu);
+	    	}
+		});
+	}
+	
+	protected void setMenuButton(Menu menu, boolean value, String buttonName, String buttonKey, SelectionAdapter adapter) {
+		if (value) {
+			if (menu.getData(buttonKey) == null) {
+			    MenuItem item = new MenuItem(menu, SWT.NONE);
+			    item.addSelectionListener(adapter);
+			    item.setText(buttonName);
+			    menu.setData(buttonKey, item);
+			}
+		} else {
+			if (menu.getData(buttonKey) != null) {
+				MenuItem item = (MenuItem) menu.getData(buttonKey);
+				item.dispose();
+			}
+		}
+	}
+	
+	//-------------------------------------------------------------------------------------
+	// Menu handlers
+	//-------------------------------------------------------------------------------------
+	
+	protected abstract void onEditButton(Menu menu);
+	protected abstract void onInsertNewButton(Menu menu);
+	protected abstract void onDuplicateButton(Menu menu);
+	protected abstract void onDeleteButton(Menu menu);
+	
 	//-------------------------------------------------------------------------------------
 	// Modify
 	//-------------------------------------------------------------------------------------
