@@ -36,11 +36,13 @@ public abstract class LCollection<T, ST> extends LWidget {
 	
 	protected LEditEvent<ST> newEditAction(LPath path) {
 		LEditEvent<ST> event = edit(path);
-		if (actionStack != null) {
-			LEditAction<ST> action = new LEditAction<ST>(this, path, event.oldData, event.newData);
-			actionStack.newAction(action);
+		if (event != null) {
+			if (actionStack != null) {
+				LEditAction<ST> action = new LEditAction<ST>(this, path, event.oldData, event.newData);
+				actionStack.newAction(action);
+			}
+			notifyEditListeners(event);
 		}
-		notifyEditListeners(event);
 		return event;
 	}
 	

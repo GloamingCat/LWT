@@ -129,7 +129,7 @@ public abstract class LGrid<T, ST> extends LCollection<T, ST> {
 	
 	protected void onInsertNewButton(Menu menu) {
 		Label label = (Label) menu.getData("label");
-		int i = indexOf(label);
+		int i = indexOf(label) + 1;
 		LDataTree<T> newNode = emptyNode();
 		newInsertAction(null, i, newNode);
 	}

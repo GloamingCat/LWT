@@ -67,6 +67,14 @@ public class LCombo extends LControl {
 		currentValue = obj;
 	}
 	
+	public void setItems(Object[] items) {
+		ArrayList<Object> array = new ArrayList<>();
+		for(Object item : items) {
+			array.add(item);
+		}
+		setItems(array);
+	}
+	
 	public void setItems(ArrayList<?> array) {
 		int d = 0;
 		String[] items;

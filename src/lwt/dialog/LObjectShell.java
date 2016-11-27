@@ -76,5 +76,7 @@ public abstract class LObjectShell<T> extends Shell {
 	}
 	
 	protected abstract T createResult(T initial);
+	
+	protected void checkSubclass() { }
 
 }

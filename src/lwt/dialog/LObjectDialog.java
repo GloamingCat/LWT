@@ -40,7 +40,8 @@ public class LObjectDialog<T> extends Dialog {
 				display.sleep();
 			}
 		}
-		return shell.getResult();
+		T result = shell.getResult();
+		return result;
 	}
 	
 	public void setFactory(LShellFactory<T> factory) {
