@@ -39,7 +39,7 @@ public abstract class LList<T, ST> extends LTree<T, ST> {
 		refreshAll();
 	}
 	
-	public void renameItem(LPath path) {
+	public void refreshObject(LPath path) {
 		TreeItem item = toTreeItem(path);
 		String id = "";
 		if (includeID) {

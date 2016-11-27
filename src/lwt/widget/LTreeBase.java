@@ -93,7 +93,6 @@ public abstract class LTreeBase<T, ST> extends LSelectableCollection<T, ST> {
 
 			public void dragFinished(DragSourceEvent event) {
 				if (event.detail == DND.DROP_NONE) {
-					System.out.println("Drag cancelled");
 					TreeItem item = createTreeItem(dragParent, dragIndex, dragNode);
 					notifySelectionListeners(selectTreeItem(item));
 				} else {
@@ -349,7 +348,6 @@ public abstract class LTreeBase<T, ST> extends LSelectableCollection<T, ST> {
 		}
 		if (path.index == -1)
 			path.index = tree.getItemCount() - 1;
-		System.out.println(path.index);
 		TreeItem item = tree.getItem(path.index);
 		path = path.child;
 		while(path != null) {

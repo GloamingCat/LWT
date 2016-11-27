@@ -1,8 +1,10 @@
 package myeditor.data;
 
-import lwt.datainterface.Graphical;
+import org.eclipse.swt.graphics.Image;
 
-public class Content implements Graphical {
+import lwt.datainterface.LGraphical;
+
+public class Content implements LGraphical {
 
 	public String name;
 	public int value;
@@ -19,8 +21,8 @@ public class Content implements Graphical {
 	}
 
 	@Override
-	public String getImagePath() {
-		return "bla";
+	public Image toImage() {
+		return null;
 	}
 	
 }

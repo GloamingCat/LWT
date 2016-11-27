@@ -11,16 +11,20 @@ import lwt.event.LInsertEvent;
 import lwt.event.LMoveEvent;
 
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.graphics.Image;
+import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.RowLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Menu;
-import org.eclipse.wb.swt.SWTResourceManager;
+import org.eclipse.swt.widgets.MenuItem;
 
 public abstract class LGrid<T, ST> extends LCollection<T, ST> {
 
 	protected LActionStack actionStack;
+	protected RowLayout rowLayout;
+	protected FillLayout fillLayout;
 	
 	/**
 	 * Create the composite.
@@ -29,11 +33,20 @@ public abstract class LGrid<T, ST> extends LCollection<T, ST> {
 	 */
 	public LGrid(Composite parent, int style) {
 		super(parent, style);
-		RowLayout rl = new RowLayout(SWT.HORIZONTAL);
-		rl.fill = true;
-		rl.pack = true;
-		rl.wrap = true;
-		setLayout(rl);
+		fillLayout = new FillLayout();
+		rowLayout = new RowLayout(SWT.HORIZONTAL);
+		rowLayout.fill = true;
+		rowLayout.pack = true;
+		rowLayout.wrap = true;
+		setLayout(fillLayout);
+		
+		Label label = new Label(this, SWT.NONE);
+		
+		Menu menu = new Menu(label);
+		label.setMenu(menu);
+		
+		MenuItem mntmNewItem = new MenuItem(menu, SWT.NONE);
+		mntmNewItem.setText("New Item");
 	}
 
 	public void setDataCollection(LDataCollection<T> collection) {
@@ -45,6 +58,12 @@ public abstract class LGrid<T, ST> extends LCollection<T, ST> {
 		for(Control c : getChildren()) {
 			c.dispose();
 		}
+	}
+	
+	private void emptyLayout() {
+		setLayout(fillLayout);
+		addLabel(0, null, true);
+		layout();
 	}
 	
 	private int indexOf(Label label) {
@@ -60,32 +79,42 @@ public abstract class LGrid<T, ST> extends LCollection<T, ST> {
 	
 	public void setList(LDataList<T> list) {
 		clear();
-		int i = 0;
-		for(T data : list) {
-			Label label = addLabel(i, data);
-			String path = getImagePath(i);
-			label.setImage(SWTResourceManager.getImage(path));
-			i++;
+		if (list != null) {
+			if (list.size() > 0) {
+				setLayout(rowLayout);
+				int i = 0;
+				for(T data : list) {
+					Label label = addLabel(i, data, false);
+					label.setImage(getImage(i));
+					i++;
+				}
+				layout();
+			} else {
+				emptyLayout();
+			}
 		}
-		layout();
 	}
 	
-	private Label addLabel(int i, T data) {
+	private Label addLabel(int i, T data, boolean placeholder) {
 		Label label = new Label(this, SWT.NONE);
 		Menu menu = new Menu(label);
 		label.setMenu(menu);
-		label.setData(data);
 		menu.setData("label", label);
 		
-		setEditEnabled(menu, true);
-		setInsertNewEnabled(menu, true);
-		setDuplicateEnabled(menu, true);
-		setDeleteEnabled(menu, true);
+		if (placeholder) {
+			setInsertNewEnabled(menu, true);
+		} else {
+			label.setData(data);
+			setEditEnabled(menu, true);
+			setInsertNewEnabled(menu, true);
+			setDuplicateEnabled(menu, true);
+			setDeleteEnabled(menu, true);
+		}
 		
 		return label;
 	}
 
-	protected abstract String getImagePath(int i);
+	protected abstract Image getImage(int i);
 
 	//-------------------------------------------------------------------------------------
 	// Button Handler
@@ -131,8 +160,11 @@ public abstract class LGrid<T, ST> extends LCollection<T, ST> {
 
 	@Override
 	public LInsertEvent<T> insert(LPath parentPath, int index, LDataTree<T> node) {
-		addLabel(index, node.data);
-		System.out.println("bla2");
+		if (getLayout() == fillLayout) {
+			clear();
+			setLayout(rowLayout);
+		}
+		addLabel(index, node.data, false);
 		return new LInsertEvent<T>(parentPath, index, node);
 	}
 
@@ -142,6 +174,9 @@ public abstract class LGrid<T, ST> extends LCollection<T, ST> {
 		@SuppressWarnings("unchecked")
 		T data = (T) c.getData();
 		c.dispose();
+		if (getChildren().length == 0) {
+			emptyLayout();
+		}
 		return new LDeleteEvent<T>(parentPath, index, new LDataTree<T>(data));
 	}
 	
@@ -179,18 +214,17 @@ public abstract class LGrid<T, ST> extends LCollection<T, ST> {
 		Label label = (Label) getChildren()[path.index];
 		T data = toObject(path);
 		label.setData(data);
-		String p = getImagePath(path.index);
-		label.setImage(SWTResourceManager.getImage(p));
+		label.setImage(getImage(path.index));
 	}
 
 	@Override
 	public void refreshAll() {
-		LPath p = new LPath(0);
-		Control[] c = getChildren();
-		for(p.index = 0; p.index < c.length; p.index++) {
-			System.out.println("refresh" + p.index);
-			refreshObject(p);
+		if (getLayout() == rowLayout) {
+			LPath p = new LPath(0);
+			Control[] c = getChildren();
+			for(p.index = 0; p.index < c.length; p.index++) {
+				refreshObject(p);
+			}
 		}
 	}
-	
 }

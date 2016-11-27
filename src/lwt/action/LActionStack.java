@@ -40,7 +40,6 @@ public class LActionStack {
 			lastAction--;
 			actions.get(lastAction).state.reset();
 			actions.get(lastAction).action.undo();
-			System.out.println("lalal2");
 		}
 	}
 	

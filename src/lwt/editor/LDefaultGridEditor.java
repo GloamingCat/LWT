@@ -1,11 +1,12 @@
 package lwt.editor;
 
 import lwt.dataestructure.LPath;
-import lwt.datainterface.Graphical;
+import lwt.datainterface.LGraphical;
 
+import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Composite;
 
-public abstract class LDefaultGridEditor<T extends Graphical> extends LGridEditor<T, T> {
+public abstract class LDefaultGridEditor<T extends LGraphical> extends LGridEditor<T, T> {
 
 	/**
 	 * Create the composite.
@@ -24,8 +25,8 @@ public abstract class LDefaultGridEditor<T extends Graphical> extends LGridEdito
 		getDataCollection().set(path.index, data);
 	}
 	
-	protected String getImagePath(int i) {
-		return getDataCollection().get(i).getImagePath();
+	protected Image getImage(int i) {
+		return getDataCollection().get(i).toImage();
 	}
 
 }

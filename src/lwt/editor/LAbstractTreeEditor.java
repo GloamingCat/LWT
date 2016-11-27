@@ -1,6 +1,5 @@
 package lwt.editor;
 
-import lwt.dataestructure.LDataCollection;
 import lwt.dataestructure.LDataTree;
 import lwt.dataestructure.LPath;
 import lwt.event.LDeleteEvent;
@@ -61,17 +60,9 @@ public abstract class LAbstractTreeEditor<T, ST> extends LCollectionEditor<T, ST
 		addChild((LEditor) editor);
 	}
 	
-	
-	
 	public abstract LTree<T, ST> getCollectionWidget();
 	protected abstract T createNewData();
 	protected abstract T duplicateData(T original);
-	
-	public void setObject(Object obj) {
-		@SuppressWarnings("unchecked")
-		LDataCollection<T> db = (LDataCollection<T>) obj;
-		setDataCollection(db);
-	}
 	
 	public LDataTree<T> duplicateNode(LDataTree<T> node) {
 		LDataTree<T> copy = new LDataTree<T>(duplicateData(node.data));

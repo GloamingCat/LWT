@@ -39,7 +39,6 @@ public abstract class LCollectionEditor<T, ST> extends LEditor {
 		getCollectionWidget().addInsertListener(new LCollectionListener<T>() {
 			public void onInsert(LInsertEvent<T> event) {
 				getDataCollection().insert(event.parentPath, event.index, event.node);
-				System.out.println("bla");
 			}
 		});
 		getCollectionWidget().addDeleteListener(new LCollectionListener<T>() {
@@ -58,6 +57,12 @@ public abstract class LCollectionEditor<T, ST> extends LEditor {
 				setEditableData(event.path, event.newData);
 			}
 		});
+	}
+	
+	public void setObject(Object obj) {
+		@SuppressWarnings("unchecked")
+		LDataCollection<T> db = (LDataCollection<T>) obj;
+		setDataCollection(db);
 	}
 	
 	public void setDataCollection(LDataCollection<T> db) {

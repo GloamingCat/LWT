@@ -7,6 +7,7 @@ import lwt.event.LEditEvent;
 import lwt.widget.LGrid;
 
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Composite;
 
 public abstract class LGridEditor<T, ST> extends LCollectionEditor<T, ST> {
@@ -37,20 +38,12 @@ public abstract class LGridEditor<T, ST> extends LCollectionEditor<T, ST> {
 				return new LDataTree<T> (duplicateData(getDataCollection().get(path.index)));
 			}
 			@Override
-			protected String getImagePath(int i) {
-				return self.getImagePath(i);
+			protected Image getImage(int i) {
+				return self.getImage(i);
 			}
 		};
 		setListeners();
 	}
-
-	@Override
-	public void setObject(Object obj) {
-		@SuppressWarnings("unchecked")
-		LDataList<T> db = (LDataList<T>) obj;
-		getCollectionWidget().setList(db);
-	}
-	
 	
 	public void onVisible() {
 		onChildVisible();
@@ -63,7 +56,7 @@ public abstract class LGridEditor<T, ST> extends LCollectionEditor<T, ST> {
 	}
 	protected abstract T createNewData();
 	protected abstract T duplicateData(T original);
-	protected abstract String getImagePath(int i);
+	protected abstract Image getImage(int i);
 	
 	protected abstract LDataList<T> getDataCollection();
 
