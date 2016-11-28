@@ -91,6 +91,10 @@ public class LObjectEditor extends LEditor {
 		}
 	}
 	
+	public Object getObject() {
+		return currentObject;
+	}
+	
 	public void setObject(Object obj, LPath path) {
 		setObject(obj);
 		currentPath = path;
