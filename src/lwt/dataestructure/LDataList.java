@@ -14,6 +14,10 @@ public class LDataList<T> extends ArrayList<T> implements LDataCollection<T> {
 		super(i);
 	}
 
+	public LDataList(LDataList<T> copy) {
+		super(copy);
+	}
+
 	@Override
 	public void insert(LPath parentPath, int index, LDataTree<T> node) {
 		if (index == -1)  {

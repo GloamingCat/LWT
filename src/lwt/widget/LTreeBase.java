@@ -223,6 +223,14 @@ public abstract class LTreeBase<T, ST> extends LSelectableCollection<T, ST> {
 		}
 	}
 	
+	protected boolean isOutOfBounds(TreeItem parent, int i) {
+		if (parent == null) {
+			return i >= tree.getItemCount();
+		} else {
+			return i >= parent.getItemCount();
+		}
+	}
+	
 	//-------------------------------------------------------------------------------------
 	// Internal operations
 	//-------------------------------------------------------------------------------------

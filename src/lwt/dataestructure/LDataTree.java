@@ -22,6 +22,12 @@ public class LDataTree<T> implements Serializable, LDataCollection<T> {
 		parent.children.add(this);
 	}
 	
+	public LDataTree(T data, LDataTree<T> parent, int index) {
+		this.data = data;
+		this.parent = parent;
+		parent.children.add(index, this);
+	}
+
 	public void setParent(LDataTree<T> parent) {
 		if (this.parent != null) {
 			this.parent.children.remove(this);

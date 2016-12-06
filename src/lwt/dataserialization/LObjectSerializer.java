@@ -1,18 +1,18 @@
 package lwt.dataserialization;
 
-public abstract class LObjectSerializer extends LDefaultSerializer {
+public abstract class LObjectSerializer<T> extends LDefaultSerializer {
 
-	protected Object data;
+	protected T data;
 	
 	public LObjectSerializer(String path, Class<?> type) {
 		super(path, type);
 	}
 	
-	public Object getData() {
+	public T getData() {
 		return data;
 	}
 	
-	public void setData(Object data) {
+	public void setData(T data) {
 		this.data = data;
 	}
 	
@@ -24,7 +24,7 @@ public abstract class LObjectSerializer extends LDefaultSerializer {
 		data = fromByteArray(bytes);
 	}
 	
-	protected abstract byte[] toByteArray(Object obj);
-	protected abstract Object fromByteArray(byte[] bytes);
+	protected abstract byte[] toByteArray(T obj);
+	protected abstract T fromByteArray(byte[] bytes);
 
 }
