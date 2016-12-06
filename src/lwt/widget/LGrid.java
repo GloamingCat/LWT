@@ -9,22 +9,30 @@ import lwt.event.LDeleteEvent;
 import lwt.event.LEditEvent;
 import lwt.event.LInsertEvent;
 import lwt.event.LMoveEvent;
+import lwt.event.LSelectionEvent;
 
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.MouseAdapter;
+import org.eclipse.swt.events.MouseEvent;
+import org.eclipse.swt.events.PaintEvent;
+import org.eclipse.swt.events.PaintListener;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.RowLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.MenuItem;
 
-public abstract class LGrid<T, ST> extends LCollection<T, ST> {
+public abstract class LGrid<T, ST> extends LSelectableCollection<T, ST> {
 
 	protected LActionStack actionStack;
 	protected RowLayout rowLayout;
 	protected FillLayout fillLayout;
+	protected int selectedIndex = -1;
+	protected T selectedObj = null;
 	
 	/**
 	 * Create the composite.
@@ -39,12 +47,9 @@ public abstract class LGrid<T, ST> extends LCollection<T, ST> {
 		rowLayout.pack = true;
 		rowLayout.wrap = true;
 		setLayout(fillLayout);
-		
 		Label label = new Label(this, SWT.NONE);
-		
 		Menu menu = new Menu(label);
 		label.setMenu(menu);
-		
 		MenuItem mntmNewItem = new MenuItem(menu, SWT.NONE);
 		mntmNewItem.setText("New Item");
 	}
@@ -109,13 +114,31 @@ public abstract class LGrid<T, ST> extends LCollection<T, ST> {
 			setInsertNewEnabled(menu, true);
 			setDuplicateEnabled(menu, true);
 			setDeleteEnabled(menu, true);
+			label.addMouseListener(new MouseAdapter() {
+				@Override
+				public void mouseDown(MouseEvent arg0) {
+					int i = indexOf(label);
+					select(data, i);
+					LSelectionEvent e = new LSelectionEvent(new LPath(i), data);
+					notifySelectionListeners(e);
+				}
+			});
+			label.addPaintListener(new PaintListener() {
+				@Override
+				public void paintControl(PaintEvent e) {
+					if (indexOf(label) == selectedIndex) {
+						e.gc.setForeground(Display.getCurrent().getSystemColor(SWT.COLOR_BLACK));
+						e.gc.drawRectangle(0, 0, label.getBounds().width - 1, label.getBounds().height - 1);
+					}
+				}
+			});
 		}
 		
 		return label;
 	}
 
 	protected abstract Image getImage(int i);
-
+	
 	//-------------------------------------------------------------------------------------
 	// Button Handler
 	//-------------------------------------------------------------------------------------
@@ -227,4 +250,50 @@ public abstract class LGrid<T, ST> extends LCollection<T, ST> {
 			}
 		}
 	}
+	
+	//-------------------------------------------------------------------------------------
+	// Selection
+	//-------------------------------------------------------------------------------------
+	
+	public LSelectionEvent select(LPath path) {
+		if (path.index >= 0) {
+			Label l = (Label) getChildren()[path.index];
+			@SuppressWarnings("unchecked")
+			T data = (T) l.getData("data");
+			select(data, path.index);
+			return new LSelectionEvent(path, data);
+		} else {
+			select((T) null, -1);
+			return new LSelectionEvent(path, null);
+		}
+	}
+	
+	public T getSelectedObject() {
+		return selectedObj;
+	}
+	
+	public LPath getSelectedPath() {
+		if (selectedIndex == -1) {
+			return null;
+		} else {
+			return new LPath(selectedIndex);
+		}
+	}
+	
+	protected void select(T obj, int i) {
+		if (i != selectedIndex) {
+			if (selectedIndex != -1) {
+				LPath path = new LPath(selectedIndex);
+				selectedIndex = i;
+				refreshObject(path);
+			}
+			selectedIndex = i;
+			selectedObj = obj;
+			if (i >= 0) {
+				refreshObject(new LPath(i));
+			}
+			layout();
+		}
+	}
+	
 }

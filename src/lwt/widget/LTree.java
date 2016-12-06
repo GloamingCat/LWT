@@ -121,12 +121,10 @@ public abstract class LTree<T, ST> extends LTreeBase<T, ST> {
 			TreeItem item = tree.getSelection()[0];
 			LPath parentPath = toPath(item.getParentItem());
 			int i = indexOf(item);
+			int selection = isOutOfBounds(item.getParentItem(), i) ? i - 1 : i;
 			LDeleteEvent<T> event = newDeleteAction(parentPath, i);
 			if (event != null) {
-				if (isOutOfBounds(item.getParentItem(), i)) {
-					i--;
-				}
-    			notifySelectionListeners(select(event.parentPath, i));
+    			notifySelectionListeners(select(event.parentPath, selection));
 			}
 		}
 	}
