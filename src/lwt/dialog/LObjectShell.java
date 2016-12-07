@@ -18,7 +18,7 @@ public abstract class LObjectShell<T> extends Shell {
 	protected T initial = null;
 	
 	public LObjectShell(Shell parent) {
-		super(parent, parent.getStyle());
+		super(parent, parent.getStyle() | SWT.APPLICATION_MODAL);
 		
 		setSize(450, 300);
 		setText(getText());

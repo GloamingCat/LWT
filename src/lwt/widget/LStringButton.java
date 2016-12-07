@@ -1,7 +1,5 @@
 package lwt.widget;
 
-import lwt.LVocab;
-
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
@@ -19,7 +17,6 @@ public class LStringButton extends LObjectButton<String> {
 	 */
 	public LStringButton(Composite parent, int style) {
 		super(parent, style);
-		setText(LVocab.instance.SELECT);
 	}
 	
 	public void setText(Text text) {

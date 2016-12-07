@@ -30,7 +30,12 @@ public abstract class LSelectableCollection<T, ST> extends LCollection<T, ST> {
 	//-------------------------------------------------------------------------------------
 	
 	public LSelectionEvent select(LPath parent, int index) {
-		return select(new LPath(index, parent));
+		if (parent == null) {
+			parent = new LPath(index);
+		} else {
+			parent.addLast(index);
+		}
+		return select(parent);
 	}
 	
 	public abstract LSelectionEvent select(LPath path);

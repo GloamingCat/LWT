@@ -95,9 +95,6 @@ public abstract class LTreeBase<T, ST> extends LSelectableCollection<T, ST> {
 				if (event.detail == DND.DROP_NONE) {
 					TreeItem item = createTreeItem(dragParent, dragIndex, dragNode);
 					notifySelectionListeners(selectTreeItem(item));
-				} else {
-					TreeItem item = toTreeItem(dragParent, dragIndex);
-					notifySelectionListeners(selectTreeItem(item));
 				}
 				refreshAll();
 				dragParent = null;
@@ -326,6 +323,7 @@ public abstract class LTreeBase<T, ST> extends LSelectableCollection<T, ST> {
 			}
 		} else {
 			if (parent == null) {
+				System.out.println(index);
 				return tree.getItem(index);
 			} else {
 				return parent.getItem(index);
@@ -356,15 +354,19 @@ public abstract class LTreeBase<T, ST> extends LSelectableCollection<T, ST> {
 		}
 		if (path.index == -1)
 			path.index = tree.getItemCount() - 1;
-		TreeItem item = tree.getItem(path.index);
-		path = path.child;
-		while(path != null) {
-			if (path.index == -1)
-				path.index = item.getItemCount() - 1;
-			item = item.getItem(path.index);
+		try {
+			TreeItem item = tree.getItem(path.index);
 			path = path.child;
+			while(path != null) {
+				if (path.index == -1)
+					path.index = item.getItemCount() - 1;
+				item = item.getItem(path.index);
+				path = path.child;
+			}
+			return item;
+		} catch(IllegalArgumentException e) {
+			return null;
 		}
-		return item;
 	}
 	
 	public LPath toPath(TreeItem item) {
@@ -381,7 +383,8 @@ public abstract class LTreeBase<T, ST> extends LSelectableCollection<T, ST> {
 		LPath root = new LPath(tree.indexOf(item));
 		LPath path = root;
 		while(indexes.isEmpty() == false) {
-			path = new LPath(indexes.pop(), path);
+			path.child = new LPath(indexes.pop());
+			path = path.child;
 		}
 		return root;
 	}
@@ -391,7 +394,11 @@ public abstract class LTreeBase<T, ST> extends LSelectableCollection<T, ST> {
 	//-------------------------------------------------------------------------------------
 	
 	public void setDataCollection(LDataCollection<T> collection) {
-		setItems(collection.toTree());
+		if (collection == null) {
+			setItems(null);
+		} else {
+			setItems(collection.toTree());
+		}
 	}
 	
 	public void setItems(LDataTree<T> root) {
@@ -455,7 +462,12 @@ public abstract class LTreeBase<T, ST> extends LSelectableCollection<T, ST> {
 	}
 	
 	public void forceSelection(LPath parent, int index) {
-		forceSelection(new LPath(index, parent));
+		if (parent == null) {
+			parent = new LPath(index);
+		} else {
+			parent.addLast(index);
+		}
+		forceSelection(parent);
 	}
 	
 	public void refreshSelection() {

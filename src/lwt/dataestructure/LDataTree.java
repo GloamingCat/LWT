@@ -99,8 +99,8 @@ public class LDataTree<T> implements Serializable, LDataCollection<T> {
 			return null;
 		}
 		LPath parentPath = parent.toPath();
-		LPath path = new LPath(parent.children.indexOf(this), parentPath);
-		return path;
+		parentPath.addLast(parent.children.indexOf(this));
+		return parentPath;
 	}
 
 	@Override

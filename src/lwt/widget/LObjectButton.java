@@ -25,6 +25,7 @@ public class LObjectButton<T> extends LControl {
 	public LObjectButton(Composite parent, int style) {
 		super(parent, style);
 		LControl self = this;
+		this.dialog = new LObjectDialog<T>(getShell(), getShell().getStyle());
 		button = new Button(this, SWT.NONE);
 		button.addSelectionListener(new SelectionAdapter() {
 			@Override
@@ -43,9 +44,7 @@ public class LObjectButton<T> extends LControl {
 	}
 	
 	public void setShellFactory(LShellFactory<T> factory) {
-		LObjectDialog<T> dialog = new LObjectDialog<T>(getShell(), getShell().getStyle());
 		dialog.setFactory(factory);
-		this.dialog = dialog;
 	}
 	
 	public void setText(String text) {
