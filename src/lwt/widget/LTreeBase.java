@@ -264,9 +264,9 @@ public abstract class LTreeBase<T, ST> extends LSelectableCollection<T, ST> {
 	}
 	
 	protected LDataTree<T> disposeTreeItem(TreeItem item) {
-		LDataTree<T> stringNode = toNode(item);
+		LDataTree<T> data = toNode(item);
 		item.dispose();
-		return stringNode;
+		return data;
 	}
 	
 	protected LMoveEvent<T> moveTreeItem(LDataTree<T> node, TreeItem sourceParent, int sourceIndex, 
@@ -317,16 +317,15 @@ public abstract class LTreeBase<T, ST> extends LSelectableCollection<T, ST> {
 	public TreeItem toTreeItem(TreeItem parent, int index) {
 		if (index == -1) {
 			if (parent == null) {
-				return tree.getItem(tree.getItemCount() - 1);
+				return tree.getItems()[tree.getItemCount() - 1];
 			} else {
-				return parent.getItem(parent.getItemCount() - 1);
+				return parent.getItems()[parent.getItemCount() - 1];
 			}
 		} else {
 			if (parent == null) {
-				System.out.println(index);
-				return tree.getItem(index);
+				return tree.getItems()[index];
 			} else {
-				return parent.getItem(index);
+				return parent.getItems()[index];
 			}
 		}
 	}
@@ -337,14 +336,14 @@ public abstract class LTreeBase<T, ST> extends LSelectableCollection<T, ST> {
 				return null;
 			if (index == -1)
 				index = tree.getItemCount() - 1;
-			return tree.getItem(index);
+			return tree.getItems()[index];
 		} else {
 			TreeItem parent = toTreeItem(parentPath);
 			if (index >= parent.getItemCount() || parent.getItemCount() == 0)
 				return null;
 			if (index == -1)
 				index = parent.getItemCount() - 1;
-			return parent.getItem(index);
+			return parent.getItems()[index];
 		}
 	}
 	
@@ -352,21 +351,25 @@ public abstract class LTreeBase<T, ST> extends LSelectableCollection<T, ST> {
 		if (path == null) {
 			return null;
 		}
-		if (path.index == -1)
-			path.index = tree.getItemCount() - 1;
+		TreeItem item = null;
 		try {
-			TreeItem item = tree.getItem(path.index);
+			if (path.index == -1)
+				path.index = tree.getItemCount() - 1;
+			item = tree.getItems()[path.index];
 			path = path.child;
 			while(path != null) {
 				if (path.index == -1)
 					path.index = item.getItemCount() - 1;
-				item = item.getItem(path.index);
+				item = item.getItems()[path.index];
 				path = path.child;
 			}
-			return item;
-		} catch(IllegalArgumentException e) {
-			return null;
+		} catch(ArrayIndexOutOfBoundsException e) {
+			ArrayIndexOutOfBoundsException e2 = new ArrayIndexOutOfBoundsException(
+					e.getMessage() + " " + path.index);
+			e2.setStackTrace(e.getStackTrace());
+			throw e2;
 		}
+		return item;
 	}
 	
 	public LPath toPath(TreeItem item) {
@@ -447,17 +450,13 @@ public abstract class LTreeBase<T, ST> extends LSelectableCollection<T, ST> {
 	//-------------------------------------------------------------------------------------
 	
 	public void forceSelection(LPath path) {
-		try {
-			TreeItem item = toTreeItem(path);
-			if (item == null) {
-				tree.deselectAll();
-				notifySelectionListeners(new LSelectionEvent(null, null));
-			} else {
-				tree.select(item);
-				notifySelectionListeners(new LSelectionEvent(path, toObject(path)));
-			}
-		} catch (IllegalArgumentException e) {
-			// Index out of bounds.
+		TreeItem item = toTreeItem(path);
+		if (item == null) {
+			tree.deselectAll();
+			notifySelectionListeners(new LSelectionEvent(null, null));
+		} else {
+			tree.select(item);
+			notifySelectionListeners(new LSelectionEvent(path, toObject(path)));
 		}
 	}
 	

@@ -33,7 +33,15 @@ public abstract class LAbstractTreeEditor<T, ST> extends LCollectionEditor<T, ST
 		});
 		getCollectionWidget().addDeleteListener(new LCollectionListener<T>() {
 			public void onDelete(LDeleteEvent<T> event) {
-				getCollectionWidget().forceSelection(event.parentPath, event.index);
+				try {
+					getCollectionWidget().forceSelection(event.parentPath, event.index);
+				} catch(IllegalArgumentException | ArrayIndexOutOfBoundsException e) {
+					try {
+						getCollectionWidget().forceSelection(event.parentPath, event.index - 1);
+					} catch(IllegalArgumentException | ArrayIndexOutOfBoundsException e2) {
+						forceFirstSelection();
+					}
+				}
 			}
 		});
 		getCollectionWidget().addMoveListener(new LCollectionListener<T>() {

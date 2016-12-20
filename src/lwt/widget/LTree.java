@@ -82,7 +82,6 @@ public abstract class LTree<T, ST> extends LTreeBase<T, ST> {
 			LEditEvent<ST> event = newEditAction(path);
 			if (event != null) {
     			refreshObject(path);
-    			notifySelectionListeners(select(event.path));
 			}
 		}
 	}
@@ -96,10 +95,7 @@ public abstract class LTree<T, ST> extends LTreeBase<T, ST> {
 			parentPath = toPath(item.getParentItem());
 			index = indexOf(item) + 1;
 		}
-		LInsertEvent<T> event = newInsertAction(parentPath, index, newNode);
-		if (event != null) {
-			notifySelectionListeners(select(event.parentPath, event.index));
-		}
+		newInsertAction(parentPath, index, newNode);
 	}
 	
 	protected void onDuplicateButton(Menu menu) {
@@ -109,28 +105,17 @@ public abstract class LTree<T, ST> extends LTreeBase<T, ST> {
 			LDataTree<T> node = duplicateNode(itemPath);
 			LPath parentPath = toPath(item.getParentItem());
 			int i = indexOf(item);
-			LInsertEvent<T> event = newInsertAction(parentPath, i, node);
-			if (event != null) {
-    			notifySelectionListeners(select(event.parentPath, event.index));
-			}
+			newInsertAction(parentPath, i, node);
 		}
 	}
 	
 	protected void onDeleteButton(Menu menu) {
 		if (tree.getSelectionCount() > 0) {
 			TreeItem item = tree.getSelection()[0];
-			LPath parentPath = toPath(item.getParentItem());
+			TreeItem parentItem = item.getParentItem();
+			LPath parentPath = toPath(parentItem);
 			int i = indexOf(item);
-			int selectionID = isOutOfBounds(item.getParentItem(), i + 1) ? i - 1 : i;
-			System.out.println(selectionID);
-			LDeleteEvent<T> event = newDeleteAction(parentPath, i);
-			if (event != null) {
-				if (selectionID == -1) {
-					notifySelectionListeners(select(null));
-				} else {
-					notifySelectionListeners(select(parentPath, selectionID));
-				}
-			}
+			newDeleteAction(parentPath, i);
 		}
 	}
 	
