@@ -293,10 +293,18 @@ public abstract class LTreeBase<T, ST> extends LSelectableCollection<T, ST> {
 	}
 	
 	public LMoveEvent<T> move(LPath sourceParent, int sourceIndex, LPath destParent, int destIndex) {
-		TreeItem sourceItem = toTreeItem(sourceParent, sourceIndex);
-		LDataTree<T> node = disposeTreeItem(sourceItem);
-		refreshAll();
-		return moveTreeItem(node, toTreeItem(sourceParent), sourceIndex, toTreeItem(destParent), destIndex);
+		try {
+			TreeItem sourceItem = toTreeItem(sourceParent, sourceIndex);
+			LDataTree<T> node = disposeTreeItem(sourceItem);
+			refreshAll();
+			return moveTreeItem(node, toTreeItem(sourceParent), sourceIndex, 
+					toTreeItem(destParent), destIndex);
+		} catch(Exception e) {
+			String dest = destParent == null ? "" : destParent.toString();
+			String src = sourceParent == null ? "" : sourceParent.toString();
+			System.out.println("Try move: " + src + sourceIndex + " to " + dest + destIndex);
+			throw e;
+		}
 	}
 	
 	//-------------------------------------------------------------------------------------
@@ -367,7 +375,7 @@ public abstract class LTreeBase<T, ST> extends LSelectableCollection<T, ST> {
 			ArrayIndexOutOfBoundsException e2 = new ArrayIndexOutOfBoundsException(
 					e.getMessage() + " " + path.index);
 			e2.setStackTrace(e.getStackTrace());
-			throw e2;
+			return null;
 		}
 		return item;
 	}
@@ -464,7 +472,7 @@ public abstract class LTreeBase<T, ST> extends LSelectableCollection<T, ST> {
 		if (parent == null) {
 			parent = new LPath(index);
 		} else {
-			parent.addLast(index);
+			parent = parent.addLast(index);
 		}
 		forceSelection(parent);
 	}

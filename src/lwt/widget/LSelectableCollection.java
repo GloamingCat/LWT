@@ -33,7 +33,7 @@ public abstract class LSelectableCollection<T, ST> extends LCollection<T, ST> {
 		if (parent == null) {
 			parent = new LPath(index);
 		} else {
-			parent.addLast(index);
+			parent = parent.addLast(index);
 		}
 		return select(parent);
 	}

@@ -291,4 +291,7 @@ public abstract class LDefaultApplicationShell extends Shell {
 		}
 	}
 	
+	@Override
+	protected void checkSubclass() { }
+	
 }

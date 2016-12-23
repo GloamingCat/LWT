@@ -22,12 +22,17 @@ public class LPath {
 		return p;
 	}
 	
-	public void addLast(int index) {
-		LPath parent = this;
-		while (parent.child != null) {
-			parent = parent.child;
+	public LPath addLast(int index) {
+		LPath newPath = new LPath(this.index);
+		LPath newLast = newPath;
+		LPath last = this;
+		while (last.child != null) {
+			last = last.child;
+			newLast.child = new LPath(last.index);
+			newLast = newLast.child;
 		}
-		parent.child = new LPath(index);
+		newLast.child = new LPath(index);
+		return newPath;
 	}
 	
 	public boolean equals(Object obj) {
@@ -58,6 +63,16 @@ public class LPath {
 			path = path.child;
 		}
 		System.out.println();
+	}
+	
+	public String toString() {
+		String s = "";
+		LPath path = this;
+		while(path != null) {
+			s += path.index + " ";
+			path = path.child;
+		}
+		return s;
 	}
 	
 }
