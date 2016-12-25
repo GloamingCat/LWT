@@ -2,16 +2,13 @@ package lwt.widget;
 
 import java.util.ArrayList;
 
-import lwt.action.LControlAction;
-import lwt.event.LControlEvent;
-
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 
-public class LCombo extends LControl {
+public class LCombo extends LControl<Integer> {
 
 	private Combo combo;
 	private boolean includeID = true;
@@ -24,17 +21,14 @@ public class LCombo extends LControl {
 	 */
 	public LCombo(Composite parent, int style) {
 		super(parent, style);
-		LCombo self = this;
 		combo = new Combo(this, SWT.BORDER | SWT.READ_ONLY);
 		combo.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent arg0) {
 				if (getSelectionIndex() == (Integer)currentValue)
 					return;
-				LControlEvent event = new LControlEvent(currentValue, getSelectionIndex());
-				newAction(new LControlAction(self, event));
-				notifyListeners(event);
-				currentValue = event.newValue;
+				newModifyAction(currentValue, getSelectionIndex());
+				currentValue = getSelectionIndex();
 			}
 		});
 	}
@@ -60,11 +54,12 @@ public class LCombo extends LControl {
 			Integer i = (Integer) obj;
 			combo.setEnabled(true);
 			setSelectionIndex(i);
+			currentValue = i;
 		} else {
 			combo.setEnabled(false);
 			combo.clearSelection();
+			currentValue = null;
 		}
-		currentValue = obj;
 	}
 	
 	public void setItems(Object[] items) {

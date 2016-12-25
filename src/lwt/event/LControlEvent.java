@@ -1,13 +1,14 @@
 package lwt.event;
 
-public class LControlEvent {
+public class LControlEvent<T> {
 	
-	public Object oldValue;
-	public Object newValue;
+	public T oldValue;
+	public T newValue;
 	public int detail;
 	
-	public LControlEvent(Object oldValue, Object newValue) {
+	public LControlEvent(T oldValue, T newValue) {
 		this.oldValue = oldValue;
 		this.newValue = newValue;
 	}
+	
 }

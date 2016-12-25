@@ -8,7 +8,7 @@ import lwt.widget.LControl;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
 
-public class LComboView extends LControlView {
+public class LComboView extends LControlView<Integer> {
 
 	protected LCombo combo;
 	
@@ -30,7 +30,7 @@ public class LComboView extends LControlView {
 		super.onVisible();
 	}
 	
-	public LControl getControl() {
+	public LControl<Integer> getControl() {
 		return combo;
 	}
 	

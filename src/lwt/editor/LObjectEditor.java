@@ -23,7 +23,7 @@ import org.eclipse.swt.widgets.Composite;
 
 public class LObjectEditor extends LEditor {
 
-	protected HashMap<String, LControl> controlMap = new HashMap<>();
+	protected HashMap<String, LControl<?>> controlMap = new HashMap<>();
 	public LCollectionEditor<?, ?> collectionEditor;
 	protected Object currentObject;
 	protected LPath currentPath;
@@ -38,21 +38,25 @@ public class LObjectEditor extends LEditor {
 		super(parent, style);
 	}
 	
-	public void addControl(LControlView view, String key) {
+	public <T> void addControl(LControlView<T> view, String key) {
 		addControl(view.getControl(), key);
 		addChild(view);
 	}
 
-	public void addControl(LControl control, String key) {
+	public <T> void addControl(LControl<T> control, String key) {
 		controlMap.put(key, control);
 		control.setActionStack(actionStack);
-		control.addModifyListener(new LControlListener() {
+		control.addModifyListener(new LControlListener<T>() {
 			@Override
-			public void onModify(LControlEvent event) {
+			public void onModify(LControlEvent<T> event) {
 				if (currentObject != null) {
-					setFieldValue(currentObject, key, event.newValue);
-					if (collectionEditor != null && currentPath != null && event.detail >= 0)
-						collectionEditor.refreshObject(currentPath);
+					if (key != null && !key.isEmpty()) {
+						setFieldValue(currentObject, key, event.newValue);
+						if (collectionEditor != null && currentPath != null && event.detail >= 0)
+							collectionEditor.refreshObject(currentPath);
+					} else {
+						setObject(event.newValue);
+					}
 				}
 			}
 		});
@@ -60,7 +64,7 @@ public class LObjectEditor extends LEditor {
 	
 	public void setActionStack(LActionStack stack) {
 		super.setActionStack(stack);
-		for(LControl control : controlMap.values()) {
+		for(LControl<?> control : controlMap.values()) {
 			control.setActionStack(stack);
 		}
 	}
@@ -70,7 +74,7 @@ public class LObjectEditor extends LEditor {
 			saveObjectValues();
 		currentObject = obj;
 		if (obj != null) {
-			for(Map.Entry<String, LControl> entry : controlMap.entrySet()) {
+			for(Map.Entry<String, LControl<?>> entry : controlMap.entrySet()) {
 				if (entry.getKey().isEmpty()) {
 					entry.getValue().setValue(obj);
 				} else {
@@ -79,7 +83,7 @@ public class LObjectEditor extends LEditor {
 				}
 			}
 		} else {
-			for(Map.Entry<String, LControl> entry : controlMap.entrySet()) {
+			for(Map.Entry<String, LControl<?>> entry : controlMap.entrySet()) {
 				entry.getValue().setValue(null);
 			}
 		}
@@ -101,12 +105,9 @@ public class LObjectEditor extends LEditor {
 	}
 	
 	public void saveObjectValues() {
-		for(Map.Entry<String, LControl> entry : controlMap.entrySet()) {
-			LControl control = entry.getValue();
-			Object controlValue = control.getValue();
-			LControlEvent event = new LControlEvent(null, controlValue);
-			event.detail = -1;
-			control.notifyListeners(event);
+		for(Map.Entry<String, LControl<?>> entry : controlMap.entrySet()) {
+			LControl<?> control = entry.getValue();
+			control.notifyEmpty();
 		}
 	}
 	

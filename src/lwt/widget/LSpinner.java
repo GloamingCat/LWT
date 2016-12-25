@@ -1,15 +1,12 @@
 package lwt.widget;
 
-import lwt.action.LControlAction;
-import lwt.event.LControlEvent;
-
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Spinner;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 
-public class LSpinner extends LControl {
+public class LSpinner extends LControl<Integer> {
 
 	private Spinner spinner;
 	
@@ -20,17 +17,14 @@ public class LSpinner extends LControl {
 	 */
 	public LSpinner(Composite parent, int style) {
 		super(parent, style);
-		LSpinner self = this;
 		spinner = new Spinner(this, SWT.BORDER);
 		spinner.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent arg0) {
-				if (spinner.getSelection() == (Integer)currentValue)
+				if (spinner.getSelection() == currentValue)
 					return;
-				LControlEvent event = new LControlEvent(currentValue, spinner.getSelection());
-				newAction(new LControlAction(self, event));
-				notifyListeners(event);
-				currentValue = event.newValue;
+				newModifyAction(currentValue, spinner.getSelection());
+				currentValue = spinner.getSelection();
 			}
 		});
 	}
@@ -40,11 +34,12 @@ public class LSpinner extends LControl {
 			Integer i = (Integer) obj;
 			spinner.setEnabled(true);
 			spinner.setSelection(i);
+			currentValue = i;
 		} else {
 			spinner.setEnabled(false);
 			spinner.setSelection(0);
+			currentValue = null;
 		}
-		currentValue = obj;
 	}
 	
 	public void setMinimum(int i) {

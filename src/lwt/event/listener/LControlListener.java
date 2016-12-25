@@ -2,8 +2,8 @@ package lwt.event.listener;
 
 import lwt.event.LControlEvent;
 
-public interface LControlListener {
+public interface LControlListener<T> {
 
-	void onModify(LControlEvent event);
+	void onModify(LControlEvent<T> event);
 	
 }

@@ -1,10 +1,8 @@
 package lwt.widget;
 
 import lwt.LVocab;
-import lwt.action.LControlAction;
 import lwt.dialog.LObjectDialog;
 import lwt.dialog.LShellFactory;
-import lwt.event.LControlEvent;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
@@ -12,7 +10,7 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.events.SelectionEvent;
 
-public class LObjectButton<T> extends LControl {
+public class LObjectButton<T> extends LControl<T> {
 	
 	protected Button button;
 	protected LObjectDialog<T> dialog;
@@ -24,19 +22,15 @@ public class LObjectButton<T> extends LControl {
 	 */
 	public LObjectButton(Composite parent, int style) {
 		super(parent, style);
-		LControl self = this;
-		this.dialog = new LObjectDialog<T>(getShell(), getShell().getStyle());
+		dialog = new LObjectDialog<T>(getShell(), getShell().getStyle());
 		button = new Button(this, SWT.NONE);
 		button.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent arg0) {
-				@SuppressWarnings("unchecked")
-				T newValue = dialog.open((T) currentValue);
+				T newValue = dialog.open(currentValue);
 				if (newValue != null) {
-					LControlEvent event = new LControlEvent(currentValue, newValue);
-					newAction(new LControlAction(self, event));
+					newModifyAction(currentValue, newValue);
 					setValue(newValue);
-					notifyListeners(event);
 				}
 			}
 		});

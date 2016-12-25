@@ -3,12 +3,12 @@ package lwt.action;
 import lwt.event.LControlEvent;
 import lwt.widget.LControl;
 
-public class LControlAction implements LAction {
+public class LControlAction<T> implements LAction {
 	
-	private LControl control;
-	private LControlEvent event;
+	private LControl<T> control;
+	private LControlEvent<T> event;
 	
-	public LControlAction(LControl control, LControlEvent event) {
+	public LControlAction(LControl<T> control, LControlEvent<T> event) {
 		this.control = control;
 		this.event = event;
 	}
@@ -19,8 +19,8 @@ public class LControlAction implements LAction {
 	}
 	
 	private void swap() {
-		Object oldv = event.oldValue;
-		Object newv = event.newValue;
+		T oldv = event.oldValue;
+		T newv = event.newValue;
 		event.oldValue = newv;
 		event.newValue = oldv;
 	}

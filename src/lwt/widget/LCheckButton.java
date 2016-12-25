@@ -1,15 +1,12 @@
 package lwt.widget;
 
-import lwt.action.LControlAction;
-import lwt.event.LControlEvent;
-
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 
-public class LCheckButton extends LControl {
+public class LCheckButton extends LControl<Boolean> {
 
 	private Button button;
 	
@@ -20,17 +17,14 @@ public class LCheckButton extends LControl {
 	 */
 	public LCheckButton(Composite parent, int style) {
 		super(parent, style);
-		LCheckButton self = this;
 		button = new Button(this, SWT.CHECK);
 		button.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent arg0) {
-				if (button.getSelection() == (Boolean)currentValue)
+				if (button.getSelection() == currentValue)
 					return;
-				LControlEvent event = new LControlEvent(currentValue, button.getSelection());
-				newAction(new LControlAction(self, event));
-				notifyListeners(event);
-				currentValue = event.newValue;
+				newModifyAction(currentValue, button.getSelection());
+				currentValue = button.getSelection();
 			}
 		});
 	}
@@ -40,11 +34,12 @@ public class LCheckButton extends LControl {
 			Boolean i = (Boolean) obj;
 			button.setEnabled(true);
 			button.setSelection(i);
+			currentValue = i;
 		} else {
 			button.setEnabled(false);
 			button.setSelection(false);
+			currentValue = null;
 		}
-		currentValue = obj;
 	}
 	
 	public void setText(String text) {

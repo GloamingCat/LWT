@@ -1,8 +1,5 @@
 package lwt.widget;
 
-import lwt.action.LControlAction;
-import lwt.event.LControlEvent;
-
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.StyledText;
 import org.eclipse.swt.events.FocusAdapter;
@@ -11,7 +8,7 @@ import org.eclipse.swt.events.KeyAdapter;
 import org.eclipse.swt.events.KeyEvent;
 import org.eclipse.swt.widgets.Composite;
 
-public class LTextBox extends LControl {
+public class LTextBox extends LControl<String> {
 	
 	private StyledText text;
 
@@ -42,10 +39,8 @@ public class LTextBox extends LControl {
 	
 	private void onTextModify() {
 		if (!text.getText().equals(currentValue)) {
-			LControlEvent event = new LControlEvent(currentValue, text.getText());
-			newAction(new LControlAction(this, event));
-			notifyListeners(event);
-			currentValue = event.newValue;
+			newModifyAction(currentValue, text.getText());
+			currentValue = text.getText();
 		}
 	}
 	
@@ -55,11 +50,12 @@ public class LTextBox extends LControl {
 			String s = (String) value;
 			text.setEnabled(true);
 			text.setText(s);
+			currentValue = s;
 		} else {
 			text.setEnabled(false);
 			text.setText("");
+			currentValue = null;
 		}
-		currentValue = value;
 	}
 
 }
