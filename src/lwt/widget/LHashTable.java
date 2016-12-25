@@ -102,18 +102,18 @@ public class LHashTable<T> extends LWidget {
 	private void addKeyLabel(final String key, final T initialValue) {
 		LHashTable<T> self = this;
 		
+		Composite buttons = new Composite(content, SWT.NONE);
+		GridLayout gl_buttons = new GridLayout(2, true);
+		gl_buttons.marginHeight = 0;
+		gl_buttons.marginWidth = 0;
+		buttons.setLayout(gl_buttons);
+		
 		Label lblKey = new Label(content, SWT.NONE);
 		lblKey.setText(key + ":");
 		
 		Label lblValue = new Label(content, SWT.NONE);
 		lblValue.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		lblValue.setText(initialValue.toString());
-		
-		Composite buttons = new Composite(content, SWT.NONE);
-		GridLayout gl_buttons = new GridLayout(2, true);
-		gl_buttons.marginHeight = 0;
-		gl_buttons.marginWidth = 0;
-		buttons.setLayout(gl_buttons);
 		
 		Button btnEdit = new Button(buttons, SWT.NONE);
 		btnEdit.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
@@ -174,6 +174,9 @@ public class LHashTable<T> extends LWidget {
 		keyMap.put(key, entryList.size());
 		entryList.add(new SimpleEntry<String, T>(key, initialValue));
 		addKeyLabel(key, initialValue);
+		scrolledComposite.setContent(content);
+		scrolledComposite.setMinSize(content.computeSize(SWT.DEFAULT, SWT.DEFAULT));
+		layout();
 	}
 
 	public void deleteKey(String key) {
@@ -195,6 +198,8 @@ public class LHashTable<T> extends LWidget {
 		
 		scrolledComposite.setContent(content);
 		scrolledComposite.setMinSize(content.computeSize(SWT.DEFAULT, SWT.DEFAULT));
+		
+		layout();
 	}
 	
 	public void setShellFactory(LShellFactory<T> factory) {

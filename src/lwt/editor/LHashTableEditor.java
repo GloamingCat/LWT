@@ -2,6 +2,7 @@ package lwt.editor;
 
 import java.util.Map;
 
+import lwt.action.LActionStack;
 import lwt.event.LHashEditEvent;
 import lwt.event.LHashKeyEvent;
 import lwt.event.listener.LHashListener;
@@ -45,6 +46,11 @@ public class LHashTableEditor<T> extends LEditor {
 				map.remove(event.key);
 			}
 		});
+	}
+	
+	public void setActionStack(LActionStack stack) {
+		super.setActionStack(stack);
+		table.setActionStack(stack);
 	}
 	
 	@SuppressWarnings("unchecked")

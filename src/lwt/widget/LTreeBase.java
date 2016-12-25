@@ -72,6 +72,11 @@ public abstract class LTreeBase<T, ST> extends LSelectableCollection<T, ST> {
 	    	public void dragStart(DragSourceEvent event) {
 	    		TreeItem[] selection = tree.getSelection();
 	    		if (selection.length > 0) {
+	    			Object block = selection[0].getData(BLOCK);
+	    			if (block != null) {
+	    				event.doit = false;
+	    				return;
+	    			}
 	    			dragNode = toNode(selection[0]);
 	    			if (selection[0].getParentItem() != null) {
 	    				dragParent = selection[0].getParentItem();
