@@ -54,7 +54,7 @@ public abstract class LControl<T> extends LWidget {
 		return e;
 	}
 	
-	public Object getValue() {
+	public T getValue() {
 		return currentValue;
 	}
 

@@ -33,6 +33,8 @@ public abstract class LGrid<T, ST> extends LSelectableCollection<T, ST> {
 	protected FillLayout fillLayout;
 	protected int selectedIndex = -1;
 	protected T selectedObj = null;
+
+	protected boolean editable = true;
 	
 	/**
 	 * Create the composite.
@@ -52,6 +54,16 @@ public abstract class LGrid<T, ST> extends LSelectableCollection<T, ST> {
 		label.setMenu(menu);
 		MenuItem mntmNewItem = new MenuItem(menu, SWT.NONE);
 		mntmNewItem.setText("New Item");
+	}
+	
+	public boolean getEditable() {
+		return editable;
+	}
+	
+	public void setEditable(boolean value) {
+		if (editable != value) {
+			editable = value;
+		}
 	}
 
 	public void setDataCollection(LDataCollection<T> collection) {
@@ -107,22 +119,10 @@ public abstract class LGrid<T, ST> extends LSelectableCollection<T, ST> {
 		menu.setData("label", label);
 		
 		if (placeholder) {
-			setInsertNewEnabled(menu, true);
+			if (editable)
+				setInsertNewEnabled(menu, true);
 		} else {
 			label.setData(data);
-			setEditEnabled(menu, true);
-			setInsertNewEnabled(menu, true);
-			setDuplicateEnabled(menu, true);
-			setDeleteEnabled(menu, true);
-			label.addMouseListener(new MouseAdapter() {
-				@Override
-				public void mouseDown(MouseEvent arg0) {
-					int i = indexOf(label);
-					select(data, i);
-					LSelectionEvent e = new LSelectionEvent(new LPath(i), data);
-					notifySelectionListeners(e);
-				}
-			});
 			label.addPaintListener(new PaintListener() {
 				@Override
 				public void paintControl(PaintEvent e) {
@@ -132,6 +132,21 @@ public abstract class LGrid<T, ST> extends LSelectableCollection<T, ST> {
 					}
 				}
 			});
+			label.addMouseListener(new MouseAdapter() {
+				@Override
+				public void mouseDown(MouseEvent arg0) {
+					int i = indexOf(label);
+					select(data, i);
+					LSelectionEvent e = new LSelectionEvent(new LPath(i), data);
+					notifySelectionListeners(e);
+				}
+			});
+			if (!editable)
+				return label;
+			setEditEnabled(menu, true);
+			setInsertNewEnabled(menu, true);
+			setDuplicateEnabled(menu, true);
+			setDeleteEnabled(menu, true);
 		}
 		
 		return label;
