@@ -2,12 +2,12 @@ package myeditor.project;
 
 import lwt.dataserialization.LSerializer;
 
-public class Project implements LSerializer {
+public class MyProject implements LSerializer {
 
-	public static Project current = null;
+	public static MyProject current = null;
 	public String path;
 	
-	public Project(String path) {
+	public MyProject(String path) {
 		this.path = path;
 		current = this;
 	}

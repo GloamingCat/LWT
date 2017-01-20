@@ -49,7 +49,12 @@ public abstract class LView extends Composite {
 	}
 	
 	public void onVisible() {
-		onChildVisible();
+		try {
+			onChildVisible();
+		} catch(Exception e) {
+			System.out.println(this.getClass());
+			throw e;
+		}
 	}
 	
 	public void onChildVisible() {

@@ -39,6 +39,16 @@ public abstract class LList<T, ST> extends LTree<T, ST> {
 		refreshAll();
 	}
 	
+	public void setItemNode(TreeItem item, LDataTree<T> node) {
+		String id = "";
+		if (includeID) {
+			id = stringID(indexOf(item));
+		}
+		String name = node.data.toString();
+		item.setData(node.data);
+		item.setText(id + name);
+	}
+	
 	public void refreshObject(LPath path) {
 		TreeItem item = toTreeItem(path);
 		if (item != null) {
@@ -52,7 +62,6 @@ public abstract class LList<T, ST> extends LTree<T, ST> {
 	}
 	
 	public void refreshAll() {
-	
 		if (includeID) {
 			int i = 0;
 			for(TreeItem item : tree.getItems()) {

@@ -2,10 +2,10 @@ package myeditor;
 
 import lwt.LDefaultApplicationShell;
 import lwt.dataserialization.LSerializer;
-import myeditor.project.Project;
-import myeditor.views.ContentGridEditor;
-import myeditor.views.ContentListEditor;
-import myeditor.views.ContentTreeEditor;
+import myeditor.project.MyProject;
+import myeditor.views.MyContentGridEditor;
+import myeditor.views.MyContentListEditor;
+import myeditor.views.MyContentTreeEditor;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
@@ -13,7 +13,7 @@ import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.MenuItem;
 
-public class ApplicationShell extends LDefaultApplicationShell {
+public class MyApplicationShell extends LDefaultApplicationShell {
 	
 	/**
 	 * Launch the application.
@@ -22,7 +22,7 @@ public class ApplicationShell extends LDefaultApplicationShell {
 	public static void main(String args[]) {
 		try {
 			Display display = Display.getDefault();
-			ApplicationShell shell = new ApplicationShell(display);
+			MyApplicationShell shell = new MyApplicationShell(display);
 			shell.open();
 			shell.layout();
 			while (!shell.isDisposed()) {
@@ -39,14 +39,14 @@ public class ApplicationShell extends LDefaultApplicationShell {
 	 * Create the shell.
 	 * @param display
 	 */
-	public ApplicationShell(Display display) {
+	public MyApplicationShell(Display display) {
 		super(display);
 		setText("My Editor");
 		setSize(450, 300);
 		
-		ContentTreeEditor treeEditor = new ContentTreeEditor(this, SWT.NONE);
-		ContentListEditor listEditor = new ContentListEditor(this, SWT.NONE);
-		ContentGridEditor gridEditor = new ContentGridEditor(this, SWT.NONE);
+		MyContentTreeEditor treeEditor = new MyContentTreeEditor(this, SWT.NONE);
+		MyContentListEditor listEditor = new MyContentListEditor(this, SWT.NONE);
+		MyContentGridEditor gridEditor = new MyContentGridEditor(this, SWT.NONE);
 		
 		MenuItem mntmContentList = new MenuItem(menuView, SWT.NONE);
 		mntmContentList.addSelectionListener(new SelectionAdapter() {
@@ -78,7 +78,7 @@ public class ApplicationShell extends LDefaultApplicationShell {
 	
 	@Override
 	protected LSerializer createProject(String path) {
-		return new Project(path);
+		return new MyProject(path);
 	}
 	
 	@Override

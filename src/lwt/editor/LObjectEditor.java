@@ -24,6 +24,7 @@ import org.eclipse.swt.widgets.Composite;
 public class LObjectEditor extends LEditor {
 
 	protected HashMap<String, LControl<?>> controlMap = new HashMap<>();
+	protected HashMap<String, LEditor> editorMap = new HashMap<>();
 	public LCollectionEditor<?, ?> collectionEditor;
 	protected Object currentObject;
 	protected LPath currentPath;
@@ -36,6 +37,15 @@ public class LObjectEditor extends LEditor {
 	 */
 	public LObjectEditor(Composite parent, int style) {
 		super(parent, style);
+	}
+	
+	public <T> void addChild(LEditor editor, String key) {
+		if (key.isEmpty()) {
+			addChild(editor);
+		} else {
+			addChild((LView) editor);
+			editorMap.put(key, editor);
+		}
 	}
 	
 	public <T> void addControl(LControlView<T> view, String key) {
@@ -82,9 +92,16 @@ public class LObjectEditor extends LEditor {
 					entry.getValue().setValue(value);
 				}
 			}
+			for(Map.Entry<String, LEditor> entry : editorMap.entrySet()) {
+				Object value = getFieldValue(obj, entry.getKey());
+				entry.getValue().setObject(value);
+			}
 		} else {
 			for(Map.Entry<String, LControl<?>> entry : controlMap.entrySet()) {
 				entry.getValue().setValue(null);
+			}
+			for(Map.Entry<String, LEditor> entry : editorMap.entrySet()) {
+				entry.getValue().setObject(null);
 			}
 		}
 		for(LEditor subEditor : subEditors) {

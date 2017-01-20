@@ -19,8 +19,7 @@ public abstract class LListEditor<T, ST> extends LAbstractTreeEditor<T, ST> {
 	 * @param style
 	 */
 	public LListEditor(Composite parent, int style) {
-		super(parent, style);
-		
+		super(parent, style);		
 		list = new LList<T, ST>(this, SWT.NONE) {
 			@Override
 			public LEditEvent<ST> edit(LPath path) {
@@ -47,9 +46,16 @@ public abstract class LListEditor<T, ST> extends LAbstractTreeEditor<T, ST> {
 				return new LDataTree<T> (data);
 			}
 		};
+		LList<T, ST> customList = createList();
+		if (customList != null) {
+			list.dispose();
+			list = customList;
+		}
 		setListeners();
 		list.setActionStack(getActionStack());
 	}
+	
+	protected LList<T, ST> createList() { return null; }
 	
 	public LList<T, ST> getCollectionWidget() {
 		return list;

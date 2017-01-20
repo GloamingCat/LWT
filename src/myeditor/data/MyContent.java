@@ -4,14 +4,14 @@ import org.eclipse.swt.graphics.Image;
 
 import lwt.datainterface.LGraphical;
 
-public class Content implements LGraphical {
+public class MyContent implements LGraphical {
 
 	public String name;
 	public int value;
 	
-	public Content() {}
+	public MyContent() {}
 	
-	public Content(String name, int value) { 
+	public MyContent(String name, int value) { 
 		this.name = name;
 		this.value = value;
 	}

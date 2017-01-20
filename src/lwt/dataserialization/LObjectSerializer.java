@@ -4,8 +4,8 @@ public abstract class LObjectSerializer<T> extends LDefaultSerializer {
 
 	protected T data;
 	
-	public LObjectSerializer(String path, Class<?> type) {
-		super(path, type);
+	public LObjectSerializer(String path) {
+		super(path);
 	}
 	
 	public T getData() {

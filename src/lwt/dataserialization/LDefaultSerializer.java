@@ -5,15 +5,13 @@ import java.io.File;
 public abstract class LDefaultSerializer implements LSerializer {
 
 	protected String path;
-	protected Class<?> type;
 	
-	public LDefaultSerializer(String path, Class<?> type) {
+	public LDefaultSerializer(String path) {
 		this.path = path;
-		this.type = type;
 	}
 	
-	public Class<?> getType() {
-		return type;
+	public void setPath(String path) {
+		this.path = path;
 	}
 	
 	@Override

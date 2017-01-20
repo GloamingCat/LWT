@@ -28,6 +28,7 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.custom.ScrolledComposite;
+import org.eclipse.wb.swt.SWTResourceManager;
 
 public class LHashTable<T> extends LWidget {
 	
@@ -68,6 +69,7 @@ public class LHashTable<T> extends LWidget {
 		scrolledComposite.setExpandVertical(true);
 		
 		content = new Composite(scrolledComposite, SWT.NONE);
+		content.setBackground(SWTResourceManager.getColor(SWT.COLOR_WHITE));
 		content.setLayout(new GridLayout(3, false));
 		
 		scrolledComposite.setContent(content);

@@ -19,8 +19,6 @@ public class LMoveAction<T> implements LAction {
 		this.sourceIndex = sourceIndex;
 		this.destParent = destParent;
 		this.destIndex = destIndex;
-		String dest = destParent == null ? "" : destParent.toString();
-		String src = sourceParent == null ? "" : sourceParent.toString();
 	}
 
 	@Override

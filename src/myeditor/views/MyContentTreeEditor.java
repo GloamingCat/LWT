@@ -4,7 +4,7 @@ import lwt.action.LActionStack;
 import lwt.dataestructure.LDataTree;
 import lwt.editor.LDefaultTreeEditor;
 import lwt.editor.LView;
-import myeditor.data.Content;
+import myeditor.data.MyContent;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.SashForm;
@@ -12,17 +12,17 @@ import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.layout.GridData;
 
-public class ContentTreeEditor extends LView {
+public class MyContentTreeEditor extends LView {
 
-	private LDefaultTreeEditor<Content> treeEditor;
-	private ContentEditor contentEditor;
+	private LDefaultTreeEditor<MyContent> treeEditor;
+	private MyContentEditor contentEditor;
 	
 	/**
 	 * Create the composite.
 	 * @param parent
 	 * @param style
 	 */
-	public ContentTreeEditor(Composite parent, int style) {
+	public MyContentTreeEditor(Composite parent, int style) {
 		super(parent, style);
 		
 		setLayout(new FillLayout());
@@ -31,19 +31,19 @@ public class ContentTreeEditor extends LView {
 		
 		SashForm sashForm = new SashForm(this, SWT.NONE);
 		
-		final LDataTree<Content> contentTree = createExampleTree();
-		treeEditor = new LDefaultTreeEditor<Content>(sashForm, SWT.NONE) {
+		final LDataTree<MyContent> contentTree = createExampleTree();
+		treeEditor = new LDefaultTreeEditor<MyContent>(sashForm, SWT.NONE) {
 			@Override
-			public LDataTree<Content> getDataCollection() {
+			public LDataTree<MyContent> getDataCollection() {
 				return contentTree;
 			}
 			@Override
-			public Content createNewData() {
-				return new Content("Bla", 0);
+			public MyContent createNewData() {
+				return new MyContent("Bla", 0);
 			}
 			@Override
-			public Content duplicateData(Content original) {
-				return new Content(original.name, original.value);
+			public MyContent duplicateData(MyContent original) {
+				return new MyContent(original.name, original.value);
 			}
 		};
 		treeEditor.getCollectionWidget().setInsertNewEnabled(true);
@@ -53,7 +53,7 @@ public class ContentTreeEditor extends LView {
 		treeEditor.getCollectionWidget().setDeleteEnabled(true);
 		addChild(treeEditor);
 		
-		contentEditor = new ContentEditor(sashForm, SWT.NONE);
+		contentEditor = new MyContentEditor(sashForm, SWT.NONE);
 		contentEditor.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		treeEditor.addChild(contentEditor);
 		
@@ -61,20 +61,20 @@ public class ContentTreeEditor extends LView {
 		
 	}
 	
-	private LDataTree<Content> createExampleTree() {
-		LDataTree<Content> root = new LDataTree<>();
+	private LDataTree<MyContent> createExampleTree() {
+		LDataTree<MyContent> root = new LDataTree<>();
 		for (int i = 0; i < 3; i++) {
 			String name = "item " + i;
-			Content data = new Content(name, i);
-			LDataTree<Content> node = new LDataTree<Content>(data, root);
+			MyContent data = new MyContent(name, i);
+			LDataTree<MyContent> node = new LDataTree<MyContent>(data, root);
 			for (int j = 0; j < 3; j++) {
 				name = "item " + i + " " + j;
-				data = new Content(name, j);
-				LDataTree<Content> subnode = new LDataTree<Content>(data, node);
+				data = new MyContent(name, j);
+				LDataTree<MyContent> subnode = new LDataTree<MyContent>(data, node);
 				for (int k = 0; k < 3; k++) {
 					name = "item " + i + " " + j + " " + k;
-					data = new Content(name, k);
-					new LDataTree<Content>(data, subnode);
+					data = new MyContent(name, k);
+					new LDataTree<MyContent>(data, subnode);
 				}
 			}
 	    }

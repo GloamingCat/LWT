@@ -11,14 +11,14 @@ import lwt.widget.LSpinner;
 import lwt.widget.LText;
 import myeditor.MyVocab;
 
-public class ContentEditor extends LObjectEditor {
+public class MyContentEditor extends LObjectEditor {
 
 	/**
 	 * Create the composite.
 	 * @param parent
 	 * @param style
 	 */
-	public ContentEditor(Composite parent, int style) {
+	public MyContentEditor(Composite parent, int style) {
 		super(parent, style);
 		
 		setLayout(new GridLayout(2, false));

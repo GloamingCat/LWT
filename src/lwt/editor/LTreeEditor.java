@@ -45,9 +45,16 @@ public abstract class LTreeEditor<T, ST> extends LAbstractTreeEditor<T, ST> {
 				return getDataCollection().getNode(path);
 			}
 		};
+		LTree<T, ST> customTree = createTree();
+		if (customTree != null) {
+			tree.dispose();
+			tree = customTree;
+		}
 		setListeners();
 		tree.setActionStack(getActionStack());
 	}
+	
+	protected LTree<T, ST> createTree() { return null; }
 
 	public LTree<T, ST> getCollectionWidget() {
 		return tree;
