@@ -207,7 +207,6 @@ public class LHashTable<T> extends LWidget {
 	}
 	
 	public void notifyEditListeners(LHashEditEvent<T> event) {
-		System.out.println("lalala2");
 		for(LHashListener<T> listener : editListeners) {
 			listener.onEdit(event);
 		}

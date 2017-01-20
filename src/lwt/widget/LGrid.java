@@ -135,6 +135,8 @@ public abstract class LGrid<T, ST> extends LSelectableCollection<T, ST> {
 			label.addMouseListener(new MouseAdapter() {
 				@Override
 				public void mouseDown(MouseEvent arg0) {
+					if (label.isDisposed())
+						return;
 					int i = indexOf(label);
 					select(data, i);
 					LSelectionEvent e = new LSelectionEvent(new LPath(i), data);

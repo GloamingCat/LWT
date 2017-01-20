@@ -31,7 +31,6 @@ public class LHashTableEditor<T> extends LEditor {
 			@Override
 			public void onEdit(LHashEditEvent<T> event) {
 				map.put(event.key, event.newValue);
-				System.out.println("lalala");
 			}
 		});
 		table.addInsertListener(new LHashListener<T> () {

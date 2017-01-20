@@ -44,6 +44,7 @@ public abstract class LTree<T, ST> extends LTreeBase<T, ST> {
 	}
 	
 	public LEditEvent<ST> edit(LPath path) {
+		refreshAll();
 		return null;
 	}
 	
@@ -81,7 +82,7 @@ public abstract class LTree<T, ST> extends LTreeBase<T, ST> {
 			LPath path = toPath(item);
 			LEditEvent<ST> event = newEditAction(path);
 			if (event != null) {
-    			refreshObject(path);
+				setItemNode(item, toNode(path));
 			}
 		}
 	}
@@ -104,7 +105,7 @@ public abstract class LTree<T, ST> extends LTreeBase<T, ST> {
 			LPath itemPath = toPath(item);
 			LDataTree<T> node = duplicateNode(itemPath);
 			LPath parentPath = toPath(item.getParentItem());
-			int i = indexOf(item);
+			int i = indexOf(item) + 1;
 			newInsertAction(parentPath, i, node);
 		}
 	}

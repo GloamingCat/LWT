@@ -41,22 +41,29 @@ public abstract class LList<T, ST> extends LTree<T, ST> {
 	
 	public void refreshObject(LPath path) {
 		TreeItem item = toTreeItem(path);
-		String id = "";
-		if (includeID) {
-			id = stringID(path.index);
-		}
 		if (item != null) {
-			item.setText(id + toObject(path).toString());
+			String id = "";
+			if (includeID) {
+				id = stringID(path.index);
+			}
+			String name = toObject(path).toString();
+			item.setText(id + name);
 		}
 	}
 	
 	public void refreshAll() {
+	
 		if (includeID) {
 			int i = 0;
 			for(TreeItem item : tree.getItems()) {
 				String name = item.getData().toString();
 				String id = stringID(i++);
 				item.setText(id + name);
+			}
+		} else {
+			for(TreeItem item : tree.getItems()) {
+				String name = item.getData().toString();
+				item.setText(name);
 			}
 		}
 	}

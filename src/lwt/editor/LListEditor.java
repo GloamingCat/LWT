@@ -38,11 +38,13 @@ public abstract class LListEditor<T, ST> extends LAbstractTreeEditor<T, ST> {
 			}
 			@Override
 			public LDataTree<T> duplicateNode(LPath path) {
-				return new LDataTree<T> (duplicateData(getDataCollection().get(path.index)));
+				T data = duplicateData(getDataCollection().get(path.index));
+				return new LDataTree<T> (data);
 			}
 			@Override
 			public LDataTree<T> toNode(LPath path) {
-				return new LDataTree<T> (getDataCollection().get(path.index));
+				T data = getDataCollection().get(path.index);
+				return new LDataTree<T> (data);
 			}
 		};
 		setListeners();

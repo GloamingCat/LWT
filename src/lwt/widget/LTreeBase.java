@@ -35,6 +35,7 @@ public abstract class LTreeBase<T, ST> extends LSelectableCollection<T, ST> {
 	protected final String BLOCK = "block";
 	
 	protected Tree tree;
+	protected LDataCollection<T> dataCollection;
 	
 	private LDataTree<T> dragNode;
 	private TreeItem dragParent;
@@ -301,9 +302,10 @@ public abstract class LTreeBase<T, ST> extends LSelectableCollection<T, ST> {
 		try {
 			TreeItem sourceItem = toTreeItem(sourceParent, sourceIndex);
 			LDataTree<T> node = disposeTreeItem(sourceItem);
-			refreshAll();
-			return moveTreeItem(node, toTreeItem(sourceParent), sourceIndex, 
+			LMoveEvent<T> e = moveTreeItem(node, toTreeItem(sourceParent), sourceIndex, 
 					toTreeItem(destParent), destIndex);
+			refreshAll();
+			return e;
 		} catch(Exception e) {
 			String dest = destParent == null ? "" : destParent.toString();
 			String src = sourceParent == null ? "" : sourceParent.toString();
@@ -503,7 +505,23 @@ public abstract class LTreeBase<T, ST> extends LSelectableCollection<T, ST> {
 		}
 	}
 	
-	public void refreshAll() { }
+	public void refreshAll() {
+		if (dataCollection != null) {
+			int i = 0;
+			for (LDataTree<T> child : dataCollection.toTree().children) {
+				refreshNode(child, tree.getItems()[i]);
+				i++;
+			}
+		}
+	}
+	
+	private void refreshNode(LDataTree<T> node, TreeItem item) {
+		item.setText(node.data.toString());
+		int i = 0;
+		for (LDataTree<T> child : node.children) {
+			refreshNode(child, item.getItems()[i]);
+		}
+	}
 	
 	public void clear() {
 		for(TreeItem item : tree.getItems()) {
