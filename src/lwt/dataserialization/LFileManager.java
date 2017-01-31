@@ -3,6 +3,10 @@ package lwt.dataserialization;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.util.logging.FileHandler;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import java.util.logging.SimpleFormatter;
 
 public class LFileManager {
 	
@@ -50,6 +54,24 @@ public class LFileManager {
 			System.out.println("couldn't save: " + path);
 			return false;
 		}
+	}
+	
+	public static void log(Exception e) {
+	    Logger logger = Logger.getAnonymousLogger();
+	    FileHandler fh;  
+	    try {  
+
+	        // This block configure the logger with handler and formatter  
+	        fh = new FileHandler(applicationPath() + "/log.txt");  
+	        logger.addHandler(fh);
+	        SimpleFormatter formatter = new SimpleFormatter();  
+	        fh.setFormatter(formatter);  
+
+	        // the following statement is used to log any messages  
+	        logger.log(Level.SEVERE, "an exception was thrown", e); 
+	    } catch (Exception e0) {  
+	        e.printStackTrace();  
+	    }  
 	}
 	
 }

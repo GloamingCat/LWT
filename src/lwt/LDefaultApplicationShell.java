@@ -43,8 +43,6 @@ public abstract class LDefaultApplicationShell extends Shell {
 		
 		LVocab vocab = LVocab.instance;
 		
-		applicationName = getText();
-		
 		setSize(632, 400);
 		
 		stackLayout = new StackLayout();

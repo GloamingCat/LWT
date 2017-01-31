@@ -95,6 +95,7 @@ public class LObjectEditor extends LEditor {
 			for(Map.Entry<String, LEditor> entry : editorMap.entrySet()) {
 				Object value = getFieldValue(obj, entry.getKey());
 				entry.getValue().setObject(value);
+				entry.getValue().onVisible();
 			}
 		} else {
 			for(Map.Entry<String, LControl<?>> entry : controlMap.entrySet()) {
@@ -102,10 +103,12 @@ public class LObjectEditor extends LEditor {
 			}
 			for(Map.Entry<String, LEditor> entry : editorMap.entrySet()) {
 				entry.getValue().setObject(null);
+				entry.getValue().onVisible();
 			}
 		}
 		for(LEditor subEditor : subEditors) {
 			subEditor.setObject(obj);
+			subEditor.onVisible();
 		}
 		for(LSelectionListener listener : selectionListeners) {
 			listener.onSelect(new LSelectionEvent(currentPath, obj));

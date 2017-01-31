@@ -432,12 +432,16 @@ public abstract class LTreeBase<T, ST> extends LSelectableCollection<T, ST> {
 	}
 	
 	public void setItemNode(TreeItem item, LDataTree<T> node) {
-		item.setText(node.data.toString());
+		item.setText(dataToString(node.data));
 		item.setData(node.data);
 		for(LDataTree<T> child : node.children) {
 			TreeItem newItem = new TreeItem(item, item.getStyle());
 			setItemNode(newItem, child);
 		}
+	}
+	
+	protected String dataToString(T data) {
+		return data.toString();
 	}
 	
 	//-------------------------------------------------------------------------------------
@@ -501,7 +505,7 @@ public abstract class LTreeBase<T, ST> extends LSelectableCollection<T, ST> {
 	public void refreshObject(LPath path) {
 		TreeItem item = toTreeItem(path);
 		if (item != null) {
-			item.setText(toObject(path).toString());
+			item.setText(dataToString(toObject(path)));
 		}
 	}
 	
@@ -516,7 +520,7 @@ public abstract class LTreeBase<T, ST> extends LSelectableCollection<T, ST> {
 	}
 	
 	private void refreshNode(LDataTree<T> node, TreeItem item) {
-		item.setText(node.data.toString());
+		item.setText(dataToString(node.data));
 		int i = 0;
 		for (LDataTree<T> child : node.children) {
 			refreshNode(child, item.getItems()[i]);

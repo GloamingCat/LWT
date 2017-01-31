@@ -22,6 +22,7 @@ public abstract class LEditor extends LView {
 			Field field = object.getClass().getField(name);
 			return field.get(object);
 		} catch (NoSuchFieldException e) {
+			System.out.println(object.getClass());
 			e.printStackTrace();
 		} catch (SecurityException e) {
 			e.printStackTrace();

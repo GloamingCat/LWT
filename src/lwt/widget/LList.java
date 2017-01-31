@@ -44,7 +44,7 @@ public abstract class LList<T, ST> extends LTree<T, ST> {
 		if (includeID) {
 			id = stringID(indexOf(item));
 		}
-		String name = node.data.toString();
+		String name = dataToString(node.data);
 		item.setData(node.data);
 		item.setText(id + name);
 	}
@@ -56,27 +56,28 @@ public abstract class LList<T, ST> extends LTree<T, ST> {
 			if (includeID) {
 				id = stringID(path.index);
 			}
-			String name = toObject(path).toString();
+			String name = dataToString(toObject(path));
 			item.setText(id + name);
 		}
 	}
 	
+	@SuppressWarnings("unchecked")
 	public void refreshAll() {
 		if (includeID) {
 			int i = 0;
 			for(TreeItem item : tree.getItems()) {
-				String name = item.getData().toString();
+				String name = dataToString((T) item.getData());
 				String id = stringID(i++);
 				item.setText(id + name);
 			}
 		} else {
 			for(TreeItem item : tree.getItems()) {
-				String name = item.getData().toString();
+				String name = dataToString((T) item.getData());
 				item.setText(name);
 			}
 		}
 	}
-	
+
 	protected String stringID(int i) {
 		return String.format("[%03d]", i);
 	}
