@@ -21,7 +21,7 @@ public class LSpinner extends LControl<Integer> {
 		spinner.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent arg0) {
-				if (spinner.getSelection() == currentValue)
+				if (currentValue != null && spinner.getSelection() == currentValue)
 					return;
 				newModifyAction(currentValue, spinner.getSelection());
 				currentValue = spinner.getSelection();

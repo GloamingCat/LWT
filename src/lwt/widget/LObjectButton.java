@@ -44,5 +44,17 @@ public class LObjectButton<T> extends LControl<T> {
 	public void setText(String text) {
 		button.setText(text);
 	}
+	
+	@SuppressWarnings("unchecked")
+	@Override
+	public void setValue(Object value) {
+		if (value != null) {
+			button.setEnabled(true);
+			currentValue = (T) value;
+		} else {
+			button.setEnabled(false);
+			currentValue = null;
+		}
+	}
 
 }

@@ -89,7 +89,12 @@ public class LObjectEditor extends LEditor {
 					entry.getValue().setValue(obj);
 				} else {
 					Object value = getFieldValue(obj, entry.getKey());
-					entry.getValue().setValue(value);
+					try {
+						entry.getValue().setValue(value);
+					} catch (Exception e) {
+						System.out.println(entry.getKey());
+						e.printStackTrace();
+					}
 				}
 			}
 			for(Map.Entry<String, LEditor> entry : editorMap.entrySet()) {
