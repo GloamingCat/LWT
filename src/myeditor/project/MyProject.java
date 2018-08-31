@@ -23,6 +23,9 @@ public class MyProject implements LSerializer {
 	public String scriptPath() {
 		return path + "scripts/custom/";
 	}
+	
+	@Override
+	public void initialize() {}
 
 	@Override
 	public boolean save() {

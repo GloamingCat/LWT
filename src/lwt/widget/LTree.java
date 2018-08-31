@@ -13,6 +13,7 @@ import org.eclipse.swt.widgets.TreeItem;
 public abstract class LTree<T, ST> extends LTreeBase<T, ST> {
 	
 	protected Menu menu;
+	protected boolean includeID = false;
 	
 	/**
 	 * Create the composite.
@@ -23,6 +24,14 @@ public abstract class LTree<T, ST> extends LTreeBase<T, ST> {
 		super(parent, style);
 		menu = new Menu(tree);
 		tree.setMenu(menu);
+	}
+	
+	public void setIncludeID(boolean value) {
+		includeID = value;
+	}
+	
+	protected String stringID(int i) {
+		return String.format("[%03d]", i);
 	}
 	
 	//-------------------------------------------------------------------------------------

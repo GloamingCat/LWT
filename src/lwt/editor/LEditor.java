@@ -22,7 +22,7 @@ public abstract class LEditor extends LView {
 			Field field = object.getClass().getField(name);
 			return field.get(object);
 		} catch (NoSuchFieldException e) {
-			System.out.println(object.getClass());
+			System.out.println(name + " not found in " + object.getClass().toString());
 			e.printStackTrace();
 		} catch (SecurityException e) {
 			e.printStackTrace();

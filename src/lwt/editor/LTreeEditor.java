@@ -60,6 +60,6 @@ public abstract class LTreeEditor<T, ST> extends LAbstractTreeEditor<T, ST> {
 		return tree;
 	}
 	
-	protected abstract LDataTree<T> getDataCollection();
+	public abstract LDataTree<T> getDataCollection();
 
 }

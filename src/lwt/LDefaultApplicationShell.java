@@ -220,8 +220,12 @@ public abstract class LDefaultApplicationShell extends Shell {
 				return project;
 			}
 		}
+		newProject.initialize();
 		newProject.save();
 		mntmView.setEnabled(true);
+		String path = LFileManager.appDataPath(applicationName) + "lattest.txt";
+		byte[] bytes = resultPath.getBytes();
+		LFileManager.save(path, bytes);
 		return newProject;
 	}
 	

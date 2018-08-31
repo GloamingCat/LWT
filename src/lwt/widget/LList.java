@@ -77,9 +77,5 @@ public abstract class LList<T, ST> extends LTree<T, ST> {
 			}
 		}
 	}
-
-	protected String stringID(int i) {
-		return String.format("[%03d]", i);
-	}
 	
 }
