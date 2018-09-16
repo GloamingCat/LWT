@@ -206,4 +206,6 @@ public abstract class LCollection<T, ST> extends LWidget {
 	
 	public abstract void refreshAll();
 	
+	public abstract LPath getSelectedPath();
+	
 }

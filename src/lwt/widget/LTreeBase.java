@@ -32,7 +32,7 @@ import org.eclipse.swt.events.SelectionEvent;
 
 public abstract class LTreeBase<T, ST> extends LSelectableCollection<T, ST> {
 	
-	protected final String BLOCK = "block";
+	protected static final String BLOCK = "block";
 	
 	protected Tree tree;
 	protected LDataCollection<T> dataCollection;
@@ -291,6 +291,7 @@ public abstract class LTreeBase<T, ST> extends LSelectableCollection<T, ST> {
 	
 	public LSelectionEvent select(LPath path) {
 		if (path == null) {
+			tree.deselectAll();
 			return new LSelectionEvent(null, null);
 		}
 		TreeItem item = toTreeItem(path);

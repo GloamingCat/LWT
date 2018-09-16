@@ -22,6 +22,11 @@ public abstract class LControl<T> extends LWidget {
 		super(parent, style);
 	}
 	
+	public void modify(T newValue) {
+		setValue(newValue);
+		newModifyAction(currentValue, newValue);
+	}
+	
 	protected void newModifyAction(T oldValue, T newValue) {
 		LControlEvent<T> event = new LControlEvent<T>(oldValue, newValue);
 		newAction(new LControlAction<T>(this, event));

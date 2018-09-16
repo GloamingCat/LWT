@@ -13,7 +13,7 @@ import lwt.widget.LTree;
 
 import org.eclipse.swt.widgets.Composite;
 
-public abstract class LAbstractTreeEditor<T, ST> extends LCollectionEditor<T, ST> {
+public abstract class LAbstractTreeEditor<T, ST> extends LSelectableCollectionEditor<T, ST> {
 	
 	/**
 	 * Create the composite.

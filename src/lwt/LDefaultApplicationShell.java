@@ -39,7 +39,7 @@ public abstract class LDefaultApplicationShell extends Shell {
 	 * @param display
 	 */
 	public LDefaultApplicationShell(Display display) {
-		super(display, SWT.SHELL_TRIM);
+		super(display, SWT.SHELL_TRIM | SWT.DOUBLE_BUFFERED);
 		
 		LVocab vocab = LVocab.instance;
 		

@@ -69,14 +69,12 @@ public class LDataTree<T> implements Serializable, LDataCollection<T> {
 	
 	protected void addChild(LDataTree<T> child) {
 		children.add(child);
-		System.out.println("added " + child.id + " on " + id);
-		dataMap.put(child.id, data);
+		dataMap.put(child.id, child.data);
 	}
 	
 	protected void addChild(LDataTree<T> child, int pos) {
 		children.add(pos, child);
-		System.out.println("added " + child.id + " on " + id);
-		dataMap.put(child.id, data);
+		dataMap.put(child.id, child.data);
 	}
 	
 	protected void removeChild(LDataTree<T> child) {
@@ -88,9 +86,8 @@ public class LDataTree<T> implements Serializable, LDataCollection<T> {
 		for(LDataTree<T> child : children) {
 			child.parent = this;
 			child.restoreParents();
-			Integer id = child.id;
-			if (id != null)
-				dataMap.put(id, child.data);
+			if (child.id >= 0)
+				dataMap.put(child.id, child.data);
 		}
 	}
 	
@@ -130,12 +127,16 @@ public class LDataTree<T> implements Serializable, LDataCollection<T> {
 	}
 	
 	public LPath toPath() {
-		if (parent == null) {
-			return null;
+		LDataTree<T> current = this;
+		LPath path = null;
+		while (current.parent != null) {
+			int pos = current.parent.children.indexOf(current);
+			LPath tail = path;
+			path = new LPath(pos);
+			path.child = tail;
+			current = current.parent;
 		}
-		LPath parentPath = parent.toPath();
-		parentPath.addLast(parent.children.indexOf(this));
-		return parentPath;
+		return path;
 	}
 
 	@Override
@@ -151,6 +152,23 @@ public class LDataTree<T> implements Serializable, LDataCollection<T> {
 			obj = child.get(id);
 			if (obj != null)
 				return obj;
+		}
+		return null;
+	}
+	
+	//-------------------------------------------------------------------------------------
+	// Auxiliary
+	//-------------------------------------------------------------------------------------
+	
+	public LDataTree<T> findNode(int id) {
+		for (LDataTree<T> child : children) {
+			if (child.id == id)
+				return child;
+			else {
+				LDataTree<T> node = child.findNode(id);
+				if (node != null)
+					return node;
+			}
 		}
 		return null;
 	}

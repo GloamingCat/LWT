@@ -29,7 +29,7 @@ public abstract class LObjectShell<T> extends Shell {
 		
 		Composite buttons = new Composite(this, SWT.NONE);
 		buttons.setLayout(new GridLayout(2, true));
-		buttons.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+		buttons.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, true, false, 1, 1));
 		
 		Button btnOk = new Button(buttons, SWT.NONE);
 		btnOk.addSelectionListener(new SelectionAdapter() {

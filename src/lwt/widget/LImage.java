@@ -27,7 +27,7 @@ public class LImage extends Composite {
 		addPaintListener(new PaintListener() {
 			@Override
 			public void paintControl(PaintEvent e) {
-				if (image == null) {
+				if (image == null || rect == null) {
 					return;
 				}
 				int x = 0;
