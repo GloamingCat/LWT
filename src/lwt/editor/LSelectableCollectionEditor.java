@@ -3,7 +3,6 @@ package lwt.editor;
 import java.util.ArrayList;
 
 import lwt.dataestructure.LPath;
-import lwt.dialog.LObjectDialog;
 import lwt.event.LSelectionEvent;
 import lwt.event.listener.LSelectionListener;
 import lwt.widget.LSelectableCollection;
@@ -17,9 +16,6 @@ import org.eclipse.swt.widgets.Composite;
  */
 
 public abstract class LSelectableCollectionEditor<T, ST> extends LCollectionEditor<T, ST> {
-
-	public String fieldName = "";
-	protected LObjectDialog<ST> editDialog = null;
 	
 	/**
 	 * Create the composite.

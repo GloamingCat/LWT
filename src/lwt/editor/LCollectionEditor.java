@@ -22,6 +22,7 @@ import org.eclipse.swt.widgets.Composite;
 
 public abstract class LCollectionEditor<T, ST> extends LEditor {
 
+	public String name = "";
 	public String fieldName = "";
 	protected LObjectDialog<ST> editDialog = null;
 	
@@ -75,6 +76,7 @@ public abstract class LCollectionEditor<T, ST> extends LEditor {
 	}
 	
 	public LEditEvent<ST> onEditItem(LPath path) {
+		editDialog.setText(name);
 		ST oldData = getEditableData(path);
 		ST newData = editDialog.open(oldData);
 		if (newData != null) {

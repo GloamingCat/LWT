@@ -6,6 +6,8 @@ import lwt.event.LDeleteEvent;
 import lwt.event.LEditEvent;
 import lwt.event.LInsertEvent;
 
+import org.eclipse.swt.events.MouseEvent;
+import org.eclipse.swt.events.MouseListener;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.TreeItem;
@@ -14,6 +16,7 @@ public abstract class LTree<T, ST> extends LTreeBase<T, ST> {
 	
 	protected Menu menu;
 	protected boolean includeID = false;
+	protected boolean editEnabled = false;
 	
 	/**
 	 * Create the composite.
@@ -24,6 +27,13 @@ public abstract class LTree<T, ST> extends LTreeBase<T, ST> {
 		super(parent, style);
 		menu = new Menu(tree);
 		tree.setMenu(menu);
+	    tree.addMouseListener(new MouseListener() {
+	    	public void mouseUp(MouseEvent arg0) {}
+			public void mouseDown(MouseEvent arg0) {}
+			public void mouseDoubleClick(MouseEvent arg0) {
+				onEditButton(menu);
+			}
+		});
 	}
 	
 	public void setIncludeID(boolean value) {
@@ -66,6 +76,7 @@ public abstract class LTree<T, ST> extends LTreeBase<T, ST> {
 	//-------------------------------------------------------------------------------------
 	
 	public void setEditEnabled(boolean value) {
+		editEnabled = value;
 		super.setEditEnabled(menu, value);
 	}
 	

@@ -40,12 +40,14 @@ public class LImage extends Composite {
 				}
 				if (alignv == SWT.BOTTOM) {
 					y = bounds.height - rect.height;
-				} else if (alignh == SWT.CENTER) {
+				} else if (alignv == SWT.CENTER) {
 					y = (bounds.height - rect.height) / 2;
 				}
 				try {
 					e.gc.drawImage(image, rect.x, rect.y, rect.width, rect.height, x, y, rect.width, rect.height);
 				} catch (IllegalArgumentException ex) { System.out.println("Problem printing quad."); }
+				e.x = x;
+				e.y = y;
 			}
 		});
 	}

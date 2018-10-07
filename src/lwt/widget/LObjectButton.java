@@ -12,6 +12,7 @@ import org.eclipse.swt.events.SelectionEvent;
 
 public class LObjectButton<T> extends LControl<T> {
 	
+	public String name = "";
 	protected Button button;
 	protected LObjectDialog<T> dialog;
 
@@ -27,6 +28,7 @@ public class LObjectButton<T> extends LControl<T> {
 		button.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent arg0) {
+				dialog.setText(name);
 				T newValue = dialog.open(currentValue);
 				if (newValue != null) {
 					newModifyAction(currentValue, newValue);

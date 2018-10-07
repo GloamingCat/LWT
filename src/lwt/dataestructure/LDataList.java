@@ -59,4 +59,12 @@ public class LDataList<T> extends ArrayList<T> implements LDataCollection<T> {
 		return root;
 	}
 	
+	public LDataTree<Object> toObjectTree() {
+		LDataTree<Object> root = new LDataTree<Object>();
+		for(T element : this) {
+			new LDataTree<Object>(element, root);
+		}
+		return root;
+	}
+	
 }

@@ -40,6 +40,7 @@ public abstract class LTreeBase<T, ST> extends LSelectableCollection<T, ST> {
 	private LDataTree<T> dragNode;
 	private TreeItem dragParent;
 	private int dragIndex;
+	public boolean dragEnabled = true;
 	
 	public LTreeBase(Composite parent, int style) {
 		super(parent, style);
@@ -71,6 +72,8 @@ public abstract class LTreeBase<T, ST> extends LSelectableCollection<T, ST> {
 	    source.addDragListener(new DragSourceListener() {
 	    	
 	    	public void dragStart(DragSourceEvent event) {
+	    		if (!dragEnabled)
+	    			return;
 	    		TreeItem[] selection = tree.getSelection();
 	    		if (selection.length > 0) {
 	    			Object block = selection[0].getData(BLOCK);
@@ -98,6 +101,8 @@ public abstract class LTreeBase<T, ST> extends LSelectableCollection<T, ST> {
 			}
 
 			public void dragFinished(DragSourceEvent event) {
+				if (!dragEnabled)
+	    			return;
 				if (event.detail == DND.DROP_NONE) {
 					TreeItem item = createTreeItem(dragParent, dragIndex, dragNode);
 					notifySelectionListeners(selectTreeItem(item));
@@ -121,6 +126,8 @@ public abstract class LTreeBase<T, ST> extends LSelectableCollection<T, ST> {
 	    target.addDropListener(new DropTargetAdapter() {
 	    	
 	    	public void dragOver(DropTargetEvent event) {
+	    		if (!dragEnabled)
+	    			return;
 	    		if (event.item != null) {
 	    			TreeItem item = (TreeItem) event.item;
 	    			Object block  = item.getData(BLOCK);
@@ -143,6 +150,8 @@ public abstract class LTreeBase<T, ST> extends LSelectableCollection<T, ST> {
 	    	}
 	    	
 	    	public void drop(DropTargetEvent event) {
+	    		if (!dragEnabled)
+	    			return;
 	    		if (event.data == null) {
 	    			event.detail = DND.DROP_NONE;
 	    			return;
@@ -547,9 +556,9 @@ public abstract class LTreeBase<T, ST> extends LSelectableCollection<T, ST> {
 		if (tree.getSelectionCount() > 0) {
 			TreeItem item = tree.getSelection()[0];
 			return toPath(item);
-		} else if (tree.getItemCount() > 0) {
-			TreeItem item = tree.getItems()[0];
-			return toPath(item);		
+		//} else if (tree.getItemCount() > 0) {
+		//	TreeItem item = tree.getItems()[0];
+		//	return toPath(item);		
 		} else {
 			return null;
 		}

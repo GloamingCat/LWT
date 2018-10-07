@@ -32,6 +32,7 @@ public class LObjectDialog<T> extends Dialog {
 	 */
 	public T open(T initial) {
 		LObjectShell<T> shell = factory.createShell(getParent().getShell());
+		shell.setText(getText());
 		shell.open(initial);
 		shell.layout();
 		Display display = getParent().getDisplay();
