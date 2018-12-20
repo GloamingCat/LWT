@@ -9,7 +9,10 @@ import com.google.gson.GsonBuilder;
 
 public class GObjectSerializer<T> extends LObjectSerializer<T> {
 	
-	protected static Gson gson = new GsonBuilder().setPrettyPrinting().create();
+	protected static Gson gson = new GsonBuilder().
+			setPrettyPrinting().
+			disableHtmlEscaping().
+			create();
 	protected Type type;
 	
 	public GObjectSerializer(String path, Type type) {
