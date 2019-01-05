@@ -19,7 +19,7 @@ public class LTextBox extends LControl<String> {
 	 */
 	public LTextBox(Composite parent, int style) {
 		super(parent, style);
-		text = new StyledText(this, SWT.BORDER);
+		text = new StyledText(this, SWT.BORDER | SWT.V_SCROLL | SWT.H_SCROLL);
 		
 		text.addFocusListener(new FocusAdapter() {
 			@Override
