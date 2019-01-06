@@ -87,6 +87,10 @@ public abstract class LView extends Composite {
 		}
 	}
 	
+	public void createActionStack() {
+		actionStack = new LActionStack(this);
+	}
+	
 	public void setActionStack(LActionStack stack) {
 		this.actionStack = stack;
 		for(LView child : children) {

@@ -2,6 +2,8 @@ package lwt.dialog;
 
 import java.util.ArrayList;
 
+import lwt.LVocab;
+
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
@@ -36,11 +38,13 @@ public abstract class LObjectShell<T> extends Shell {
 			@Override
 			public void widgetSelected(SelectionEvent arg0) {
 				result = createResult(initial);
+				if (initial.equals(result))
+					result = null;
 				close();
 			}
 		});
 		btnOk.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false, 1, 1));
-		btnOk.setText("OK");
+		btnOk.setText(LVocab.instance.OK);
 		
 		Button btnCancel = new Button(buttons, SWT.NONE);
 		btnCancel.addSelectionListener(new SelectionAdapter() {
@@ -51,7 +55,7 @@ public abstract class LObjectShell<T> extends Shell {
 			}
 		});
 		btnCancel.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false, 1, 1));
-		btnCancel.setText("Cancel");
+		btnCancel.setText(LVocab.instance.CANCEL);
 	}
 
 	public void open(T initial) {

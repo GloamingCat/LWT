@@ -76,6 +76,8 @@ public abstract class LCollectionEditor<T, ST> extends LEditor {
 	}
 	
 	public LEditEvent<ST> onEditItem(LPath path) {
+		if (editDialog == null)
+			return null;
 		editDialog.setText(name);
 		ST oldData = getEditableData(path);
 		ST newData = editDialog.open(oldData);
