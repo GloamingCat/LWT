@@ -52,7 +52,6 @@ public class LNodeSelector<T> extends LControl<Integer> {
 				return collection.getNode(path);
 			}
 		};
-		tree.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		tree.addSelectionListener(new LSelectionListener() {
 			@Override
 			public void onSelect(LSelectionEvent event) {
@@ -60,8 +59,8 @@ public class LNodeSelector<T> extends LControl<Integer> {
 				int id = path == null ? -1 : collection.getNode(path).id;
 				if (id == (Integer)currentValue)
 					return;
-				newModifyAction(currentValue, id);
 				currentValue = id;
+				newModifyAction(currentValue, id);
 			}
 		});
 		tree.dragEnabled = false;
@@ -70,7 +69,9 @@ public class LNodeSelector<T> extends LControl<Integer> {
 			return;
 		
 		setLayout(new GridLayout(1, false));
-		btnNull = new Button(this, 0);
+		tree.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
+		
+		btnNull = new Button(this, SWT.NONE);
 		btnNull.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, true, false, 1, 1));
 		btnNull.addSelectionListener(new SelectionAdapter() {
 			@Override
@@ -101,6 +102,12 @@ public class LNodeSelector<T> extends LControl<Integer> {
 	public void setCollection(LDataTree<T> collection) {
 		this.collection = collection;
 		tree.setDataCollection(collection);
+	}
+	
+	public T getSelectedObject() {
+		if (currentValue == null)
+			return null;
+		return collection.get(currentValue);
 	}
 	
 }
