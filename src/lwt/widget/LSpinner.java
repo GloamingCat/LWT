@@ -10,6 +10,10 @@ public class LSpinner extends LControl<Integer> {
 
 	private Spinner spinner;
 	
+	public LSpinner(Composite parent) {
+		this(parent, SWT.NONE);
+	}
+	
 	/**
 	 * Create the composite.
 	 * @param parent

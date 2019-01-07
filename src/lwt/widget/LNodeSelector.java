@@ -20,17 +20,13 @@ public class LNodeSelector<T> extends LControl<Integer> {
 	protected LTree<T, T> tree;
 	protected Button btnNull;
 	
-	public LNodeSelector(Composite parent, int style) {
-		this(parent, style, true);
-	}
-	
 	/**
 	 * Create the composite.
 	 * @param parent
 	 * @param style
 	 */
-	public LNodeSelector(Composite parent, int style, boolean optional) {
-		super(parent, style);
+	public LNodeSelector(Composite parent, int style) {
+		super(parent, SWT.NONE);
 		tree = new LTree<T, T>(this, SWT.NONE) {
 			@Override
 			public T toObject(LPath path) {
@@ -57,7 +53,7 @@ public class LNodeSelector<T> extends LControl<Integer> {
 			public void onSelect(LSelectionEvent event) {
 				LPath path = tree.getSelectedPath();
 				int id = path == null ? -1 : collection.getNode(path).id;
-				if (id == (Integer)currentValue)
+				if (id == currentValue)
 					return;
 				currentValue = id;
 				newModifyAction(currentValue, id);
@@ -65,7 +61,7 @@ public class LNodeSelector<T> extends LControl<Integer> {
 		});
 		tree.dragEnabled = false;
 		
-		if (!optional)
+		if (style == 0)
 			return;
 		
 		setLayout(new GridLayout(1, false));
@@ -76,7 +72,7 @@ public class LNodeSelector<T> extends LControl<Integer> {
 		btnNull.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent arg0) {
-				tree.select(null);
+				tree.notifySelectionListeners(tree.select(null));
 			}
 		});
 		btnNull.setText(LVocab.instance.DESELECT);
