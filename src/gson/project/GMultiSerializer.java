@@ -23,7 +23,7 @@ public abstract class GMultiSerializer<NodeT, DataT, CollectionType>
 			return false;
 		for(Map.Entry<NodeT, DataT> entry : loadedData.entrySet()) {
 			nodeSerializer.setData(entry.getValue());
-			nodeSerializer.setPath(folder + toFileName(entry.getKey()) + ".json");
+			nodeSerializer.setPath(folder + toFileName(entry.getKey(), entry.getValue()) + ".json");
 			if (!nodeSerializer.save()) {
 				return false;
 			}
@@ -31,18 +31,6 @@ public abstract class GMultiSerializer<NodeT, DataT, CollectionType>
 		return true;
 	}
 	
-	public DataT loadData(NodeT node) {
-		DataT data = loadedData.get(node);
-		if (data == null) {
-			nodeSerializer.setPath(folder + toFileName(node) + ".json");
-			if (nodeSerializer.load()) {
-				data = nodeSerializer.getData();
-				loadedData.put(node, data);
-			}
-		}
-		return data;
-	}
-	
-	public abstract String toFileName(NodeT node);
+	public abstract String toFileName(NodeT node, DataT data);
 
 }

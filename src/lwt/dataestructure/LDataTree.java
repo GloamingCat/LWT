@@ -173,6 +173,19 @@ public class LDataTree<T> implements Serializable, LDataCollection<T> {
 		return null;
 	}
 	
+	public LDataTree<T> findNode(Object data) {
+		for (LDataTree<T> child : children) {
+			if (child.data == data)
+				return child;
+			else {
+				LDataTree<T> node = child.findNode(data);
+				if (node != null)
+					return node;
+			}
+		}
+		return null;
+	}
+	
 	public int findID() {
 		Stack<LDataTree<T>> nodeStack = new Stack<>();
 		ArrayList<Integer> usedIDs = new ArrayList<>();

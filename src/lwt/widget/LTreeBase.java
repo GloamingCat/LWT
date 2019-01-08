@@ -32,7 +32,9 @@ import org.eclipse.swt.events.SelectionEvent;
 
 public abstract class LTreeBase<T, ST> extends LSelectableCollection<T, ST> {
 	
+	protected static final String DATA = "data";
 	protected static final String BLOCK = "block";
+	protected static final String ID = "id";
 	
 	protected Tree tree;
 	protected LDataCollection<T> dataCollection;
@@ -52,7 +54,7 @@ public abstract class LTreeBase<T, ST> extends LSelectableCollection<T, ST> {
 	    		if (tree.getSelectionCount() > 0) {
 	    			TreeItem item = tree.getSelection()[0];
 	    			LPath path = toPath(item);
-	    			LSelectionEvent event = new LSelectionEvent(path, toObject(path));
+	    			LSelectionEvent event = new LSelectionEvent(path, toObject(path), getID(item));
 	    			event.detail = arg0.detail;
 	    			notifySelectionListeners(event);
 	    		}
@@ -243,6 +245,10 @@ public abstract class LTreeBase<T, ST> extends LSelectableCollection<T, ST> {
 		}
 	}
 	
+	protected int getID(TreeItem item) {
+		return item == null ? -1 : (int) item.getData("id");
+	}
+	
 	//-------------------------------------------------------------------------------------
 	// Internal operations
 	//-------------------------------------------------------------------------------------
@@ -250,11 +256,11 @@ public abstract class LTreeBase<T, ST> extends LSelectableCollection<T, ST> {
 	protected LSelectionEvent selectTreeItem(TreeItem item) {
 		if (item == null) {
 			tree.deselectAll();
-			return new LSelectionEvent(null, null);
+			return new LSelectionEvent(null, null, -1);
 		} else {
 			tree.setSelection(item);
 			LPath path = toPath(item);
-			return new LSelectionEvent(path, toObject(path));
+			return new LSelectionEvent(path, toObject(path), getID(item));
 		}
 	}
 	
@@ -301,11 +307,11 @@ public abstract class LTreeBase<T, ST> extends LSelectableCollection<T, ST> {
 	public LSelectionEvent select(LPath path) {
 		if (path == null) {
 			tree.deselectAll();
-			return new LSelectionEvent(null, null);
+			return new LSelectionEvent(null, null, -1);
 		}
 		TreeItem item = toTreeItem(path);
 		tree.setSelection(item);
-		return new LSelectionEvent(path, toObject(path));
+		return new LSelectionEvent(path, toObject(path), getID(item));
 	}
 	
 	public LMoveEvent<T> move(LPath sourceParent, int sourceIndex, LPath destParent, int destIndex) {
@@ -443,7 +449,8 @@ public abstract class LTreeBase<T, ST> extends LSelectableCollection<T, ST> {
 	
 	public void setItemNode(TreeItem item, LDataTree<T> node) {
 		item.setText(dataToString(node.data));
-		item.setData(node.data);
+		item.setData(DATA, node.data);
+		item.setData(ID, node.id);
 		for(LDataTree<T> child : node.children) {
 			TreeItem newItem = new TreeItem(item, item.getStyle());
 			setItemNode(newItem, child);
@@ -482,10 +489,10 @@ public abstract class LTreeBase<T, ST> extends LSelectableCollection<T, ST> {
 		TreeItem item = toTreeItem(path);
 		if (item == null) {
 			tree.deselectAll();
-			notifySelectionListeners(new LSelectionEvent(null, null));
+			notifySelectionListeners(new LSelectionEvent(null, null, -1));
 		} else {
 			tree.select(item);
-			notifySelectionListeners(new LSelectionEvent(path, toObject(path)));
+			notifySelectionListeners(new LSelectionEvent(path, toObject(path), getID(item)));
 		}
 	}
 	
@@ -502,13 +509,13 @@ public abstract class LTreeBase<T, ST> extends LSelectableCollection<T, ST> {
 		if (tree.getSelectionCount() > 0) {
 			TreeItem item = tree.getSelection()[0];
 			LPath path = toPath(item);
-			notifySelectionListeners(new LSelectionEvent(path, toObject(path)));
+			notifySelectionListeners(new LSelectionEvent(path, toObject(path), getID(item)));
 		} else if (tree.getItemCount() > 0) {
 			TreeItem item = tree.getItems()[0];
 			LPath path = toPath(item);
-			notifySelectionListeners(new LSelectionEvent(path, toObject(path)));		
+			notifySelectionListeners(new LSelectionEvent(path, toObject(path), getID(item)));		
 		} else {
-			notifySelectionListeners(new LSelectionEvent(null, null));
+			notifySelectionListeners(new LSelectionEvent(null, null, -1));
 		}
 	}
 	

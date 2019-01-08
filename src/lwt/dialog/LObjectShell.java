@@ -27,7 +27,7 @@ public abstract class LObjectShell<T> extends Shell {
 		setLayout(new GridLayout(1, false));
 		
 		content = new Composite(this, SWT.NONE);
-		content.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+		content.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		
 		Composite buttons = new Composite(this, SWT.NONE);
 		buttons.setLayout(new GridLayout(2, true));

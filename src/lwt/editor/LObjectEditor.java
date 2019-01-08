@@ -116,7 +116,7 @@ public class LObjectEditor extends LEditor {
 			subEditor.onVisible();
 		}
 		for(LSelectionListener listener : selectionListeners) {
-			listener.onSelect(new LSelectionEvent(currentPath, obj));
+			listener.onSelect(new LSelectionEvent(currentPath, obj, -1));
 		}
 	}
 	

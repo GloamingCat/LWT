@@ -45,7 +45,8 @@ public abstract class LList<T, ST> extends LTree<T, ST> {
 			id = stringID(indexOf(item));
 		}
 		String name = dataToString(node.data);
-		item.setData(node.data);
+		item.setData(DATA, node.data);
+		item.setData(ID, node.id);
 		item.setText(id + name);
 	}
 	
@@ -66,13 +67,13 @@ public abstract class LList<T, ST> extends LTree<T, ST> {
 		if (includeID) {
 			int i = 0;
 			for(TreeItem item : tree.getItems()) {
-				String name = dataToString((T) item.getData());
+				String name = dataToString((T) item.getData(DATA));
 				String id = stringID(i++);
 				item.setText(id + name);
 			}
 		} else {
 			for(TreeItem item : tree.getItems()) {
-				String name = dataToString((T) item.getData());
+				String name = dataToString((T) item.getData(DATA));
 				item.setText(name);
 			}
 		}

@@ -33,6 +33,10 @@ public class LCombo extends LControl<Integer> {
 		});
 	}
 	
+	public LCombo(Composite parent) {
+		this(parent, SWT.NONE);
+	}
+
 	public int getSelectionIndex() {
 		if (optional) {
 			return combo.getSelectionIndex() - 1;
