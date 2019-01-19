@@ -53,7 +53,7 @@ public class LNodeSelector<T> extends LControl<Integer> {
 			public void onSelect(LSelectionEvent event) {
 				LPath path = tree.getSelectedPath();
 				int id = path == null ? -1 : collection.getNode(path).id;
-				if (id == currentValue)
+				if ((Integer)id == currentValue)
 					return;
 				currentValue = id;
 				newModifyAction(currentValue, id);
@@ -77,6 +77,16 @@ public class LNodeSelector<T> extends LControl<Integer> {
 		});
 		btnNull.setText(LVocab.instance.DESELECT);
 		
+	}
+	
+	public void setValue(LPath path) {
+		tree.select(null);
+		if (path != null) {
+			tree.select(path);
+			currentValue = collection.getNode(path).id;
+		} else {
+			currentValue = null;
+		}
 	}
 	
 	public void setValue(Object obj) {
@@ -104,6 +114,10 @@ public class LNodeSelector<T> extends LControl<Integer> {
 		if (currentValue == null)
 			return null;
 		return collection.get(currentValue);
+	}
+	
+	public LPath getSelectedPath() {
+		return tree.getSelectedPath();
 	}
 	
 }

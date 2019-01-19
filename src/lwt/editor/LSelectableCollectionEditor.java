@@ -26,6 +26,7 @@ public abstract class LSelectableCollectionEditor<T, ST> extends LCollectionEdit
 		super(parent, style);
 		setLayout(new FillLayout());
 	}
+	
 	public void addChild(LObjectEditor editor) {
 		getCollectionWidget().addSelectionListener(new LSelectionListener() {
 			@Override

@@ -75,6 +75,8 @@ public class LCombo extends LControl<Integer> {
 	}
 	
 	public void setItems(ArrayList<?> array) {
+		if (array == null)
+			array = new ArrayList<Object>();
 		int d = 0;
 		String[] items;
 		if (optional) {

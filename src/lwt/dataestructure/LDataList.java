@@ -53,8 +53,10 @@ public class LDataList<T> extends ArrayList<T> implements LDataCollection<T> {
 
 	public LDataTree<T> toTree() {
 		LDataTree<T> root = new LDataTree<T>();
+		int i = 0;
 		for(T element : this) {
-			new LDataTree<T>(element, root);
+			LDataTree<T> node = new LDataTree<T>(element, root);
+			node.id = i++;
 		}
 		return root;
 	}

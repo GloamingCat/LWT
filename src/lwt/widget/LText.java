@@ -37,6 +37,10 @@ public class LText extends LControl<String> {
 		});
 	}
 	
+	public LText(Composite parent) {
+		this(parent, 0);
+	}
+	
 	private void onTextModify() {
 		if (!text.getText().equals(currentValue)) {
 			newModifyAction(currentValue, text.getText());
