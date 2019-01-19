@@ -84,6 +84,11 @@ public class LObjectEditor extends LEditor {
 			saveObjectValues();
 		currentObject = obj;
 		if (obj != null) {
+			for(Map.Entry<String, LEditor> entry : editorMap.entrySet()) {
+				Object value = getFieldValue(obj, entry.getKey());
+				entry.getValue().setObject(value);
+				entry.getValue().onVisible();
+			}
 			for(Map.Entry<String, LControl<?>> entry : controlMap.entrySet()) {
 				if (entry.getKey().isEmpty()) {
 					entry.getValue().setValue(obj);
@@ -97,18 +102,13 @@ public class LObjectEditor extends LEditor {
 					}
 				}
 			}
-			for(Map.Entry<String, LEditor> entry : editorMap.entrySet()) {
-				Object value = getFieldValue(obj, entry.getKey());
-				entry.getValue().setObject(value);
-				entry.getValue().onVisible();
-			}
 		} else {
-			for(Map.Entry<String, LControl<?>> entry : controlMap.entrySet()) {
-				entry.getValue().setValue(null);
-			}
 			for(Map.Entry<String, LEditor> entry : editorMap.entrySet()) {
 				entry.getValue().setObject(null);
 				entry.getValue().onVisible();
+			}
+			for(Map.Entry<String, LControl<?>> entry : controlMap.entrySet()) {
+				entry.getValue().setValue(null);
 			}
 		}
 		for(LEditor subEditor : subEditors) {
