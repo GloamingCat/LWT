@@ -15,6 +15,7 @@ import org.eclipse.wb.swt.SWTResourceManager;
 public class LImage extends Composite {
 
 	private Image image = null;
+	private Image original = null;
 	private Rectangle rectangle;
 	private int alignv = SWT.TOP;
 	private int alignh = SWT.LEFT;
@@ -78,18 +79,34 @@ public class LImage extends Composite {
 	}
 	
 	public void setImage(Image img, Rectangle rect) {
-		if (image != null)
-			image.dispose();
 		rectangle = rect;
+		original = img;
 		if (img == null) {
 			image = null;
 		} else {
+			if (img.getImageData().depth == 24) {
+				img = LHelper.convertTo32(img);
+			}
 			ImageData imgData = img.getImageData();
 			imgData = LHelper.colorTransform(imgData, r, g, b, a, h, s, v);
+			if (image != null)
+				image.dispose();
 			image = new Image(getDisplay(), imgData);
 		}
 		rectangle = rect;
 		redraw();
+	}
+	
+	public Image getImage() {
+		return image;
+	}
+	
+	public Image getOriginalImage() {
+		return original;
+	}
+	
+	public Rectangle getRectangle() {
+		return rectangle;
 	}
 	
 	public void setHorizontalAlign(int i) {
