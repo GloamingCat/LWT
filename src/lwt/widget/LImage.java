@@ -24,6 +24,8 @@ public class LImage extends Composite {
 	private float h = 0, s = 1, v = 1;
 	private int a = 255;
 	
+	private float sx = 1, sy = 1;
+	
 	/**
 	 * Create the composite.
 	 * @param parent
@@ -37,24 +39,26 @@ public class LImage extends Composite {
 			public void paintControl(PaintEvent e) {
 				if (image == null)
 					return;
-				int x = 0;
-				int y = 0;
 				Rectangle bounds = getBounds();
 				Rectangle rect = rectangle == null ? image.getBounds() : rectangle;
+				int x = 0;
+				int y = 0;
+				int w = Math.round(rect.width * sx);
+				int h = Math.round(rect.height * sy);
 				if (alignh == SWT.RIGHT) {
-					x = bounds.width - rect.width;
+					x = bounds.width - w;
 				} else if (alignh == SWT.CENTER) {
-					x = (bounds.width - rect.width) / 2;
+					x = (bounds.width - w) / 2;
 				}
 				if (alignv == SWT.BOTTOM) {
-					y = bounds.height - rect.height;
+					y = bounds.height - h;
 				} else if (alignv == SWT.CENTER) {
-					y = (bounds.height - rect.height) / 2;
+					y = (bounds.height - h) / 2;
 				}
 				try {
 					e.gc.setAlpha(a);
 					e.gc.drawImage(image, rect.x, rect.y, rect.width, rect.height, 
-							x, y, rect.width, rect.height);
+							x, y, w, h);
 				} catch (IllegalArgumentException ex) { System.out.println("Problem printing quad."); }
 				e.x = x;
 				e.y = y;
@@ -132,6 +136,10 @@ public class LImage extends Composite {
 	
 	public void setHSV(float _h, float _s, float _v) {
 		h = _h; s = _s; v = _v;
+	}
+	
+	public void setScale(float _sx, float _sy) {
+		sx = _sx; sy = _sy;
 	}
 	
 	@Override
