@@ -20,8 +20,9 @@ public class LImage extends Composite {
 	private int alignv = SWT.TOP;
 	private int alignh = SWT.LEFT;
 	
-	private float r = 1, g = 1, b = 1, a = 1;
+	private float r = 1, g = 1, b = 1;
 	private float h = 0, s = 1, v = 1;
+	private int a = 255;
 	
 	/**
 	 * Create the composite.
@@ -51,6 +52,7 @@ public class LImage extends Composite {
 					y = (bounds.height - rect.height) / 2;
 				}
 				try {
+					e.gc.setAlpha(a);
 					e.gc.drawImage(image, rect.x, rect.y, rect.width, rect.height, 
 							x, y, rect.width, rect.height);
 				} catch (IllegalArgumentException ex) { System.out.println("Problem printing quad."); }
@@ -84,11 +86,8 @@ public class LImage extends Composite {
 		if (img == null) {
 			image = null;
 		} else {
-			if (img.getImageData().depth == 24) {
-				img = LHelper.convertTo32(img);
-			}
 			ImageData imgData = img.getImageData();
-			imgData = LHelper.colorTransform(imgData, r, g, b, a, h, s, v);
+			imgData = LHelper.colorTransform(imgData, r, g, b, h, s, v);
 			if (image != null)
 				image.dispose();
 			image = new Image(getDisplay(), imgData);
@@ -128,7 +127,7 @@ public class LImage extends Composite {
 	}
 	
 	public void setRGBA(float _r, float _g, float _b, float _a) {
-		r = _r; g = _g; b = _b; a = _a;
+		r = _r; g = _g; b = _b; a = Math.round(_a * 255);
 	}
 	
 	public void setHSV(float _h, float _s, float _v) {
