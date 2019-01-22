@@ -120,4 +120,11 @@ public class LNodeSelector<T> extends LControl<Integer> {
 		return tree.getSelectedPath();
 	}
 	
+	public void forceFirstSelection() {
+		if (collection.children.size() > 0)
+			tree.forceSelection(new LPath(0));
+		else 
+			tree.select(null);
+	}
+	
 }
