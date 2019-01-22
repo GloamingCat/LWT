@@ -46,11 +46,12 @@ public class LCombo extends LControl<Integer> {
 	}
 	
 	public void setSelectionIndex(int i) {
-		if (optional) {
-			combo.select(i + 1);
-		} else {
+		if (optional) 
+			i++;
+		if (i >= combo.getItemCount())
+			combo.select(0);
+		else
 			combo.select(i);
-		}
 	}
 	
 	public void setValue(Object obj) {
