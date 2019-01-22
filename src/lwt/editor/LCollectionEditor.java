@@ -16,7 +16,7 @@ import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.widgets.Composite;
 
 /**
- * Holds common functionalities for LTreeEditor and LListEditor.
+ * Edits the items in a list.
  *
  */
 

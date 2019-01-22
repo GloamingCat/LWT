@@ -1,5 +1,7 @@
 package lwt.editor;
 
+import java.util.ArrayList;
+
 import lwt.dataestructure.LDataTree;
 import lwt.dataestructure.LPath;
 import lwt.event.LDeleteEvent;
@@ -11,9 +13,14 @@ import lwt.event.listener.LCollectionListener;
 import lwt.event.listener.LSelectionListener;
 import lwt.widget.LTree;
 
+import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.widgets.Composite;
 
-public abstract class LAbstractTreeEditor<T, ST> extends LSelectableCollectionEditor<T, ST> {
+/**
+ * Holds common functionalities for LTreeEditor and LListEditor.
+ *
+ */
+public abstract class LAbstractTreeEditor<T, ST> extends LCollectionEditor<T, ST> {
 	
 	/**
 	 * Create the composite.
@@ -22,6 +29,7 @@ public abstract class LAbstractTreeEditor<T, ST> extends LSelectableCollectionEd
 	 */
 	public LAbstractTreeEditor(Composite parent, int style) {
 		super(parent, style);
+		setLayout(new FillLayout());
 	}
 	
 	protected void setListeners() {
@@ -114,6 +122,20 @@ public abstract class LAbstractTreeEditor<T, ST> extends LSelectableCollectionEd
 			getCollectionWidget().setItems(null);
 			getCollectionWidget().forceSelection(null);
 		}
+	}
+	
+	@Override
+	public LState getState() {
+		final LPath currentPath = getCollectionWidget().getSelectedPath();
+		final ArrayList<LState> states = getChildrenStates();
+		return new LState() {
+			@Override
+			public void reset() {
+				LSelectionEvent e = getCollectionWidget().select(currentPath);
+				getCollectionWidget().notifySelectionListeners(e);
+				resetStates(states);
+			}
+		};
 	}
 	
 }
