@@ -81,6 +81,16 @@ public abstract class LAbstractTreeEditor<T, ST> extends LSelectableCollectionEd
 		return copy;
 	}
 	
+	public void setObject(Object obj) {
+		LPath selectedPath = getCollectionWidget().getSelectedPath();
+		super.setObject(obj);
+		if (selectedPath != null) {
+			getCollectionWidget().forceSelection(selectedPath);
+		} else {  
+			forceFirstSelection();
+		}
+	}
+	
 	public void onVisible() {
 		LPath selectedPath = getCollectionWidget().getSelectedPath();
 		onChildVisible();

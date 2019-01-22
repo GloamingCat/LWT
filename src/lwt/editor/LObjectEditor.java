@@ -83,11 +83,13 @@ public class LObjectEditor extends LEditor {
 		if (currentObject != null)
 			saveObjectValues();
 		currentObject = obj;
+		for(LEditor subEditor : subEditors) {
+			subEditor.setObject(obj);
+		}
 		if (obj != null) {
 			for(Map.Entry<String, LEditor> entry : editorMap.entrySet()) {
 				Object value = getFieldValue(obj, entry.getKey());
 				entry.getValue().setObject(value);
-				entry.getValue().onVisible();
 			}
 			for(Map.Entry<String, LControl<?>> entry : controlMap.entrySet()) {
 				if (entry.getKey().isEmpty()) {
@@ -105,15 +107,10 @@ public class LObjectEditor extends LEditor {
 		} else {
 			for(Map.Entry<String, LEditor> entry : editorMap.entrySet()) {
 				entry.getValue().setObject(null);
-				entry.getValue().onVisible();
 			}
 			for(Map.Entry<String, LControl<?>> entry : controlMap.entrySet()) {
 				entry.getValue().setValue(null);
 			}
-		}
-		for(LEditor subEditor : subEditors) {
-			subEditor.setObject(obj);
-			subEditor.onVisible();
 		}
 		for(LSelectionListener listener : selectionListeners) {
 			listener.onSelect(new LSelectionEvent(currentPath, obj, -1));
