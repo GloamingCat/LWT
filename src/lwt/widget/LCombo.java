@@ -54,6 +54,12 @@ public class LCombo extends LControl<Integer> {
 			combo.select(i);
 	}
 	
+	public void setItem(int i, Object obj) {
+		if (optional)
+			i++;
+		combo.setItem(i, obj.toString());
+	}
+	
 	public void setValue(Object obj) {
 		if (obj != null) {
 			Integer i = (Integer) obj;
@@ -69,8 +75,10 @@ public class LCombo extends LControl<Integer> {
 	
 	public void setItems(Object[] items) {
 		ArrayList<Object> array = new ArrayList<>();
-		for(Object item : items) {
-			array.add(item);
+		if (items != null) {
+			for(Object item : items) {
+				array.add(item);
+			}
 		}
 		setItems(array);
 	}
