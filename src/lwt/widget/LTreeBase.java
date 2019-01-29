@@ -47,15 +47,15 @@ public abstract class LTreeBase<T, ST> extends LSelectableCollection<T, ST> {
 	public LTreeBase(Composite parent, int style) {
 		super(parent, style);
 
-	    tree = new Tree(this, SWT.BORDER | SWT.VIRTUAL);
+	    tree = new Tree(this, style | SWT.BORDER | SWT.VIRTUAL);
 	    tree.addSelectionListener(new SelectionAdapter() {
 	    	@Override
-	    	public void widgetSelected(SelectionEvent arg0) {
+	    	public void widgetSelected(SelectionEvent e) {
 	    		if (tree.getSelectionCount() > 0) {
-	    			TreeItem item = tree.getSelection()[0];
+	    			TreeItem item = (TreeItem) e.item;//tree.getSelection()[0];
 	    			LPath path = toPath(item);
 	    			LSelectionEvent event = new LSelectionEvent(path, toObject(path), getID(item));
-	    			event.detail = arg0.detail;
+	    			event.detail = e.detail;
 	    			notifySelectionListeners(event);
 	    		}
 	    	}
@@ -310,6 +310,10 @@ public abstract class LTreeBase<T, ST> extends LSelectableCollection<T, ST> {
 			return new LSelectionEvent(null, null, -1);
 		}
 		TreeItem item = toTreeItem(path);
+		if (item == null) {
+			new Exception("Couldn't find tree item: " + path.toString()).printStackTrace();
+			return null;
+		}
 		tree.setSelection(item);
 		return new LSelectionEvent(path, toObject(path), getID(item));
 	}
@@ -384,20 +388,13 @@ public abstract class LTreeBase<T, ST> extends LSelectableCollection<T, ST> {
 		}
 		TreeItem item = null;
 		try {
-			if (path.index == -1)
-				path.index = tree.getItemCount() - 1;
-			item = tree.getItems()[path.index];
-			path = path.child;
-			while(path != null) {
+			do {
 				if (path.index == -1)
-					path.index = item.getItemCount() - 1;
-				item = item.getItems()[path.index];
+					path.index = tree.getItemCount() - 1;
+				item = tree.getItems()[path.index];
 				path = path.child;
-			}
+			} while(path != null);
 		} catch(ArrayIndexOutOfBoundsException e) {
-			ArrayIndexOutOfBoundsException e2 = new ArrayIndexOutOfBoundsException(
-					e.getMessage() + " " + path.index);
-			e2.setStackTrace(e.getStackTrace());
 			return null;
 		}
 		return item;
@@ -492,7 +489,7 @@ public abstract class LTreeBase<T, ST> extends LSelectableCollection<T, ST> {
 			notifySelectionListeners(new LSelectionEvent(null, null, -1));
 		} else {
 			tree.select(item);
-			notifySelectionListeners(new LSelectionEvent(path, toObject(path), getID(item)));
+			notifySelectionListeners(new LSelectionEvent(path, item.getData(DATA), getID(item)));
 		}
 	}
 	
@@ -569,6 +566,26 @@ public abstract class LTreeBase<T, ST> extends LSelectableCollection<T, ST> {
 		} else {
 			return null;
 		}
+	}
+	
+	//-------------------------------------------------------------------------------------
+	// Selection
+	//-------------------------------------------------------------------------------------	
+	
+	public void setChecked(LPath path, boolean value) {
+		TreeItem item = toTreeItem(path);
+		item.setChecked(value);
+	}
+	
+	public void checkAll(boolean value) {
+		for (TreeItem item : tree.getItems())
+			checkAll(item, value);
+	}
+	
+	protected void checkAll(TreeItem item, boolean value) {
+		item.setChecked(value);
+		for(TreeItem child : item.getItems())
+			checkAll(child, value);
 	}
 	
 }

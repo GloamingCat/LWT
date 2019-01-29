@@ -5,7 +5,6 @@ import lwt.dataestructure.LPath;
 import lwt.event.LEditEvent;
 import lwt.widget.LTree;
 
-import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
 
 public abstract class LTreeEditor<T, ST> extends LAbstractTreeEditor<T, ST> {
@@ -20,7 +19,7 @@ public abstract class LTreeEditor<T, ST> extends LAbstractTreeEditor<T, ST> {
 	public LTreeEditor(Composite parent, int style) {
 		super(parent, style);
 		LTreeEditor<T, ST> self = this;
-		tree = new LTree<T, ST>(this, SWT.NONE) {
+		tree = new LTree<T, ST>(this, style) {
 			@Override
 			public LEditEvent<ST> edit(LPath path) {
 				return onEditItem(path);

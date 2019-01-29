@@ -6,7 +6,6 @@ import lwt.dataestructure.LPath;
 import lwt.event.LEditEvent;
 import lwt.widget.LList;
 
-import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
 
 public abstract class LListEditor<T, ST> extends LAbstractTreeEditor<T, ST> {
@@ -20,7 +19,7 @@ public abstract class LListEditor<T, ST> extends LAbstractTreeEditor<T, ST> {
 	 */
 	public LListEditor(Composite parent, int style) {
 		super(parent, style);		
-		list = new LList<T, ST>(this, SWT.NONE) {
+		list = new LList<T, ST>(this, style) {
 			@Override
 			public LEditEvent<ST> edit(LPath path) {
 				return onEditItem(path);
