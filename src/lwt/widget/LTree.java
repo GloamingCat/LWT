@@ -41,7 +41,7 @@ public abstract class LTree<T, ST> extends LTreeBase<T, ST> {
 	}
 	
 	protected String stringID(int i) {
-		return String.format("[%03d]", i);
+		return String.format("[%03d] ", i);
 	}
 	
 	//-------------------------------------------------------------------------------------

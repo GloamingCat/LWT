@@ -97,7 +97,7 @@ public class LCombo extends LControl<Integer> {
 		}
 		int id = 0;
 		for(Object obj : array) {
-			String item = includeID ? String.format("[%03d]", id) : "";
+			String item = includeID ? String.format("[%03d] ", id) : "";
 			items[id + d] = item + obj.toString();
 			id++;
 		}

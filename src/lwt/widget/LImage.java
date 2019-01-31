@@ -87,13 +87,13 @@ public class LImage extends Composite {
 	public void setImage(Image img, Rectangle rect) {
 		rectangle = rect;
 		original = img;
+		if (image != null)
+			image.dispose();
 		if (img == null) {
 			image = null;
 		} else {
 			ImageData imgData = img.getImageData();
-			imgData = LHelper.colorTransform(imgData, r, g, b, h, s, v);
-			if (image != null)
-				image.dispose();
+			LHelper.colorTransform(imgData, r, g, b, h, s, v);
 			image = new Image(getDisplay(), imgData);
 		}
 		rectangle = rect;
@@ -141,6 +141,12 @@ public class LImage extends Composite {
 	public void setScale(float _sx, float _sy) {
 		sx = _sx; sy = _sy;
 	}
+	
+	public void dispose() {
+		super.dispose();
+		if (image != null)
+			image.dispose();
+	};
 	
 	@Override
 	protected void checkSubclass() {}

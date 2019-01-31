@@ -72,7 +72,7 @@ public abstract class LObjectShell<T> extends Shell {
 		String[] items = new String[array.size()];
 		int id = 0;
 		for(Object obj : array) {
-			String item = String.format("[%03d]", id);
+			String item = String.format("[%03d] ", id);
 			items[id] = item + obj.toString();
 			id++;
 		}

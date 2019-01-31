@@ -15,11 +15,10 @@ public class LHelper {
 	 * @param _v [0, 1]
 	 * @return
 	 */
-	public static ImageData colorTransform(ImageData src, 
+	public static void colorTransform(ImageData src, 
 			float _r, float _g, float _b,
 			float _h, float _s, float _v) {
 		_h /= 60;
-		ImageData newdata = (ImageData) src.clone();
 		int len = src.width * src.height;		
 		int step = src.depth == 32 ? 4 : 3;
 		for (int i = 0; i < len; i ++) {
@@ -66,11 +65,10 @@ public class LHelper {
 			        case 5: r = v; g = p; b = q; break;
 			    }
 			}
-			newdata.data[i*step] = (byte) Math.round(r * 255);
-			newdata.data[i*step+1] = (byte) Math.round(g * 255);
-			newdata.data[i*step+2] = (byte) Math.round(b * 255);
+			src.data[i*step] = (byte) Math.round(r * 255);
+			src.data[i*step+1] = (byte) Math.round(g * 255);
+			src.data[i*step+2] = (byte) Math.round(b * 255);
 		}
-		return newdata;
 	}
 	
 }

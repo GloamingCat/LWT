@@ -80,40 +80,45 @@ public class LObjectEditor extends LEditor {
 	}
 	
 	public void setObject(Object obj) {
-		if (currentObject != null)
-			saveObjectValues();
-		currentObject = obj;
-		for(LEditor subEditor : subEditors) {
-			subEditor.setObject(obj);
-		}
-		if (obj != null) {
-			for(Map.Entry<String, LEditor> entry : editorMap.entrySet()) {
-				Object value = getFieldValue(obj, entry.getKey());
-				entry.getValue().setObject(value);
+		try {
+			if (currentObject != null)
+				saveObjectValues();
+			currentObject = obj;
+			for(LEditor subEditor : subEditors) {
+				subEditor.setObject(obj);
 			}
-			for(Map.Entry<String, LControl<?>> entry : controlMap.entrySet()) {
-				if (entry.getKey().isEmpty()) {
-					entry.getValue().setValue(obj);
-				} else {
+			if (obj != null) {
+				for(Map.Entry<String, LEditor> entry : editorMap.entrySet()) {
 					Object value = getFieldValue(obj, entry.getKey());
-					try {
-						entry.getValue().setValue(value);
-					} catch (Exception e) {
-						System.out.println(entry.getKey());
-						e.printStackTrace();
+					entry.getValue().setObject(value);
+				}
+				for(Map.Entry<String, LControl<?>> entry : controlMap.entrySet()) {
+					if (entry.getKey().isEmpty()) {
+						entry.getValue().setValue(obj);
+					} else {
+						Object value = getFieldValue(obj, entry.getKey());
+						try {
+							entry.getValue().setValue(value);
+						} catch (Exception e) {
+							System.err.println(this.getClass() + ": " + entry.getKey());
+							throw e;
+						}
 					}
 				}
+			} else {
+				for(Map.Entry<String, LEditor> entry : editorMap.entrySet()) {
+					entry.getValue().setObject(null);
+				}
+				for(Map.Entry<String, LControl<?>> entry : controlMap.entrySet()) {
+					entry.getValue().setValue(null);
+				}
 			}
-		} else {
-			for(Map.Entry<String, LEditor> entry : editorMap.entrySet()) {
-				entry.getValue().setObject(null);
+			for(LSelectionListener listener : selectionListeners) {
+				listener.onSelect(new LSelectionEvent(currentPath, obj, -1));
 			}
-			for(Map.Entry<String, LControl<?>> entry : controlMap.entrySet()) {
-				entry.getValue().setValue(null);
-			}
-		}
-		for(LSelectionListener listener : selectionListeners) {
-			listener.onSelect(new LSelectionEvent(currentPath, obj, -1));
+		} catch (Exception e) {
+			System.err.println(this.getClass());
+			throw e;
 		}
 	}
 	
