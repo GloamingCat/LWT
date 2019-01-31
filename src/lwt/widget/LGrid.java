@@ -313,4 +313,16 @@ public abstract class LGrid<T, ST> extends LSelectableCollection<T, ST> {
 		}
 	}
 	
+	@Override
+	protected void onCopyButton(Menu menu) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	protected void onPasteButton(Menu menu) {
+		// TODO Auto-generated method stub
+		
+	}
+	
 }

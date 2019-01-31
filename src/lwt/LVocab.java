@@ -49,5 +49,8 @@ public class LVocab {
 	public String DELETE = "Delete";
 	
 	public String TEXT = "Text";
+
+	public String COPY = "Copy";
+	public String PASTE = "Paste";
 	
 }

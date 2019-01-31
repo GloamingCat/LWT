@@ -7,17 +7,15 @@ import lwt.event.LControlEvent;
 import lwt.event.listener.LControlListener;
 
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Menu;
 
 public abstract class LControl<T> extends LWidget {
 
+	public static Object clipboard = null;
+	
 	protected ArrayList<LControlListener<T>> modifyListeners = new ArrayList<>();
 	protected T currentValue;
 	
-	/**
-	 * Create the composite.
-	 * @param parent
-	 * @param style
-	 */
 	public LControl(Composite parent, int style) {
 		super(parent, style);
 	}
@@ -27,30 +25,23 @@ public abstract class LControl<T> extends LWidget {
 		newModifyAction(currentValue, newValue);
 	}
 	
-	protected void newModifyAction(T oldValue, T newValue) {
-		LControlEvent<T> event = new LControlEvent<T>(oldValue, newValue);
-		newAction(new LControlAction<T>(this, event));
-		notifyListeners(event);
-	}
-	
-	public void notifyListeners(LControlEvent<T> event) {
-		for(LControlListener<T> listener : modifyListeners) {
-			listener.onModify(event);
-		}
-	}
-	
-	public void addModifyListener(LControlListener<T> listener) {
-		modifyListeners.add(listener);
-	}
-	
 	@SuppressWarnings("unchecked")
 	public void setValue(Object value) {
 		currentValue = (T) value;
 	}
 	
-	public void notifyEmpty() {
-		LControlEvent<T> e = createEvent();
-		notifyListeners(e);
+	public T getValue() {
+		return currentValue;
+	}
+	
+	//-------------------------------------------------------------------------------------
+	// Modify Events
+	//-------------------------------------------------------------------------------------
+
+	protected void newModifyAction(T oldValue, T newValue) {
+		LControlEvent<T> event = new LControlEvent<T>(oldValue, newValue);
+		newAction(new LControlAction<T>(this, event));
+		notifyListeners(event);
 	}
 	
 	public LControlEvent<T> createEvent() {
@@ -59,8 +50,31 @@ public abstract class LControl<T> extends LWidget {
 		return e;
 	}
 	
-	public T getValue() {
-		return currentValue;
+	public void addModifyListener(LControlListener<T> listener) {
+		modifyListeners.add(listener);
 	}
-
+	
+	public void notifyListeners(LControlEvent<T> event) {
+		for(LControlListener<T> listener : modifyListeners) {
+			listener.onModify(event);
+		}
+	}
+	
+	public void notifyEmpty() {
+		LControlEvent<T> e = createEvent();
+		notifyListeners(e);
+	}
+	
+	//-------------------------------------------------------------------------------------
+	// Copy / Paste
+	//-------------------------------------------------------------------------------------
+	
+	public void onCopyButton(Menu menu) {
+		clipboard = currentValue;
+	}
+	
+	public void onPasteButton(Menu menu) {
+		setValue(clipboard);
+	}
+	
 }

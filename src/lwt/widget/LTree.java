@@ -18,6 +18,8 @@ public abstract class LTree<T, ST> extends LTreeBase<T, ST> {
 	protected boolean includeID = false;
 	protected boolean editEnabled = false;
 	
+	protected LDataTree<T> clipboard = null;
+	
 	/**
 	 * Create the composite.
 	 * @param parent
@@ -68,12 +70,19 @@ public abstract class LTree<T, ST> extends LTreeBase<T, ST> {
 	}
 	
 	protected abstract LDataTree<T> emptyNode();
-	
-	protected abstract LDataTree<T> duplicateNode(LPath nodePath);
+	protected abstract LDataTree<T> duplicateNode(LDataTree<T> node);
 	
 	//-------------------------------------------------------------------------------------
 	// Modify Menu
 	//-------------------------------------------------------------------------------------
+	
+	public void setCopyEnabled(boolean value) {
+		super.setCopyEnabled(menu, value);
+	}
+	
+	public void setPasteEnabled(boolean value) {
+		super.setPasteEnabled(menu, value);
+	}
 	
 	public void setEditEnabled(boolean value) {
 		editEnabled = value;
@@ -123,7 +132,7 @@ public abstract class LTree<T, ST> extends LTreeBase<T, ST> {
 		if (tree.getSelectionCount() > 0) {
 			TreeItem item = tree.getSelection()[0];
 			LPath itemPath = toPath(item);
-			LDataTree<T> node = duplicateNode(itemPath);
+			LDataTree<T> node = duplicateNode(toNode(itemPath));
 			LPath parentPath = toPath(item.getParentItem());
 			int i = indexOf(item) + 1;
 			newInsertAction(parentPath, i, node);
@@ -137,6 +146,24 @@ public abstract class LTree<T, ST> extends LTreeBase<T, ST> {
 			LPath parentPath = toPath(parentItem);
 			int i = indexOf(item);
 			newDeleteAction(parentPath, i);
+		}
+	}
+	
+	protected void onCopyButton(Menu menu) {
+		LPath path = getSelectedPath();
+		if (path != null)
+			clipboard = duplicateNode(toNode(path));
+	}
+	
+	protected void onPasteButton(Menu menu) {
+		if (clipboard == null)
+			return;
+		LPath path = getSelectedPath();
+		if (path != null) {
+			TreeItem item = tree.getSelection()[0];
+			LPath parentPath = toPath(item.getParentItem());
+			int i = indexOf(item) + 1;
+			newInsertAction(parentPath, i, duplicateNode(clipboard));
 		}
 	}
 	

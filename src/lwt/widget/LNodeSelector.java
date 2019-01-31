@@ -40,7 +40,7 @@ public class LNodeSelector<T> extends LControl<Integer> {
 				return null;
 			}
 			@Override
-			public LDataTree<T> duplicateNode(LPath nodePath) {
+			public LDataTree<T> duplicateNode(LDataTree<T> node) {
 				return null;
 			}
 			@Override

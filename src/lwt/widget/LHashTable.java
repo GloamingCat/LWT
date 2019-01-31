@@ -20,6 +20,7 @@ import lwt.event.listener.LHashListener;
 
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Label;
@@ -240,6 +241,18 @@ public class LHashTable<T> extends LWidget {
 
 	public T createNewValue() {
 		return null;
+	}
+
+	@Override
+	protected void onCopyButton(Menu menu) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	protected void onPasteButton(Menu menu) {
+		// TODO Auto-generated method stub
+		
 	}
 	
 }

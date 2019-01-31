@@ -2,12 +2,10 @@ package lwt.widget;
 
 import java.util.ArrayList;
 
-import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Menu;
-import org.eclipse.swt.widgets.MenuItem;
 
 import lwt.LVocab;
 import lwt.action.collection.LDeleteAction;
@@ -89,7 +87,7 @@ public abstract class LCollection<T, ST> extends LWidget {
 	    	public void widgetSelected(SelectionEvent arg0) {
 	    		onInsertNewButton(menu);
 	    	}
-		});
+		}, 'N');
 	}
 	
 	protected void setDuplicateEnabled(Menu menu, boolean value) {
@@ -98,7 +96,7 @@ public abstract class LCollection<T, ST> extends LWidget {
 	    	public void widgetSelected(SelectionEvent arg0) {
 	    		onDuplicateButton(menu);
 	    	}
-		});
+		}, 'D');
 	}
 	
 	protected void setDeleteEnabled(Menu menu, boolean value) {
@@ -108,22 +106,6 @@ public abstract class LCollection<T, ST> extends LWidget {
 	    		onDeleteButton(menu);
 	    	}
 		});
-	}
-	
-	protected void setMenuButton(Menu menu, boolean value, String buttonName, String buttonKey, SelectionAdapter adapter) {
-		if (value) {
-			if (menu.getData(buttonKey) == null) {
-			    MenuItem item = new MenuItem(menu, SWT.NONE);
-			    item.addSelectionListener(adapter);
-			    item.setText(buttonName);
-			    menu.setData(buttonKey, item);
-			}
-		} else {
-			if (menu.getData(buttonKey) != null) {
-				MenuItem item = (MenuItem) menu.getData(buttonKey);
-				item.dispose();
-			}
-		}
 	}
 	
 	//-------------------------------------------------------------------------------------

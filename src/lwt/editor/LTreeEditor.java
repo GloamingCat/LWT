@@ -36,8 +36,8 @@ public abstract class LTreeEditor<T, ST> extends LAbstractTreeEditor<T, ST> {
 				return new LDataTree<T>(createNewData());
 			}
 			@Override
-			public LDataTree<T> duplicateNode(LPath nodePath) {
-				return self.duplicateNode(getDataCollection().getNode(nodePath));
+			public LDataTree<T> duplicateNode(LDataTree<T> node) {
+				return self.duplicateNode(node);
 			}
 			@Override
 			public LDataTree<T> toNode(LPath path) {
