@@ -79,6 +79,10 @@ public class LNodeSelector<T> extends LControl<Integer> {
 		
 	}
 	
+	public void addSelectionListener(LSelectionListener l) {
+		tree.addSelectionListener(l);
+	}
+	
 	public void setValue(LPath path) {
 		tree.select(null);
 		if (path != null) {
@@ -118,6 +122,13 @@ public class LNodeSelector<T> extends LControl<Integer> {
 	
 	public LPath getSelectedPath() {
 		return tree.getSelectedPath();
+	}
+	
+	public LDataTree<T> getSelectedNode() {
+		LPath path = getSelectedPath();
+		if (path == null)
+			return null;
+		return collection.getNode(path);
 	}
 	
 	public void forceFirstSelection() {

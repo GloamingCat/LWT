@@ -60,7 +60,7 @@ public abstract class LCollection<T, ST> extends LWidget {
 		LDeleteEvent<T> event = delete(parentPath, i);
 		if (event != null) {
 			if (actionStack != null) {
-				LDeleteAction<T> action = new LDeleteAction<T>(this, parentPath, event.index, event.data);
+				LDeleteAction<T> action = new LDeleteAction<T>(this, parentPath, event.index, event.node);
 				actionStack.newAction(action);
 			}
 			notifyDeleteListeners(event);

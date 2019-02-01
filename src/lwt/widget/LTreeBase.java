@@ -388,12 +388,16 @@ public abstract class LTreeBase<T, ST> extends LSelectableCollection<T, ST> {
 		}
 		TreeItem item = null;
 		try {
-			do {
+			if (path.index == -1)
+				path.index = tree.getItemCount() - 1;
+			item = tree.getItems()[path.index];
+			path = path.child;
+			while(path != null) {
 				if (path.index == -1)
-					path.index = tree.getItemCount() - 1;
-				item = tree.getItems()[path.index];
+					path.index = item.getItemCount() - 1;
+				item = item.getItems()[path.index];
 				path = path.child;
-			} while(path != null);
+			}
 		} catch(ArrayIndexOutOfBoundsException e) {
 			return null;
 		}
