@@ -158,13 +158,15 @@ public abstract class LTree<T, ST> extends LTreeBase<T, ST> {
 	protected void onPasteButton(Menu menu) {
 		if (clipboard == null)
 			return;
-		LPath path = getSelectedPath();
-		if (path != null) {
+		LPath parentPath = null;
+		int index = -1;
+		LDataTree<T> newNode = duplicateNode(clipboard);
+		if (tree.getSelectionCount() > 0) {
 			TreeItem item = tree.getSelection()[0];
-			LPath parentPath = toPath(item.getParentItem());
-			int i = indexOf(item) + 1;
-			newInsertAction(parentPath, i, duplicateNode(clipboard));
+			parentPath = toPath(item.getParentItem());
+			index = indexOf(item) + 1;
 		}
+		newInsertAction(parentPath, index, newNode);
 	}
 	
 }

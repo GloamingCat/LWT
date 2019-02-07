@@ -29,6 +29,10 @@ public class LCheckButton extends LControl<Boolean> {
 		});
 	}
 	
+	public LCheckButton(Composite parent) {
+		this(parent, SWT.NONE);
+	}
+
 	public void setValue(Object obj) {
 		if (obj != null) {
 			Boolean i = (Boolean) obj;
