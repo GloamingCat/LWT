@@ -25,6 +25,7 @@ public abstract class LDefaultApplicationShell extends Shell {
 	protected LSerializer project = null;
 	protected String applicationName;
 	
+	protected LView defaultView = null;
 	protected LView currentView;
 	protected StackLayout stackLayout;
 	
@@ -172,16 +173,20 @@ public abstract class LDefaultApplicationShell extends Shell {
 		String dataPath = LFileManager.appDataPath(applicationName) + "lattest.txt";
 		byte[] bytes = LFileManager.load(dataPath);
 		if (bytes != null && bytes.length > 0) {
-			LSerializer project = createProject(new String(bytes));
+			LVocab vocab = LVocab.instance;
+			String path = new String(bytes);
+			LSerializer project = createProject(path);
 			if (!project.load()) {
 				MessageBox msg = new MessageBox(getShell(), SWT.ICON_ERROR | SWT.OK);
-				msg.setText("Load error");
-				msg.setMessage("Couldn't load the project files.");
+				msg.setText(vocab.LOADERROR);
+				msg.setMessage(vocab.LOADERRORMSG + "\n" + path);
 				msg.open();
 				return false;
 			} else {
 				this.project = project;
 				mntmView.setEnabled(true);
+				if (defaultView != null)
+					setCurrentView(defaultView);
 				return true;
 			}
 		}
@@ -226,6 +231,8 @@ public abstract class LDefaultApplicationShell extends Shell {
 		String path = LFileManager.appDataPath(applicationName) + "lattest.txt";
 		byte[] bytes = resultPath.getBytes();
 		LFileManager.save(path, bytes);
+		if (defaultView != null)
+			setCurrentView(defaultView);
 		return newProject;
 	}
 	
@@ -247,7 +254,7 @@ public abstract class LDefaultApplicationShell extends Shell {
 		if (!project.load()) {
 			MessageBox msg = new MessageBox(this, SWT.ICON_ERROR | SWT.OK);
 			msg.setText(vocab.LOADERROR);
-			msg.setMessage(vocab.LOADERRORMSG);
+			msg.setMessage(vocab.LOADERRORMSG + ":" + resultPath);
 			msg.open();
 			project = previous;
 		} else {
@@ -255,6 +262,8 @@ public abstract class LDefaultApplicationShell extends Shell {
 			String path = LFileManager.appDataPath(applicationName) + "lattest.txt";
 			byte[] bytes = resultPath.getBytes();
 			LFileManager.save(path, bytes);
+			if (defaultView != null)
+				setCurrentView(defaultView);
 		}
 		return project;
 	}

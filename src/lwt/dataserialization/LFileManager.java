@@ -35,7 +35,7 @@ public class LFileManager {
 			return array;
 		} catch(Exception e) {
 			System.out.println("couldn't load: " + path);
-			e.printStackTrace();
+			//e.printStackTrace();
 			return null;
 		}
 	}

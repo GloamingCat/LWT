@@ -41,6 +41,8 @@ public abstract class LDefaultSerializer implements LSerializer {
 	public boolean load() {
 		try {
 			byte[] bytes = LFileManager.load(path);
+			if (bytes == null)
+				return false;
 			deserialize(bytes);
 			return true;
 		} catch(Exception e) {
