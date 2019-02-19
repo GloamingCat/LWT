@@ -64,8 +64,6 @@ public class LObjectEditor extends LEditor {
 						setFieldValue(currentObject, key, event.newValue);
 						if (collectionEditor != null && currentPath != null && event.detail >= 0)
 							collectionEditor.refreshObject(currentPath);
-					} else {
-						setObject(event.newValue);
 					}
 				}
 			}
