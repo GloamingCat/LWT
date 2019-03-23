@@ -55,8 +55,7 @@ public class LDataList<T> extends ArrayList<T> implements LDataCollection<T> {
 		LDataTree<T> root = new LDataTree<T>();
 		int i = 0;
 		for(T element : this) {
-			LDataTree<T> node = new LDataTree<T>(element, root);
-			node.id = i++;
+			new LDataTree<T>(i++, element, root);
 		}
 		return root;
 	}

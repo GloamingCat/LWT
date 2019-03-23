@@ -24,6 +24,13 @@ public class LDataTree<T> implements Serializable, LDataCollection<T> {
 		this.data = data;
 	}
 	
+	public LDataTree(int id, T data, LDataTree<T> parent) {
+		this.id = id;
+		this.data = data;
+		this.parent = parent;
+		parent.addChild(this);
+	}
+	
 	public LDataTree(T data, LDataTree<T> parent) {
 		this.data = data;
 		this.parent = parent;
