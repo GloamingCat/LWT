@@ -1,6 +1,6 @@
 package lwt.widget;
 
-import lwt.LHelper;
+import lwt.LImageHelper;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.PaintEvent;
@@ -93,7 +93,7 @@ public class LImage extends Composite {
 			image = null;
 		} else {
 			ImageData imgData = img.getImageData();
-			LHelper.colorTransform(imgData, r, g, b, h, s, v);
+			LImageHelper.colorTransform(imgData, r, g, b, h, s, v);
 			image = new Image(getDisplay(), imgData);
 		}
 		rectangle = rect;
