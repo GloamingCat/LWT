@@ -93,6 +93,7 @@ public class LImage extends Composite {
 			image = null;
 		} else {
 			ImageData imgData = img.getImageData();
+			LImageHelper.correctTransparency(imgData);
 			LImageHelper.colorTransform(imgData, r, g, b, h, s, v);
 			image = new Image(getDisplay(), imgData);
 		}

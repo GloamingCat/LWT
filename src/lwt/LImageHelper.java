@@ -14,13 +14,17 @@ import org.eclipse.swt.widgets.Display;
 
 public class LImageHelper {
 	
+	public static final boolean onWindows = System.getProperty("os.name").
+			toLowerCase().contains("win");
+	
 	/** Creates new, 32-bit transparent image.
 	 * @param imgW Image width.
 	 * @param imgH Image height.
 	 * @return
 	 */
 	public static Image newImage(int imgW, int imgH) {
-		ImageData data = new ImageData(imgW, imgH, 32, new PaletteData(0xff, 0xff00, 0xff0000));
+		ImageData data = new ImageData(imgW, imgH, 32, 
+				new PaletteData(0xff, 0xff00, 0xff0000));
 		data.alphaData = new byte[imgW * imgH];
 		Arrays.fill(data.alphaData, (byte) 0);
 		Image src = new Image(Display.getCurrent(), data);
@@ -32,6 +36,8 @@ public class LImageHelper {
 	//-------------------------------------------------------------------------------------
 	
 	public static Image correctTransparency(Image image) {
+		if (!onWindows)
+			return image;
 		ImageData data = image.getImageData();
 		correctTransparency(data);
 		image.dispose();
@@ -39,8 +45,9 @@ public class LImageHelper {
 	}
 	
 	public static void correctTransparency(ImageData data) {
+		if (!onWindows)
+			return;
 		if (data.depth == 24) {
-			System.out.println("depth 24");
 			return;
 		}
 		int len = data.width * data.height;
@@ -99,7 +106,7 @@ public class LImageHelper {
 				h == 0 && s == 1 && v == 1)
 			return src;
 		ImageData newdata = src.getImageData();
-		LImageHelper.colorTransform(newdata, r, g, b, h, s, v);
+		colorTransform(newdata, r, g, b, h, s, v);
 		src.dispose();
 		return new Image(Display.getCurrent(), newdata);
 	}

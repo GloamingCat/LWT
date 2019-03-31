@@ -17,6 +17,8 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
+import lwt.LImageHelper;
+
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Cursor;
@@ -132,7 +134,7 @@ public class SWTResourceManager {
 				gc.drawImage(image, 0, 0);
 				gc.dispose();
 				image.dispose();
-				image = newImage;
+				image = LImageHelper.correctTransparency(newImage);
 			}
 			return image;
 		} finally {
