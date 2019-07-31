@@ -61,7 +61,7 @@ public class LNodeSelector<T> extends LControl<Integer> {
 		});
 		tree.dragEnabled = false;
 		
-		if (style == 0)
+		if (style % 2 == 0)
 			return;
 		
 		setLayout(new GridLayout(1, false));
@@ -94,19 +94,20 @@ public class LNodeSelector<T> extends LControl<Integer> {
 	}
 	
 	public void setValue(Object obj) {
-		tree.select(null);
 		if (obj != null) {
 			Integer i = (Integer) obj;
+			currentValue = i;
 			if (i >= 0) {
-				LDataTree<?> node = collection.findNode(i);
+				LDataTree<?> node = collection.findNode((int) i);
 				if (node != null) {
 					tree.select(node.toPath());
+					return;
 				}
 			}
-			currentValue = i;
 		} else {
 			currentValue = null;
 		}
+		tree.select(null);
 	}
 	
 	public void setCollection(LDataTree<T> collection) {
