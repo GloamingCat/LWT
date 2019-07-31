@@ -280,8 +280,18 @@ public abstract class LTreeBase<T, ST> extends LSelectableCollection<T, ST> {
 			}
 		}
 		newItem.setImage((Image) null);
-		setItemNode(newItem, node);
+		createTreeItems(newItem, node);
 		return newItem;
+	}
+	
+	protected void createTreeItems(TreeItem item, LDataTree<T> node) {
+		item.setText(dataToString(node.data));
+		item.setData(DATA, node.data);
+		item.setData(ID, node.id);
+		for(LDataTree<T> child : node.children) {
+			TreeItem newItem = new TreeItem(item, item.getStyle());
+			createTreeItems(newItem, child);
+		}
 	}
 	
 	protected LDataTree<T> disposeTreeItem(TreeItem item) {
@@ -452,9 +462,8 @@ public abstract class LTreeBase<T, ST> extends LSelectableCollection<T, ST> {
 		item.setText(dataToString(node.data));
 		item.setData(DATA, node.data);
 		item.setData(ID, node.id);
-		for(LDataTree<T> child : node.children) {
-			TreeItem newItem = new TreeItem(item, item.getStyle());
-			setItemNode(newItem, child);
+		for(int i = 0; i < node.children.size(); i++) {
+			setItemNode(item.getItem(i), node.children.get(i));
 		}
 	}
 	
