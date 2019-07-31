@@ -5,6 +5,8 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Spinner;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.layout.GridData;
 
 public class LSpinner extends LControl<Integer> {
 
@@ -21,7 +23,16 @@ public class LSpinner extends LControl<Integer> {
 	 */
 	public LSpinner(Composite parent, int style) {
 		super(parent, style);
+		GridLayout gridLayout = new GridLayout(1, false);
+		gridLayout.horizontalSpacing = 0;
+		gridLayout.marginHeight = 0;
+		gridLayout.marginWidth = 0;
+		gridLayout.verticalSpacing = 0;
+		setLayout(gridLayout);
 		spinner = new Spinner(this, SWT.BORDER);
+		GridData gd_spinner = new GridData(SWT.FILL, SWT.FILL, true, false, 1, 1);
+		gd_spinner.heightHint = 26;
+		spinner.setLayoutData(gd_spinner);
 		spinner.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent arg0) {

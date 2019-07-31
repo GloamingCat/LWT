@@ -7,6 +7,8 @@ import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.layout.GridData;
 
 public class LCombo extends LControl<Integer> {
 
@@ -21,7 +23,15 @@ public class LCombo extends LControl<Integer> {
 	 */
 	public LCombo(Composite parent, int style) {
 		super(parent, style);
+		GridLayout gridLayout = new GridLayout(1, false);
+		gridLayout.verticalSpacing = 0;
+		gridLayout.marginWidth = 0;
+		gridLayout.marginHeight = 0;
+		setLayout(gridLayout);
 		combo = new Combo(this, SWT.BORDER | SWT.READ_ONLY);
+		GridData gd_combo = new GridData(SWT.FILL, SWT.FILL, true, false, 1, 1);
+		gd_combo.heightHint = 28;
+		combo.setLayoutData(gd_combo);
 		combo.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent arg0) {

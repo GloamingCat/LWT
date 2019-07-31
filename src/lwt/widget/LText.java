@@ -7,6 +7,8 @@ import org.eclipse.swt.events.KeyAdapter;
 import org.eclipse.swt.events.KeyEvent;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Text;
+import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.layout.GridData;
 
 public class LText extends LControl<String> {
 	
@@ -19,7 +21,16 @@ public class LText extends LControl<String> {
 	 */
 	public LText(Composite parent, int style) {
 		super(parent, style);
+		GridLayout gridLayout = new GridLayout(1, false);
+		gridLayout.horizontalSpacing = 0;
+		gridLayout.verticalSpacing = 0;
+		gridLayout.marginWidth = 0;
+		gridLayout.marginHeight = 0;
+		setLayout(gridLayout);
 		text = new Text(this, SWT.BORDER);
+		GridData gd_text = new GridData(SWT.FILL, SWT.FILL, true, false, 1, 1);
+		gd_text.heightHint = 16;
+		text.setLayoutData(gd_text);
 		
 		text.addFocusListener(new FocusAdapter() {
 			@Override
