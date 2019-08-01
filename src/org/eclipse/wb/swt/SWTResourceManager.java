@@ -13,11 +13,8 @@ package org.eclipse.wb.swt;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
-
-import lwt.LImageHelper;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Color;
@@ -123,20 +120,7 @@ public class SWTResourceManager {
 			if (data.transparentPixel > 0) {
 				return new Image(display, data, data.getTransparencyMask());
 			}
-			Image image = new Image(display, data);
-			if (data.depth != 32) {
-				ImageData newData = new ImageData(data.width, data.height, 
-						32, data.palette);
-				newData.alphaData = new byte[data.width * data.height];
-				Arrays.fill(newData.alphaData, (byte) 0);
-				Image newImage = new Image(display, newData);
-				GC gc = new GC(newImage);
-				gc.drawImage(image, 0, 0);
-				gc.dispose();
-				image.dispose();
-				image = LImageHelper.correctTransparency(newImage);
-			}
-			return image;
+			return new Image(display, data);
 		} finally {
 			stream.close();
 		}

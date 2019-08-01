@@ -2,6 +2,8 @@ package lwt.widget;
 
 import java.util.ArrayList;
 
+import lwt.LImageHelper;
+
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
@@ -30,7 +32,8 @@ public class LCombo extends LControl<Integer> {
 		setLayout(gridLayout);
 		combo = new Combo(this, SWT.BORDER | SWT.READ_ONLY);
 		GridData gd_combo = new GridData(SWT.FILL, SWT.FILL, true, false, 1, 1);
-		gd_combo.heightHint = 28;
+		if (!LImageHelper.onWindows)
+			gd_combo.heightHint = 28;
 		combo.setLayoutData(gd_combo);
 		combo.addSelectionListener(new SelectionAdapter() {
 			@Override

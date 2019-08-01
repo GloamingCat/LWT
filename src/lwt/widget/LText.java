@@ -1,5 +1,7 @@
 package lwt.widget;
 
+import lwt.LImageHelper;
+
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.FocusAdapter;
 import org.eclipse.swt.events.FocusEvent;
@@ -29,7 +31,8 @@ public class LText extends LControl<String> {
 		setLayout(gridLayout);
 		text = new Text(this, SWT.BORDER);
 		GridData gd_text = new GridData(SWT.FILL, SWT.FILL, true, false, 1, 1);
-		gd_text.heightHint = 16;
+		if (!LImageHelper.onWindows)
+			gd_text.heightHint = 16;
 		text.setLayoutData(gd_text);
 		
 		text.addFocusListener(new FocusAdapter() {
