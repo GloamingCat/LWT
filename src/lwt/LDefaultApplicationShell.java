@@ -169,28 +169,35 @@ public abstract class LDefaultApplicationShell extends Shell {
 		
 	}
 	
-	protected boolean loadDefault() {
-		String dataPath = LFileManager.appDataPath(applicationName) + "lattest.txt";
-		byte[] bytes = LFileManager.load(dataPath);
-		if (bytes != null && bytes.length > 0) {
-			LVocab vocab = LVocab.instance;
-			String path = new String(bytes);
-			LSerializer project = createProject(path);
-			if (!project.load()) {
-				MessageBox msg = new MessageBox(getShell(), SWT.ICON_ERROR | SWT.OK);
-				msg.setText(vocab.LOADERROR);
-				msg.setMessage(vocab.LOADERRORMSG + "\n" + path);
-				msg.open();
-				return false;
+	protected boolean loadDefault(String path) {
+		if (path == null) {
+			String lattest = LFileManager.appDataPath(applicationName) + "lattest.txt";
+			byte[] bytes = LFileManager.load(lattest);
+			if (bytes != null && bytes.length > 0) {
+				path = new String(bytes);
 			} else {
-				this.project = project;
-				mntmView.setEnabled(true);
-				if (defaultView != null)
-					setCurrentView(defaultView);
-				return true;
+				return false;
 			}
 		}
-		return false;
+		LVocab vocab = LVocab.instance;
+		LSerializer project = createProject(path);
+		if (!project.load()) {
+			MessageBox msg = new MessageBox(getShell(), SWT.ICON_ERROR | SWT.OK);
+			msg.setText(vocab.LOADERROR);
+			msg.setMessage(vocab.LOADERRORMSG + "\n" + path);
+			msg.open();
+			return false;
+		} else {
+			this.project = project;
+			mntmView.setEnabled(true);
+			if (defaultView != null)
+				setCurrentView(defaultView);
+			return true;
+		}
+	}
+	
+	protected boolean loadDefault() {
+		return loadDefault(null);
 	}
 	
 	protected void setCurrentView(LView view) {
