@@ -23,8 +23,8 @@ import org.eclipse.swt.widgets.Composite;
 
 public class LObjectEditor extends LEditor {
 
-	protected HashMap<String, LControl<?>> controlMap = new HashMap<>();
-	protected HashMap<String, LEditor> editorMap = new HashMap<>();
+	protected HashMap<LControl<?>, String> controlMap = new HashMap<>();
+	protected HashMap<LEditor, String> editorMap = new HashMap<>();
 	public LCollectionEditor<?, ?> collectionEditor;
 	protected Object currentObject;
 	protected LPath currentPath;
@@ -44,7 +44,7 @@ public class LObjectEditor extends LEditor {
 			addChild(editor);
 		} else {
 			addChild((LView) editor);
-			editorMap.put(key, editor);
+			editorMap.put(editor, key);
 		}
 	}
 	
@@ -54,17 +54,17 @@ public class LObjectEditor extends LEditor {
 	}
 
 	public <T> void addControl(LControl<T> control, String key) {
-		controlMap.put(key, control);
+		controlMap.put(control, key);
 		control.setActionStack(actionStack);
 		control.addModifyListener(new LControlListener<T>() {
 			@Override
 			public void onModify(LControlEvent<T> event) {
-				if (currentObject != null) {
-					if (key != null && !key.isEmpty()) {
-						setFieldValue(currentObject, key, event.newValue);
-						if (collectionEditor != null && currentPath != null && event.detail >= 0)
-							collectionEditor.refreshObject(currentPath);
-					}
+				if (key.isEmpty()) {
+					currentObject = event.newValue;
+				} else if (currentObject != null && key != null) {
+					setFieldValue(currentObject, key, event.newValue);
+					if (collectionEditor != null && currentPath != null && event.detail >= 0)
+						collectionEditor.refreshObject(currentPath);
 				}
 			}
 		});
@@ -72,7 +72,7 @@ public class LObjectEditor extends LEditor {
 	
 	public void setActionStack(LActionStack stack) {
 		super.setActionStack(stack);
-		for(LControl<?> control : controlMap.values()) {
+		for(LControl<?> control : controlMap.keySet()) {
 			control.setActionStack(stack);
 		}
 	}
@@ -86,29 +86,29 @@ public class LObjectEditor extends LEditor {
 				subEditor.setObject(obj);
 			}
 			if (obj != null) {
-				for(Map.Entry<String, LEditor> entry : editorMap.entrySet()) {
-					Object value = getFieldValue(obj, entry.getKey());
-					entry.getValue().setObject(value);
+				for(Map.Entry<LEditor, String> entry : editorMap.entrySet()) {
+					Object value = getFieldValue(obj, entry.getValue());
+					entry.getKey().setObject(value);
 				}
-				for(Map.Entry<String, LControl<?>> entry : controlMap.entrySet()) {
-					if (entry.getKey().isEmpty()) {
-						entry.getValue().setValue(obj);
+				for(Map.Entry<LControl<?>, String> entry : controlMap.entrySet()) {
+					if (entry.getValue().isEmpty()) {
+						entry.getKey().setValue(obj);
 					} else {
-						Object value = getFieldValue(obj, entry.getKey());
+						Object value = getFieldValue(obj, entry.getValue());
 						try {
-							entry.getValue().setValue(value);
+							entry.getKey().setValue(value);
 						} catch (Exception e) {
-							System.err.println(this.getClass() + ": " + entry.getKey());
+							System.err.println(this.getClass() + ": " + entry.getValue());
 							throw e;
 						}
 					}
 				}
 			} else {
-				for(Map.Entry<String, LEditor> entry : editorMap.entrySet()) {
-					entry.getValue().setObject(null);
+				for(Map.Entry<LEditor, String> entry : editorMap.entrySet()) {
+					entry.getKey().setObject(null);
 				}
-				for(Map.Entry<String, LControl<?>> entry : controlMap.entrySet()) {
-					entry.getValue().setValue(null);
+				for(Map.Entry<LControl<?>, String> entry : controlMap.entrySet()) {
+					entry.getKey().setValue(null);
 				}
 			}
 			for(LSelectionListener listener : selectionListeners) {
@@ -130,8 +130,8 @@ public class LObjectEditor extends LEditor {
 	}
 	
 	public void saveObjectValues() {
-		for(Map.Entry<String, LControl<?>> entry : controlMap.entrySet()) {
-			LControl<?> control = entry.getValue();
+		for(Map.Entry<LControl<?>, String> entry : controlMap.entrySet()) {
+			LControl<?> control = entry.getKey();
 			control.notifyEmpty();
 		}
 	}

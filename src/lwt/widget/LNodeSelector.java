@@ -20,6 +20,8 @@ public class LNodeSelector<T> extends LControl<Integer> {
 	protected LTree<T, T> tree;
 	protected Button btnNull;
 	
+	public static final int OPTIONAL = 0x1;
+	
 	/**
 	 * Create the composite.
 	 * @param parent
