@@ -6,7 +6,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 
-public class LCheckButton extends LControl<Boolean> {
+public class LCheckBox extends LControl<Boolean> {
 
 	private Button button;
 	
@@ -15,7 +15,7 @@ public class LCheckButton extends LControl<Boolean> {
 	 * @param parent
 	 * @param style
 	 */
-	public LCheckButton(Composite parent, int style) {
+	public LCheckBox(Composite parent, int style) {
 		super(parent, style);
 		button = new Button(this, SWT.CHECK);
 		button.addSelectionListener(new SelectionAdapter() {
@@ -29,7 +29,7 @@ public class LCheckButton extends LControl<Boolean> {
 		});
 	}
 	
-	public LCheckButton(Composite parent) {
+	public LCheckBox(Composite parent) {
 		this(parent, SWT.NONE);
 	}
 
