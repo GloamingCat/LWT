@@ -13,8 +13,8 @@ public class LViewFolder extends LView {
 	protected TabFolder tabFolder;
 	protected int currentTab = 0;
 	
-	public LViewFolder(Composite parent, int style) {
-		super(parent, style);
+	public LViewFolder(Composite parent) {
+		super(parent, SWT.NONE);
 		setLayout(new FillLayout(SWT.HORIZONTAL));
 		
 		tabFolder = new TabFolder(this, SWT.BORDER);

@@ -13,11 +13,7 @@ import org.eclipse.swt.layout.GridData;
 public class LSpinner extends LControl<Integer> {
 
 	private Spinner spinner;
-	
-	public LSpinner(Composite parent) {
-		this(parent, SWT.NONE);
-	}
-	
+
 	/**
 	 * Create the composite.
 	 * @param parent
@@ -45,6 +41,13 @@ public class LSpinner extends LControl<Integer> {
 				currentValue = spinner.getSelection();
 			}
 		});
+	}
+	
+	/**
+	 * @wbp.parser.constructor
+	 */
+	public LSpinner(Composite parent) {
+		this(parent, SWT.NONE);
 	}
 	
 	public void setValue(Object obj) {

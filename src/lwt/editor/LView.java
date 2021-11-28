@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import lwt.action.LActionStack;
 
+import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
 
 /**
@@ -28,6 +29,10 @@ public abstract class LView extends Composite {
 	 * @param parent
 	 * @param style
 	 */
+	public LView(Composite parent) {
+		super(parent, SWT.NONE);
+	}
+	
 	public LView(Composite parent, int style) {
 		super(parent, style);
 	}

@@ -19,6 +19,7 @@ import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.MenuItem;
 import org.eclipse.swt.widgets.MessageBox;
 import org.eclipse.swt.widgets.Shell;
+import org.eclipse.wb.swt.SWTResourceManager;
 
 public abstract class LDefaultApplicationShell extends Shell {
 
@@ -39,12 +40,19 @@ public abstract class LDefaultApplicationShell extends Shell {
 	 * Create the shell.
 	 * @param display
 	 */
-	public LDefaultApplicationShell(Display display) {
-		super(display, SWT.SHELL_TRIM | SWT.DOUBLE_BUFFERED);
+	public LDefaultApplicationShell(int initialWidth, int initialHeight, String title, String icon) {
+		super(Display.getDefault(), SWT.SHELL_TRIM | SWT.DOUBLE_BUFFERED);
+		if (title != null) {
+			setText(title);
+			applicationName = "LTH Editor";
+		}
+		if (icon != null) {
+			setImage(SWTResourceManager.getImage(LDefaultApplicationShell.class, icon));
+		}
 		
 		LVocab vocab = LVocab.instance;
 		
-		setSize(632, 400);
+		setSize(initialWidth, initialHeight);
 		
 		stackLayout = new StackLayout();
 		setLayout(stackLayout);
@@ -167,6 +175,32 @@ public abstract class LDefaultApplicationShell extends Shell {
 		mntmView.setEnabled(false);
 		mntmSave.setEnabled(false);
 		
+	}
+	
+	public void run() {
+		open();
+		layout();
+		while (!isDisposed()) {
+			if (!Display.getDefault().readAndDispatch()) {
+				Display.getDefault().sleep();
+			}
+		}
+	}
+	
+	protected void addView(final LView view, String name, String shortcut) {
+		MenuItem item = new MenuItem(menuView, SWT.NONE);
+		item.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent arg0) {
+				setCurrentView(view);
+			}
+		});
+		if (shortcut != null) {
+			item.setText(name + "\t" + shortcut);
+			item.setAccelerator(SWTHelper.accelerators.get(shortcut));
+		} else {
+			item.setText(name);
+		}
 	}
 	
 	protected boolean loadDefault(String path) {

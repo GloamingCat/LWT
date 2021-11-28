@@ -38,6 +38,9 @@ public class LObjectButton<T> extends LControl<T> {
 		});
 		button.setText(LVocab.instance.SELECT);
 	}
+	public LObjectButton(Composite parent) {
+		this(parent, SWT.NONE);
+	}
 	
 	public void setShellFactory(LShellFactory<T> factory) {
 		dialog.setFactory(factory);

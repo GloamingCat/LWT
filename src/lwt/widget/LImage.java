@@ -66,6 +66,10 @@ public class LImage extends Composite {
 		});
 	}
 	
+	public LImage(Composite parent) {
+		this(parent, SWT.NONE);
+	}
+	
 	public void setImage(String path) {
 		Image img = SWTResourceManager.getImage(path);
 		setImage(img);

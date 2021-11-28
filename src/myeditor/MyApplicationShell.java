@@ -10,7 +10,6 @@ import myeditor.views.MyContentTreeEditor;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
-import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.MenuItem;
 
 public class MyApplicationShell extends LDefaultApplicationShell {
@@ -21,15 +20,8 @@ public class MyApplicationShell extends LDefaultApplicationShell {
 	 */
 	public static void main(String args[]) {
 		try {
-			Display display = Display.getDefault();
-			MyApplicationShell shell = new MyApplicationShell(display);
-			shell.open();
-			shell.layout();
-			while (!shell.isDisposed()) {
-				if (!display.readAndDispatch()) {
-					display.sleep();
-				}
-			}
+			MyApplicationShell shell = new MyApplicationShell();
+			shell.run();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -39,10 +31,8 @@ public class MyApplicationShell extends LDefaultApplicationShell {
 	 * Create the shell.
 	 * @param display
 	 */
-	public MyApplicationShell(Display display) {
-		super(display);
-		setText("My Editor");
-		setSize(450, 300);
+	public MyApplicationShell() {
+		super(450, 300, "My Editor", null);
 		
 		MyContentTreeEditor treeEditor = new MyContentTreeEditor(this, SWT.NONE);
 		MyContentListEditor listEditor = new MyContentListEditor(this, SWT.NONE);

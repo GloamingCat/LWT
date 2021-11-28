@@ -23,7 +23,7 @@ public abstract class GDefaultListEditor<T> extends LDefaultListEditor<T> {
 		if (getType() == String.class) {
 			return (T) "";
 		} else if (getType() == Integer.class) {
-			return (T) new Integer(0);
+			return (T) (Integer) 0;
 		} else {
 			return (T) gson.fromJson("{}", getType());
 		}

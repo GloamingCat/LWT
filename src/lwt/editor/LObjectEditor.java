@@ -12,6 +12,7 @@ import lwt.event.listener.LControlListener;
 import lwt.event.listener.LSelectionListener;
 import lwt.widget.LControl;
 
+import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
 
 /**
@@ -37,6 +38,10 @@ public class LObjectEditor extends LEditor {
 	 */
 	public LObjectEditor(Composite parent, int style) {
 		super(parent, style);
+	}
+	
+	public LObjectEditor(Composite parent) {
+		super(parent, SWT.NONE);
 	}
 	
 	public <T> void addChild(LEditor editor, String key) {
