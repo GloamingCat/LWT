@@ -11,14 +11,19 @@ import org.eclipse.swt.widgets.Composite;
 public class LTextBox extends LControl<String> {
 	
 	private StyledText text;
+	
+	public LTextBox(Composite parent) {
+		this(parent, false);
+	}
 
 	/**
+	 * @wbp.parser.constructor
 	 * Create the composite.
 	 * @param parent
 	 * @param style
 	 */
-	public LTextBox(Composite parent, int style) {
-		super(parent, style);
+	public LTextBox(Composite parent, boolean read_only) {
+		super(parent, 0);
 		text = new StyledText(this, SWT.BORDER | SWT.V_SCROLL | SWT.H_SCROLL);
 		
 		text.addFocusListener(new FocusAdapter() {

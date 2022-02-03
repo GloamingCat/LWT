@@ -9,27 +9,32 @@ import org.eclipse.swt.events.KeyAdapter;
 import org.eclipse.swt.events.KeyEvent;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Text;
-import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.layout.GridData;
+import org.eclipse.swt.layout.GridLayout;
 
 public class LText extends LControl<String> {
 	
 	private Text text;
 
+	public LText(Composite parent) {
+		this(parent, false);
+	}
+	
 	/**
+	 * @wbp.parser.constructor
 	 * Create the composite.
 	 * @param parent
 	 * @param style
 	 */
-	public LText(Composite parent, int style) {
-		super(parent, style);
+	public LText(Composite parent, boolean read_only) {
+		super(parent, 0);
 		GridLayout gridLayout = new GridLayout(1, false);
 		gridLayout.horizontalSpacing = 0;
-		gridLayout.verticalSpacing = 0;
-		gridLayout.marginWidth = 0;
 		gridLayout.marginHeight = 0;
+		gridLayout.marginWidth = 0;
+		gridLayout.verticalSpacing = 0;
 		setLayout(gridLayout);
-		text = new Text(this, SWT.BORDER);
+		text = new Text(this, read_only ? (SWT.BORDER | SWT.READ_ONLY) : SWT.BORDER);
 		GridData gd_text = new GridData(SWT.FILL, SWT.FILL, true, false, 1, 1);
 		if (!LImageHelper.onWindows)
 			gd_text.heightHint = 16;
@@ -49,10 +54,6 @@ public class LText extends LControl<String> {
 				}
 			}
 		});
-	}
-	
-	public LText(Composite parent) {
-		this(parent, 0);
 	}
 	
 	private void onTextModify() {
