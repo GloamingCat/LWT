@@ -13,6 +13,7 @@ public class LActionButton extends LControl<Object> {
 	public LActionButton(Composite parent, String text) {
 		super(parent, 0);
 		button = new Button(this, SWT.NONE);
+		button.setText(text);
 		button.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent arg0) {
@@ -20,6 +21,5 @@ public class LActionButton extends LControl<Object> {
 			}
 		});
 	}
-
 
 }

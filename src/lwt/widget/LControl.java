@@ -21,8 +21,9 @@ public abstract class LControl<T> extends LWidget {
 	}
 	
 	public void modify(T newValue) {
+		T oldValue = currentValue;
 		setValue(newValue);
-		newModifyAction(currentValue, newValue);
+		newModifyAction(oldValue, newValue);
 	}
 	
 	@SuppressWarnings("unchecked")
