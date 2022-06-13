@@ -139,7 +139,7 @@ public class SWTResourceManager {
 				image = getImage(new FileInputStream(path));
 				m_imageMap.put(path, image);
 			} catch (Exception e) {
-				image = getMissingImage();
+				//image = getMissingImage();
 				m_imageMap.put(path, image);
 			}
 		}

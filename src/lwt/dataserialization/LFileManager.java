@@ -22,6 +22,10 @@ public class LFileManager {
 			return "";
 		}
 	}
+	
+	public static String getDirectory(String filePath) {
+		return new File(filePath).getParentFile().getAbsolutePath() + File.separator;
+	}
 
 	public static byte[] load(String path) {
 		path = path.replace("\\", File.separator);
@@ -35,7 +39,7 @@ public class LFileManager {
 			return array;
 		} catch(Exception e) {
 			System.out.println("couldn't load: " + path);
-			//e.printStackTrace();
+			e.printStackTrace();
 			return null;
 		}
 	}

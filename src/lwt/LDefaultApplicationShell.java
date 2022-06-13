@@ -11,9 +11,9 @@ import org.eclipse.swt.events.MenuAdapter;
 import org.eclipse.swt.events.MenuEvent;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
-import org.eclipse.swt.widgets.DirectoryDialog;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Event;
+import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.MenuItem;
@@ -248,15 +248,15 @@ public abstract class LDefaultApplicationShell extends Shell {
 			return project;
 		}
 		LVocab vocab = LVocab.instance;
-		DirectoryDialog dialog = new DirectoryDialog(this);
+		FileDialog dialog = new FileDialog(this);
 		dialog.setText(vocab.NEWPROJECT);
-		dialog.setMessage(vocab.NEWMSG);
+		dialog.setFilterExtensions(new String[] {"*.json"});
 		dialog.setFilterPath(LFileManager.applicationPath());
-		String resultPath = dialog.open();
-		if (resultPath == null)
+		String resultFile = dialog.open();
+		if (resultFile == null)
 			return project;
-		resultPath += "/";
-		LSerializer newProject = createProject(resultPath);
+		String resultPath = LFileManager.getDirectory(resultFile);
+		LSerializer newProject = createProject(resultFile);
 		if (newProject.isDataFolder(resultPath)) {
 			MessageBox msg = new MessageBox(this, SWT.ICON_QUESTION | SWT.YES | SWT.NO | SWT.CANCEL);
 			msg.setText(vocab.EXISTINGPROJECT);
@@ -270,7 +270,7 @@ public abstract class LDefaultApplicationShell extends Shell {
 		newProject.save();
 		mntmView.setEnabled(true);
 		String path = LFileManager.appDataPath(applicationName) + "lattest.txt";
-		byte[] bytes = resultPath.getBytes();
+		byte[] bytes = resultFile.getBytes();
 		LFileManager.save(path, bytes);
 		if (defaultView != null)
 			setCurrentView(defaultView);
@@ -282,26 +282,26 @@ public abstract class LDefaultApplicationShell extends Shell {
 			return project;
 		}
 		LVocab vocab = LVocab.instance;
-		DirectoryDialog dialog = new DirectoryDialog(this);
+		FileDialog dialog = new FileDialog(this);
 		dialog.setText(vocab.OPENPROJECT);
-		dialog.setMessage(vocab.OPENMSG);
+		dialog.setFilterExtensions(new String[] {"*.json"});
 		dialog.setFilterPath(LFileManager.applicationPath());
-		String resultPath = dialog.open();
-		if (resultPath == null)
+		String resultFile = dialog.open();
+		if (resultFile == null)
 			return project;
 		LSerializer previous = project;
-		resultPath += "/";
-		project = createProject(resultPath);
+		System.out.println("Opened: " + resultFile);
+		project = createProject(resultFile);
 		if (!project.load()) {
 			MessageBox msg = new MessageBox(this, SWT.ICON_ERROR | SWT.OK);
 			msg.setText(vocab.LOADERROR);
-			msg.setMessage(vocab.LOADERRORMSG + ":" + resultPath);
+			msg.setMessage(vocab.LOADERRORMSG + ":" + resultFile);
 			msg.open();
 			project = previous;
 		} else {
 			mntmView.setEnabled(true);
 			String path = LFileManager.appDataPath(applicationName) + "lattest.txt";
-			byte[] bytes = resultPath.getBytes();
+			byte[] bytes = resultFile.getBytes();
 			LFileManager.save(path, bytes);
 			if (defaultView != null)
 				setCurrentView(defaultView);
