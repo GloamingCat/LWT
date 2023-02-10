@@ -96,6 +96,10 @@ public abstract class LCollectionEditor<T, ST> extends LEditor {
 		getCollectionWidget().setActionStack(stack);
 	}
 	
+	public void restart() {
+		getCollectionWidget().setDataCollection(getDataCollection());
+	}
+	
 	// Widget
 	public abstract LCollection<T, ST> getCollectionWidget();
 	

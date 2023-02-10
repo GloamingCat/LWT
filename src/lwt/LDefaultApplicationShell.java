@@ -5,6 +5,8 @@ import lwt.dataserialization.LFileManager;
 import lwt.dataserialization.LSerializer;
 import lwt.editor.LView;
 
+import java.util.ArrayList;
+
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.StackLayout;
 import org.eclipse.swt.events.MenuAdapter;
@@ -26,6 +28,7 @@ public abstract class LDefaultApplicationShell extends Shell {
 	protected LSerializer project = null;
 	protected String applicationName;
 	
+	protected ArrayList<LView> views = new ArrayList<>();
 	protected LView defaultView = null;
 	protected LView currentView;
 	protected StackLayout stackLayout;
@@ -195,6 +198,7 @@ public abstract class LDefaultApplicationShell extends Shell {
 				setCurrentView(view);
 			}
 		});
+		views.add(view);
 		if (shortcut != null) {
 			item.setText(name + "\t" + shortcut);
 			item.setAccelerator(SWTHelper.accelerators.get(shortcut));
@@ -292,19 +296,21 @@ public abstract class LDefaultApplicationShell extends Shell {
 		LSerializer previous = project;
 		System.out.println("Opened: " + resultFile);
 		project = createProject(resultFile);
-		if (!project.load()) {
+		if (project.load()) {
+			mntmView.setEnabled(true);
+			String path = LFileManager.appDataPath(applicationName) + "lattest.txt";
+			byte[] bytes = resultFile.getBytes();
+			LFileManager.save(path, bytes);
+			for (LView view : views)
+				view.restart();
+			if (defaultView != null)
+				setCurrentView(defaultView);
+		} else {
 			MessageBox msg = new MessageBox(this, SWT.ICON_ERROR | SWT.OK);
 			msg.setText(vocab.LOADERROR);
 			msg.setMessage(vocab.LOADERRORMSG + ":" + resultFile);
 			msg.open();
 			project = previous;
-		} else {
-			mntmView.setEnabled(true);
-			String path = LFileManager.appDataPath(applicationName) + "lattest.txt";
-			byte[] bytes = resultFile.getBytes();
-			LFileManager.save(path, bytes);
-			if (defaultView != null)
-				setCurrentView(defaultView);
 		}
 		return project;
 	}

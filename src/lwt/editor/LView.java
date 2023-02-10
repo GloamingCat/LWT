@@ -20,6 +20,7 @@ public abstract class LView extends Composite {
 
 	protected LView parent;
 	protected LActionStack actionStack;
+	protected boolean isActionRoot = false;
 	
 	protected ArrayList<LView> children = new ArrayList<>();
 	protected ArrayList<LEditor> subEditors = new ArrayList<>();
@@ -94,10 +95,12 @@ public abstract class LView extends Composite {
 	
 	public void createActionStack() {
 		actionStack = new LActionStack(this);
+		isActionRoot = true;
 	}
 	
 	public void setActionStack(LActionStack stack) {
 		this.actionStack = stack;
+		isActionRoot = false;
 		for(LView child : children) {
 			child.setActionStack(stack);
 		}
@@ -121,6 +124,18 @@ public abstract class LView extends Composite {
 
 	public boolean canRedo() {
 		return actionStack.canRedo();
+	}
+	
+	public void restart() {
+		if (isActionRoot)
+			actionStack.clear();
+		restartChildren();
+	}
+	
+	public void restartChildren() {
+		for(LView child : children) {
+			child.restart();
+		}
 	}
 
 }

@@ -38,7 +38,8 @@ public class LCombo extends LControl<Integer> {
 		combo.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent arg0) {
-				if (getSelectionIndex() == (Integer)currentValue)
+				int current = currentValue == null ? -1 : currentValue;
+				if (getSelectionIndex() == current)
 					return;
 				newModifyAction(currentValue, getSelectionIndex());
 				currentValue = getSelectionIndex();

@@ -29,6 +29,7 @@ public class LNodeSelector<T> extends LControl<Integer> {
 	 */
 	public LNodeSelector(Composite parent, int style) {
 		super(parent, SWT.NONE);
+		setLayout(new GridLayout(1, false));
 		tree = new LTree<T, T>(this, SWT.NONE) {
 			@Override
 			public T toObject(LPath path) {
@@ -50,6 +51,7 @@ public class LNodeSelector<T> extends LControl<Integer> {
 				return collection.getNode(path);
 			}
 		};
+		tree.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		tree.addSelectionListener(new LSelectionListener() {
 			@Override
 			public void onSelect(LSelectionEvent event) {
@@ -66,19 +68,20 @@ public class LNodeSelector<T> extends LControl<Integer> {
 		if (style % 2 == 0)
 			return;
 		
-		setLayout(new GridLayout(1, false));
-		tree.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
-		
 		btnNull = new Button(this, SWT.NONE);
 		btnNull.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, true, false, 1, 1));
 		btnNull.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent arg0) {
-				tree.notifySelectionListeners(tree.select(null));
+				selectNone();
 			}
 		});
 		btnNull.setText(LVocab.instance.DESELECT);
 		
+	}
+	
+	public void selectNone() {
+		tree.notifySelectionListeners(tree.select(null));
 	}
 	
 	public void addSelectionListener(LSelectionListener l) {

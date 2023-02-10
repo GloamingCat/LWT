@@ -45,18 +45,22 @@ public class LImageHelper {
 	}
 	
 	public static void correctTransparency(ImageData data) {
-		if (!onWindows)
-			return;
-		if (data.depth == 24) {
-			return;
+		try {
+			if (!onWindows)
+				return;
+			if (data.depth == 24) {
+				return;
+			}
+			int len = data.width * data.height;
+			data.transparentPixel = -1;
+			data.alpha = -1;
+			data.alphaData = new byte[len];
+			for (int i = 0; i < len; i++) {
+		        data.alphaData[i] = data.data[i * 4 + 3];
+		    }
+		} catch(Exception e) {
+			
 		}
-		int len = data.width * data.height;
-		data.transparentPixel = -1;
-		data.alpha = -1;
-		data.alphaData = new byte[len];
-		for (int i = 0; i < len; i++) {
-	        data.alphaData[i] = data.data[i * 4 + 3];
-	    }
 	}
 	
 	//-------------------------------------------------------------------------------------
@@ -93,6 +97,9 @@ public class LImageHelper {
 				rgb = new RGB(hsb[0] % 360, 
 						Math.max(0, Math.min(1, hsb[1])), 
 						Math.max(0, Math.min(1, hsb[2])));
+				rgb.red *= _r;
+				rgb.green *= _g;
+				rgb.blue *= _b;
 				pixel = src.palette.getPixel(rgb);
 				src.setPixel(i, j, pixel);
 			}

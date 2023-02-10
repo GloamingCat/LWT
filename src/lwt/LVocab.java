@@ -17,7 +17,7 @@ public class LVocab {
 	public String OPENMSG = "Select the projects folder.";
 	
 	public String UNSAVEDPROJECT = "Unsaved Project";
-	public String UNSAVEDMSG = "There're some changes in the current project. "
+	public String UNSAVEDMSG = "There are some unsaved changes in the current project. "
 			+ "Would you like to save it first?";
 	
 	public String EXISTINGPROJECT = "Existing Project";
@@ -28,6 +28,10 @@ public class LVocab {
 	public String LOADERRORMSG = "Couldn't load the project files.";
 	public String SAVEERROR = "Save error";
 	public String SAVEERRORMSG = "Couldn't save project.";
+	
+	public String EXPORT = "Export";
+	public String EXPORTSAVE = "Save and export";
+	public String EXPORTNOSAVE = "Export without saving";
 	
 	public String EDIT = "Edit";
 	public String UNDO = "Undo";

@@ -67,4 +67,10 @@ public class LActionStack {
 		return savedAction != lastAction;
 	}
 	
+	public void clear() {
+		savedAction = 0;
+		lastAction = 0;
+		actions.clear();
+	}
+	
 }

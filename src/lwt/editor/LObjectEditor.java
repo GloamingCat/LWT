@@ -30,7 +30,7 @@ public class LObjectEditor extends LEditor {
 	protected Object currentObject;
 	protected LPath currentPath;
 	protected ArrayList<LSelectionListener> selectionListeners = new ArrayList<>();
-	
+
 	/**
 	 * Create the composite.
 	 * @param parent
@@ -71,9 +71,12 @@ public class LObjectEditor extends LEditor {
 					if (collectionEditor != null && currentPath != null && event.detail >= 0)
 						collectionEditor.refreshObject(currentPath);
 				}
+				refresh();
 			}
 		});
 	}
+	
+	public void refresh() {}
 	
 	public void setActionStack(LActionStack stack) {
 		super.setActionStack(stack);
@@ -144,5 +147,5 @@ public class LObjectEditor extends LEditor {
 	public void addSelectionListener(LSelectionListener listener) {
 		selectionListeners.add(listener);
 	}
-
+	
 }
