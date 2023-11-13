@@ -16,6 +16,7 @@ public class LImageHelper {
 	
 	public static final boolean onWindows = System.getProperty("os.name").
 			toLowerCase().contains("win");
+	public static final int libVersion = SWT.getVersion();
 	
 	/** Creates new, 32-bit transparent image.
 	 * @param imgW Image width.
@@ -28,7 +29,7 @@ public class LImageHelper {
 		data.alphaData = new byte[imgW * imgH];
 		Arrays.fill(data.alphaData, (byte) 0);
 		Image src = new Image(Display.getCurrent(), data);
-	    return src;
+		return src;
 	}
 	
 	//-------------------------------------------------------------------------------------
@@ -36,7 +37,7 @@ public class LImageHelper {
 	//-------------------------------------------------------------------------------------
 	
 	public static Image correctTransparency(Image image) {
-		if (!onWindows)
+		if (!onWindows || libVersion >= 4963)
 			return image;
 		ImageData data = image.getImageData();
 		correctTransparency(data);
@@ -46,7 +47,7 @@ public class LImageHelper {
 	
 	public static void correctTransparency(ImageData data) {
 		try {
-			if (!onWindows)
+			if (!onWindows || libVersion >= 4963)
 				return;
 			if (data.depth == 24) {
 				return;
@@ -56,8 +57,8 @@ public class LImageHelper {
 			data.alpha = -1;
 			data.alphaData = new byte[len];
 			for (int i = 0; i < len; i++) {
-		        data.alphaData[i] = data.data[i * 4 + 3];
-		    }
+				data.alphaData[i] = data.data[i * 4 + 3];
+			}
 		} catch(Exception e) {
 			
 		}

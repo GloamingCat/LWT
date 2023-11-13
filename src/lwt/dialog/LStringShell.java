@@ -4,7 +4,6 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 
 import lwt.LVocab;
-import lwt.dialog.LObjectShell;
 
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.SWT;

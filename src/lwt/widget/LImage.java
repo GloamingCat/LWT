@@ -33,6 +33,7 @@ public class LImage extends Composite {
 	 */
 	public LImage(Composite parent, int style) {
 		super(parent, style);
+		setBackground(SWTResourceManager.getColor(224, 224, 224));
 		setLayout(new FillLayout());
 		addPaintListener(new PaintListener() {
 			@Override
