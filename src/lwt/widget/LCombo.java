@@ -12,7 +12,7 @@ import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.layout.GridData;
 
-public class LCombo extends LControl<Integer> {
+public class LCombo extends LControlWidget<Integer> {
 
 	private Combo combo;
 	private boolean includeID = true;

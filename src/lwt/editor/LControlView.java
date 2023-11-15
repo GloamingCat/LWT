@@ -1,6 +1,6 @@
 package lwt.editor;
 
-import lwt.widget.LControl;
+import lwt.widget.LControlWidget;
 
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.widgets.Composite;
@@ -12,6 +12,6 @@ public abstract class LControlView<T> extends LView {
 		setLayout(new FillLayout());
 	}
 	
-	public abstract LControl<T> getControl();
+	public abstract LControlWidget<T> getControl();
 
 }

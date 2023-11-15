@@ -71,6 +71,15 @@ public abstract class LGrid<T, ST> extends LSelectableCollection<T, ST> {
 		setList(list);
 	}
 	
+	@SuppressWarnings("unchecked")
+	public LDataList<T> getDataCollection() {
+		LDataList<T> list = new LDataList<T>();
+		for(Control c : getChildren()) {
+			list.add((T) c.getData());
+		}
+		return list;
+	}
+	
 	public void clear() {
 		for(Control c : getChildren()) {
 			c.dispose();

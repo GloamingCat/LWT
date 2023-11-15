@@ -18,7 +18,8 @@ public abstract class LListEditor<T, ST> extends LAbstractTreeEditor<T, ST> {
 	 * @param style
 	 */
 	public LListEditor(Composite parent, int style) {
-		super(parent, style);		
+		super(parent, style);	
+		LListEditor<T, ST> self = this;
 		list = new LList<T, ST>(this, style) {
 			@Override
 			public LEditEvent<ST> edit(LPath path) {
@@ -28,7 +29,7 @@ public abstract class LListEditor<T, ST> extends LAbstractTreeEditor<T, ST> {
 			public T toObject(LPath path) {
 				if (path == null || path.index == -1)
 					return null;
-				return getDataCollection().get(path.index);
+				return self.getDataCollection().get(path.index);
 			}
 			@Override
 			public LDataTree<T> emptyNode() {
@@ -41,7 +42,7 @@ public abstract class LListEditor<T, ST> extends LAbstractTreeEditor<T, ST> {
 			}
 			@Override
 			public LDataTree<T> toNode(LPath path) {
-				T data = getDataCollection().get(path.index);
+				T data = self.getDataCollection().get(path.index);
 				return new LDataTree<T> (data);
 			}
 		};

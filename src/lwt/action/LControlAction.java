@@ -14,10 +14,6 @@ public class LControlAction<T> implements LAction {
 	}
 	
 	private void apply() {
-		if (control.isDisposed()) {
-			System.err.println("Undo / Redo on disposed widget!");
-			return;
-		}
 		control.setValue(event.newValue);
 		control.notifyListeners(event);
 	}

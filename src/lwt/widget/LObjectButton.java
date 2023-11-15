@@ -10,7 +10,7 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.events.SelectionEvent;
 
-public class LObjectButton<T> extends LControl<T> {
+public class LObjectButton<T> extends LControlWidget<T> {
 	
 	public String name = "";
 	protected Button button;

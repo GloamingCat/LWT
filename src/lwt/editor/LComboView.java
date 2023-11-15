@@ -3,7 +3,7 @@ package lwt.editor;
 import java.util.ArrayList;
 
 import lwt.widget.LCombo;
-import lwt.widget.LControl;
+import lwt.widget.LControlWidget;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
@@ -30,7 +30,7 @@ public class LComboView extends LControlView<Integer> {
 		super.onVisible();
 	}
 	
-	public LControl<Integer> getControl() {
+	public LControlWidget<Integer> getControl() {
 		return combo;
 	}
 	

@@ -64,7 +64,7 @@ public abstract class LAbstractTreeEditor<T, ST> extends LCollectionEditor<T, ST
 		});
 	}
 	
-	public void addChild(LObjectEditor editor) {
+	public void addChild(LObjectEditor<?> editor) {
 		getCollectionWidget().addSelectionListener(new LSelectionListener() {
 			@Override
 			public void onSelect(LSelectionEvent event) {

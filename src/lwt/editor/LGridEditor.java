@@ -27,7 +27,7 @@ public abstract class LGridEditor<T, ST> extends LCollectionEditor<T, ST> {
 			public T toObject(LPath path) {
 				if (path == null)
 					return null;
-				return getDataCollection().get(path.index);
+				return self.getDataCollection().get(path.index);
 			}
 			@Override
 			public LDataTree<T> emptyNode() {

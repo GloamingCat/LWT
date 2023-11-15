@@ -14,7 +14,7 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.layout.GridData;
 
-public class LNodeSelector<T> extends LControl<Integer> {
+public class LNodeSelector<T> extends LControlWidget<Integer> {
 
 	protected LDataTree<T> collection;
 	protected LTree<T, T> tree;

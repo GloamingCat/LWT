@@ -26,6 +26,7 @@ public abstract class LCollection<T, ST> extends LWidget {
 		super(parent, style);
 	}
 	
+	public abstract LDataCollection<T> getDataCollection();
 	public abstract void setDataCollection(LDataCollection<T> collection);
 	
 	//-------------------------------------------------------------------------------------

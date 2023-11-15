@@ -6,7 +6,7 @@ import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 
-public class LActionButton extends LControl<Object> {
+public class LActionButton extends LControlWidget<Object> {
 
 	private Button button;
 	

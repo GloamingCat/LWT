@@ -12,7 +12,7 @@ import org.eclipse.swt.events.TraverseEvent;
 import org.eclipse.swt.events.TraverseListener;
 import org.eclipse.swt.widgets.Composite;
 
-public class LTextBox extends LControl<String> {
+public class LTextBox extends LControlWidget<String> {
 	
 	private StyledText text;
 	

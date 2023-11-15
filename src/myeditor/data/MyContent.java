@@ -25,4 +25,8 @@ public class MyContent implements LGraphical {
 		return null;
 	}
 	
+	public MyContent clone() {
+		return new MyContent(name, value);
+	}
+	
 }

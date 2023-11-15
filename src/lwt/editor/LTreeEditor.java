@@ -26,7 +26,7 @@ public abstract class LTreeEditor<T, ST> extends LAbstractTreeEditor<T, ST> {
 			}
 			@Override
 			public T toObject(LPath path) {
-				LDataTree<T> node = getDataCollection().getNode(path);
+				LDataTree<T> node = self.getDataCollection().getNode(path);
 				if (node == null)
 					return null;
 				return node.data;
@@ -41,7 +41,7 @@ public abstract class LTreeEditor<T, ST> extends LAbstractTreeEditor<T, ST> {
 			}
 			@Override
 			public LDataTree<T> toNode(LPath path) {
-				return getDataCollection().getNode(path);
+				return self.getDataCollection().getNode(path);
 			}
 		};
 		LTree<T, ST> customTree = createTree();

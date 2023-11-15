@@ -24,7 +24,7 @@ public abstract class LDefaultGridEditor<T extends LGraphical> extends LGridEdit
 	public void setEditableData(LPath path, T data) {
 		getDataCollection().set(path.index, data);
 	}
-	
+
 	protected Image getImage(int i) {
 		return getDataCollection().get(i).toImage();
 	}

@@ -16,7 +16,7 @@ import org.eclipse.swt.widgets.Text;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 
-public class LText extends LControl<String> {
+public class LText extends LControlWidget<String> {
 	
 	private Text text;
 

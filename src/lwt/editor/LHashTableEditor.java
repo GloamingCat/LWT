@@ -67,4 +67,10 @@ public class LHashTableEditor<T> extends LEditor {
 	public T createNewValue() { return null; }
 	public String getFieldName() { return null; }
 
+	@Override
+	public void saveObjectValues() {
+		// TODO Auto-generated method stub
+		
+	}
+
 }

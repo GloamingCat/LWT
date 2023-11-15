@@ -16,6 +16,8 @@ public abstract class LEditor extends LView {
 	}
 	
 	public abstract void setObject(Object object);
+	
+	public abstract void saveObjectValues();
 
 	protected Object getFieldValue(Object object, String name) {
 		try {

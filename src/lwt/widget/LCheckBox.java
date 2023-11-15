@@ -7,7 +7,7 @@ import org.eclipse.wb.swt.SWTResourceManager;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 
-public class LCheckBox extends LControl<Boolean> {
+public class LCheckBox extends LControlWidget<Boolean> {
 
 	private Button button;
 	

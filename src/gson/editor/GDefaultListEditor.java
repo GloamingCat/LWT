@@ -13,6 +13,10 @@ public abstract class GDefaultListEditor<T> extends LDefaultListEditor<T> {
 
 	protected static Gson gson = new GsonBuilder().setPrettyPrinting().create();
 	
+	public GDefaultListEditor(Composite parent) {
+		super(parent, 0);
+	}
+	
 	public GDefaultListEditor(Composite parent, int style) {
 		super(parent, style);
 	}

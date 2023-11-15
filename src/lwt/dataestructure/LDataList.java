@@ -17,6 +17,14 @@ public class LDataList<T> extends ArrayList<T> implements LDataCollection<T> {
 	public LDataList(LDataList<T> copy) {
 		super(copy);
 	}
+	
+	@Override
+	public void set(LDataCollection<T> data) {
+		LDataTree<T> tree = data.toTree();
+		clear();
+		for (LDataTree<T> node : tree.children)
+			add(node.data);
+	}
 
 	@Override
 	public void insert(LPath parentPath, int index, LDataTree<T> node) {

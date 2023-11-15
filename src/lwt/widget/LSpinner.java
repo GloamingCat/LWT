@@ -10,7 +10,7 @@ import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.layout.GridData;
 
-public class LSpinner extends LControl<Integer> {
+public class LSpinner extends LControlWidget<Integer> {
 
 	private Spinner spinner;
 

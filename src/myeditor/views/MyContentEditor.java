@@ -10,8 +10,9 @@ import lwt.widget.LLabel;
 import lwt.widget.LSpinner;
 import lwt.widget.LText;
 import myeditor.MyVocab;
+import myeditor.data.MyContent;
 
-public class MyContentEditor extends LObjectEditor {
+public class MyContentEditor extends LObjectEditor<MyContent> {
 
 	/**
 	 * Create the composite.
@@ -35,6 +36,11 @@ public class MyContentEditor extends LObjectEditor {
 		spinner.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		addControl(spinner, "value");
 		
+	}
+
+	@Override
+	public MyContent duplicateData(MyContent obj) {
+		return obj.clone();
 	}
 	
 }

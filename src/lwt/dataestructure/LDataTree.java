@@ -45,6 +45,16 @@ public class LDataTree<T> implements Serializable, LDataCollection<T> {
 		this.parent = parent;
 		parent.addChild(this, index);
 	}
+	
+	@Override
+	public void set(LDataCollection<T> data) {
+		LDataTree<T> tree = (LDataTree<T>) data;
+		dataMap.clear();
+		idMap.clear();
+		this.data = tree.data;
+		children.clear();
+		children.addAll(tree.children);
+	}
 
 	public void initID(int id) {
 		this.id = id;

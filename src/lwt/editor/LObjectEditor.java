@@ -2,18 +2,27 @@ package lwt.editor;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.IllegalFormatConversionException;
 import java.util.Map;
 
+import lwt.LVocab;
 import lwt.action.LActionStack;
+import lwt.action.LControlAction;
 import lwt.dataestructure.LPath;
 import lwt.event.LControlEvent;
 import lwt.event.LSelectionEvent;
 import lwt.event.listener.LControlListener;
 import lwt.event.listener.LSelectionListener;
 import lwt.widget.LControl;
+import lwt.widget.LControlWidget;
 
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.layout.RowLayout;
+import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Menu;
 
 /**
  * A specific type of Editor that edits a single object.
@@ -22,14 +31,15 @@ import org.eclipse.swt.widgets.Composite;
  *
  */
 
-public class LObjectEditor extends LEditor {
+public abstract class LObjectEditor<T> extends LEditor implements LControl<T> {
 
-	protected HashMap<LControl<?>, String> controlMap = new HashMap<>();
+	protected HashMap<LControlWidget<?>, String> controlMap = new HashMap<>();
 	protected HashMap<LEditor, String> editorMap = new HashMap<>();
 	public LCollectionEditor<?, ?> collectionEditor;
-	protected Object currentObject;
+	protected T currentObject;
 	protected LPath currentPath;
 	protected ArrayList<LSelectionListener> selectionListeners = new ArrayList<>();
+	protected ArrayList<LControlListener<T>> modifyListeners = new ArrayList<>();
 
 	/**
 	 * Create the composite.
@@ -41,10 +51,32 @@ public class LObjectEditor extends LEditor {
 	}
 	
 	public LObjectEditor(Composite parent) {
-		super(parent, SWT.NONE);
+		this(parent, SWT.NONE);
 	}
 	
-	public <T> void addChild(LEditor editor, String key) {
+	public Composite addHeader() {
+		Composite header = new Composite(this, 0); 
+		header.setLayout(new RowLayout());
+		Button copyButton = new Button(header, SWT.NONE);
+		copyButton.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent arg0) {
+				onCopyButton(null);
+			}
+		});
+		copyButton.setText(LVocab.instance.COPY);
+		Button pasteButton = new Button(header, SWT.NONE);
+		pasteButton.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent arg0) {
+				onPasteButton(null);
+			}
+		});
+		pasteButton.setText(LVocab.instance.PASTE);
+		return header;
+	}
+	
+	public <CT> void addChild(LEditor editor, String key) {
 		if (key.isEmpty()) {
 			addChild(editor);
 		} else {
@@ -53,19 +85,20 @@ public class LObjectEditor extends LEditor {
 		}
 	}
 	
-	public <T> void addControl(LControlView<T> view, String key) {
+	public <CT> void addControl(LControlView<CT> view, String key) {
 		addControl(view.getControl(), key);
 		addChild(view);
 	}
 
-	public <T> void addControl(LControl<T> control, String key) {
+	public <CT> void addControl(LControlWidget<CT> control, String key) {
 		controlMap.put(control, key);
 		control.setActionStack(actionStack);
-		control.addModifyListener(new LControlListener<T>() {
+		control.addModifyListener(new LControlListener<CT>() {
+			@SuppressWarnings("unchecked")
 			@Override
-			public void onModify(LControlEvent<T> event) {
+			public void onModify(LControlEvent<CT> event) {
 				if (key.isEmpty()) {
-					currentObject = event.newValue;
+					currentObject = (T) event.newValue;
 				} else if (currentObject != null && key != null) {
 					setFieldValue(currentObject, key, event.newValue);
 					if (collectionEditor != null && currentPath != null && event.detail >= 0)
@@ -80,16 +113,17 @@ public class LObjectEditor extends LEditor {
 	
 	public void setActionStack(LActionStack stack) {
 		super.setActionStack(stack);
-		for(LControl<?> control : controlMap.keySet()) {
+		for(LControlWidget<?> control : controlMap.keySet()) {
 			control.setActionStack(stack);
 		}
 	}
 	
+	@SuppressWarnings("unchecked")
 	public void setObject(Object obj) {
 		try {
 			if (currentObject != null)
 				saveObjectValues();
-			currentObject = obj;
+			currentObject = (T) obj;
 			for(LEditor subEditor : subEditors) {
 				subEditor.setObject(obj);
 			}
@@ -98,7 +132,7 @@ public class LObjectEditor extends LEditor {
 					Object value = getFieldValue(obj, entry.getValue());
 					entry.getKey().setObject(value);
 				}
-				for(Map.Entry<LControl<?>, String> entry : controlMap.entrySet()) {
+				for(Map.Entry<LControlWidget<?>, String> entry : controlMap.entrySet()) {
 					if (entry.getValue().isEmpty()) {
 						entry.getKey().setValue(obj);
 					} else {
@@ -115,7 +149,7 @@ public class LObjectEditor extends LEditor {
 				for(Map.Entry<LEditor, String> entry : editorMap.entrySet()) {
 					entry.getKey().setObject(null);
 				}
-				for(Map.Entry<LControl<?>, String> entry : controlMap.entrySet()) {
+				for(Map.Entry<LControlWidget<?>, String> entry : controlMap.entrySet()) {
 					entry.getKey().setValue(null);
 				}
 			}
@@ -128,7 +162,7 @@ public class LObjectEditor extends LEditor {
 		}
 	}
 	
-	public Object getObject() {
+	public T getObject() {
 		return currentObject;
 	}
 	
@@ -138,9 +172,13 @@ public class LObjectEditor extends LEditor {
 	}
 	
 	public void saveObjectValues() {
-		for(Map.Entry<LControl<?>, String> entry : controlMap.entrySet()) {
-			LControl<?> control = entry.getKey();
+		for(Map.Entry<LControlWidget<?>, String> entry : controlMap.entrySet()) {
+			LControlWidget<?> control = entry.getKey();
 			control.notifyEmpty();
+		}
+		for(Map.Entry<LEditor, String> entry : editorMap.entrySet()) {
+			LEditor editor = entry.getKey();
+			editor.saveObjectValues();
 		}
 	}
 	
@@ -148,4 +186,66 @@ public class LObjectEditor extends LEditor {
 		selectionListeners.add(listener);
 	}
 	
+	public void addModifyListener(LControlListener<T> listener) {
+		modifyListeners.add(listener);
+	}
+
+	public void modify(T newValue) {
+		T oldValue = duplicateData(currentObject);
+		setValue(newValue);
+		newModifyAction(oldValue, newValue);
+	}
+	
+	public void setValue(Object value) {
+		T oldValue = currentObject;
+		setObject(value);
+		currentObject = oldValue;
+		saveObjectValues();
+		currentObject = null;
+		setObject(oldValue);
+	}
+	
+	//-------------------------------------------------------------------------------------
+	// Modify Events
+	//-------------------------------------------------------------------------------------
+	
+	protected void newModifyAction(T oldValue, T newValue) {
+		LControlEvent<T> event = new LControlEvent<T>(oldValue, newValue);
+		if (actionStack != null) {
+			actionStack.newAction(new LControlAction<T>(this, event));
+		}
+		notifyListeners(event);
+	}
+	
+	public void notifyListeners(LControlEvent<T> event) {
+		for(LControlListener<T> listener : modifyListeners) {
+			listener.onModify(event);
+		}
+	}
+	
+	//-------------------------------------------------------------------------------------
+	// Copy / Paste
+	//-------------------------------------------------------------------------------------
+	
+	public void onCopyButton(Menu menu) {
+		LControlWidget.clipboard = duplicateData(currentObject);
+	}
+	
+	@SuppressWarnings("unchecked")
+	public void onPasteButton(Menu menu) {
+		T obj = null;
+		try {
+			if (LControlWidget.clipboard != null && !LControlWidget.clipboard.equals(currentObject))
+				obj = (T) LControlWidget.clipboard;	
+			else
+				return;
+		} catch (IllegalFormatConversionException e) {
+			System.err.println(e.getMessage());
+			return;
+		}
+		modify(obj);
+	}
+	
+	public abstract T duplicateData(T obj);
+
 }

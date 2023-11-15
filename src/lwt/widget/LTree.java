@@ -29,8 +29,8 @@ public abstract class LTree<T, ST> extends LTreeBase<T, ST> {
 		super(parent, style);
 		menu = new Menu(tree);
 		tree.setMenu(menu);
-	    tree.addMouseListener(new MouseListener() {
-	    	public void mouseUp(MouseEvent arg0) {}
+		tree.addMouseListener(new MouseListener() {
+			public void mouseUp(MouseEvent arg0) {}
 			public void mouseDown(MouseEvent arg0) {}
 			public void mouseDoubleClick(MouseEvent arg0) {
 				onEditButton(menu);
@@ -53,19 +53,19 @@ public abstract class LTree<T, ST> extends LTreeBase<T, ST> {
 	public LInsertEvent<T> insert(LPath parentPath, int index, LDataTree<T> node) {
 		TreeItem parent = toTreeItem(parentPath);
 		createTreeItem(parent, index, node);
-		refreshAll();
+		//refreshAll();
 		return new LInsertEvent<T>(parentPath, index, node);
 	}
 	
 	public LDeleteEvent<T> delete(LPath parentPath, int index) {
 		TreeItem item = toTreeItem(parentPath, index);
 		LDataTree<T> node = disposeTreeItem(item);
-		refreshAll();
+		//refreshAll();
 		return new LDeleteEvent<T>(parentPath, index, node);
 	}
 	
 	public LEditEvent<ST> edit(LPath path) {
-		refreshAll();
+		//refreshAll();
 		return null;
 	}
 	

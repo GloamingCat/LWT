@@ -8,7 +8,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.wb.swt.SWTResourceManager;
 
-public class LToggleButton extends LControl<Boolean> {
+public class LToggleButton extends LControlWidget<Boolean> {
 
 	private Label icon;
 	private Image imgTrue;

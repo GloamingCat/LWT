@@ -100,6 +100,10 @@ public abstract class LCollectionEditor<T, ST> extends LEditor {
 		getCollectionWidget().setDataCollection(getDataCollection());
 	}
 	
+	public void saveObjectValues() {
+		getDataCollection().set(getCollectionWidget().getDataCollection());
+	}
+	
 	// Widget
 	public abstract LCollection<T, ST> getCollectionWidget();
 	

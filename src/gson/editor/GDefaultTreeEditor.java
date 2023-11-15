@@ -13,6 +13,10 @@ public abstract class GDefaultTreeEditor<T> extends LDefaultTreeEditor<T> {
 
 	protected static Gson gson = new GsonBuilder().setPrettyPrinting().create();
 	
+	public GDefaultTreeEditor(Composite parent) {
+		super(parent, 0);
+	}
+	
 	public GDefaultTreeEditor(Composite parent, int style) {
 		super(parent, style);
 	}
