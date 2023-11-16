@@ -2,7 +2,6 @@ package lwt.editor;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.IllegalFormatConversionException;
 import java.util.Map;
 
 import lwt.LVocab;
@@ -97,6 +96,10 @@ public abstract class LObjectEditor<T> extends LEditor implements LControl<T> {
 			@SuppressWarnings("unchecked")
 			@Override
 			public void onModify(LControlEvent<CT> event) {
+				if (!controlMap.containsKey(control)) {
+					control.removeModifyListener(this);
+					return;
+				}
 				if (key.isEmpty()) {
 					currentObject = (T) event.newValue;
 				} else if (currentObject != null && key != null) {
@@ -107,6 +110,15 @@ public abstract class LObjectEditor<T> extends LEditor implements LControl<T> {
 				refresh();
 			}
 		});
+	}
+	
+	public <CT> void removeControl(LControlView<CT> view) {
+		removeControl(view.getControl());
+		removeChild(view);
+	}
+	
+	public <CT> void removeControl(LControlWidget<CT> control) {
+		controlMap.remove(control);
 	}
 	
 	public void refresh() {}
@@ -239,13 +251,13 @@ public abstract class LObjectEditor<T> extends LEditor implements LControl<T> {
 				obj = (T) LControlWidget.clipboard;	
 			else
 				return;
-		} catch (IllegalFormatConversionException e) {
+		} catch (ClassCastException e) {
 			System.err.println(e.getMessage());
 			return;
 		}
 		modify(obj);
 	}
 	
-	public abstract T duplicateData(T obj);
+	public abstract T duplicateData(Object obj);
 
 }

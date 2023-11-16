@@ -55,6 +55,10 @@ public abstract class LControlWidget<T> extends LWidget implements LControl<T> {
 		modifyListeners.add(listener);
 	}
 	
+	public void removeModifyListener(LControlListener<T> listener) {
+		modifyListeners.remove(listener);
+	}
+	
 	public void notifyListeners(LControlEvent<T> event) {
 		for(LControlListener<T> listener : modifyListeners) {
 			listener.onModify(event);

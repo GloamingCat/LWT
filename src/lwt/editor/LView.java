@@ -38,20 +38,32 @@ public abstract class LView extends Composite {
 		super(parent, style);
 	}
 	
-	public void addChild(LView editor) {
-		if (editor.parent != null) {
-			parent.children.remove(editor);
+	public void addChild(LView child) {
+		if (child.parent != null) {
+			parent.children.remove(child);
 		}
-		editor.parent = this;
-		if (editor.getActionStack() == null) {
-			editor.setActionStack(actionStack);
+		child.parent = this;
+		if (child.getActionStack() == null) {
+			child.setActionStack(actionStack);
 		}
-		children.add(editor);
+		children.add(child);
 	}
 	
 	public void addChild(LEditor editor) {
 		addChild((LView) editor);
 		subEditors.add(editor);
+	}
+
+	public void removeChild(LView child) {
+		if (child.parent != this)
+			return;
+		child.parent = null;
+		children.remove(child);
+	}
+	
+	public void removeChild(LEditor editor) {
+		removeChild((LView) editor);
+		subEditors.remove(editor);
 	}
 	
 	public void onVisible() {
