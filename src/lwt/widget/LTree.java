@@ -18,8 +18,6 @@ public abstract class LTree<T, ST> extends LTreeBase<T, ST> {
 	protected boolean includeID = false;
 	protected boolean editEnabled = false;
 	
-	protected LDataTree<T> clipboard = null;
-	
 	/**
 	 * Create the composite.
 	 * @param parent
@@ -160,13 +158,16 @@ public abstract class LTree<T, ST> extends LTreeBase<T, ST> {
 			return;
 		LPath parentPath = null;
 		int index = -1;
-		LDataTree<T> newNode = duplicateNode(clipboard);
-		if (tree.getSelectionCount() > 0) {
-			TreeItem item = tree.getSelection()[0];
-			parentPath = toPath(item.getParentItem());
-			index = indexOf(item) + 1;
-		}
-		newInsertAction(parentPath, index, newNode);
+		try {
+			@SuppressWarnings("unchecked")
+			LDataTree<T> newNode = duplicateNode((LDataTree<T>) clipboard);
+			if (tree.getSelectionCount() > 0) {
+				TreeItem item = tree.getSelection()[0];
+				parentPath = toPath(item.getParentItem());
+				index = indexOf(item) + 1;
+			}
+			newInsertAction(parentPath, index, newNode);
+		} catch (ClassCastException e) {}
 	}
 	
 }

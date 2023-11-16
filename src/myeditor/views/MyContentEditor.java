@@ -39,8 +39,9 @@ public class MyContentEditor extends LObjectEditor<MyContent> {
 	}
 
 	@Override
-	public MyContent duplicateData(MyContent obj) {
-		return obj.clone();
+	public MyContent duplicateData(Object original) {
+		MyContent data = (MyContent) original;
+		return data.clone();
 	}
 	
 }

@@ -1,7 +1,6 @@
 package lwt.widget;
 
 import java.util.ArrayList;
-import java.util.IllegalFormatConversionException;
 
 import lwt.action.LControlAction;
 import lwt.event.LControlEvent;
@@ -12,7 +11,6 @@ import org.eclipse.swt.widgets.Menu;
 
 public abstract class LControlWidget<T> extends LWidget implements LControl<T> {
 	
-	public static Object clipboard = null;
 	protected ArrayList<LControlListener<T>> modifyListeners = new ArrayList<>();
 	protected T currentValue;
 	
@@ -83,7 +81,10 @@ public abstract class LControlWidget<T> extends LWidget implements LControl<T> {
 		try {
 			if (clipboard != null && !clipboard.equals(currentValue))
 				modify((T) clipboard);	
-		} catch (IllegalFormatConversionException e) {}
+		} catch (ClassCastException e) {
+			System.err.println(e.getMessage());
+			return;
+		}
 	}
 	
 }

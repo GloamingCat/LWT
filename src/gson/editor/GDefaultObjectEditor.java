@@ -20,9 +20,10 @@ public class GDefaultObjectEditor<T> extends LObjectEditor<T> {
 	}
 
 	@SuppressWarnings("unchecked")
-	public T duplicateData(T original) {
-		String json = gson.toJson(original, original.getClass());
-		return (T) gson.fromJson(json, original.getClass());
+	public T duplicateData(Object original) {
+		T data = (T) original;
+		String json = gson.toJson(data, data.getClass());
+		return (T) gson.fromJson(json, data.getClass());
 	}
 
 }

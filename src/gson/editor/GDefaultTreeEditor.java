@@ -36,6 +36,8 @@ public abstract class GDefaultTreeEditor<T> extends LDefaultTreeEditor<T> {
 	@SuppressWarnings("unchecked")
 	@Override
 	public T duplicateData(T original) {
+		if (!getType().getClass().isInstance(original))
+			throw new ClassCastException("Object cannot be cast to " + getType().getTypeName());
 		String json = gson.toJson(original, getType());
 		return (T) gson.fromJson(json, getType());
 	}

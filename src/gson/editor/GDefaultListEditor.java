@@ -1,7 +1,5 @@
 package gson.editor;
 
-import java.lang.reflect.Type;
-
 import org.eclipse.swt.widgets.Composite;
 
 import com.google.gson.Gson;
@@ -35,11 +33,13 @@ public abstract class GDefaultListEditor<T> extends LDefaultListEditor<T> {
 	
 	@SuppressWarnings("unchecked")
 	@Override
-	public T duplicateData(T original) {
-		String json = gson.toJson(original, getType());
+	public T duplicateData(Object original) {
+		if (!getType().isInstance(original))
+			throw new ClassCastException("Object cannot be cast to " + getType().getTypeName());
+		String json = gson.toJson(original, original.getClass());
 		return (T) gson.fromJson(json, getType());
 	}
 	
-	public abstract Type getType();
+	public abstract Class<?> getType();
 
 }
