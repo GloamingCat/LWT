@@ -1,5 +1,7 @@
 package myeditor.views;
 
+import lwt.LContainer;
+import lwt.LSashPanel;
 import lwt.action.LActionStack;
 import lwt.dataestructure.LDataTree;
 import lwt.editor.LDefaultTreeEditor;
@@ -7,9 +9,6 @@ import lwt.editor.LView;
 import myeditor.data.MyContent;
 
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.custom.SashForm;
-import org.eclipse.swt.layout.FillLayout;
-import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.layout.GridData;
 
 public class MyContentTreeEditor extends LView {
@@ -17,22 +16,15 @@ public class MyContentTreeEditor extends LView {
 	private LDefaultTreeEditor<MyContent> treeEditor;
 	private MyContentEditor contentEditor;
 	
-	/**
-	 * Create the composite.
-	 * @param parent
-	 * @param style
-	 */
-	public MyContentTreeEditor(Composite parent, int style) {
-		super(parent, style);
-		
-		setLayout(new FillLayout());
+	public MyContentTreeEditor(LContainer parent) {
+		super(parent, true, false);
 		
 		actionStack = new LActionStack(this);
 		
-		SashForm sashForm = new SashForm(this, SWT.NONE);
+		LSashPanel sashForm = new LSashPanel(this);
 		
 		final LDataTree<MyContent> contentTree = createExampleTree();
-		treeEditor = new LDefaultTreeEditor<MyContent>(sashForm, SWT.NONE) {
+		treeEditor = new LDefaultTreeEditor<MyContent>(sashForm) {
 			@Override
 			public LDataTree<MyContent> getDataCollection() {
 				return contentTree;
@@ -53,7 +45,7 @@ public class MyContentTreeEditor extends LView {
 		treeEditor.getCollectionWidget().setDeleteEnabled(true);
 		addChild(treeEditor);
 		
-		contentEditor = new MyContentEditor(sashForm, SWT.NONE);
+		contentEditor = new MyContentEditor(sashForm);
 		contentEditor.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		treeEditor.addChild(contentEditor);
 		

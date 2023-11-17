@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
+import lwt.LContainer;
 import lwt.LVocab;
 import lwt.action.LActionStack;
 import lwt.action.LControlAction;
@@ -41,16 +42,33 @@ public abstract class LObjectEditor<T> extends LEditor implements LControl<T> {
 	protected ArrayList<LControlListener<T>> modifyListeners = new ArrayList<>();
 
 	/**
-	 * Create the composite.
+	 * Horizontal fill layout.
 	 * @param parent
-	 * @param style
+	 * @param doubleBuffered
 	 */
-	public LObjectEditor(Composite parent, int style) {
-		super(parent, style);
+	public LObjectEditor(LContainer parent, boolean doubleBuffered) {
+		super(parent, doubleBuffered);
 	}
 	
-	public LObjectEditor(Composite parent) {
-		this(parent, SWT.NONE);
+	/**
+	 * Grid or fill layout.
+	 * @param parent
+	 * @param columns
+	 * @param equalCols
+	 * @param doubleBuffered
+	 */
+	public LObjectEditor(LContainer parent, int columns, boolean equalCols, boolean doubleBuffered) {
+		super(parent, columns, equalCols, doubleBuffered);
+	}
+	
+	/**
+	 * Fill layout.
+	 * @param parent
+	 * @param horizontal
+	 * @param doubleBuffered
+	 */
+	public LObjectEditor(LContainer parent, boolean horizontal, boolean doubleBuffered) {
+		super(parent, horizontal, doubleBuffered);
 	}
 	
 	public Composite addHeader() {

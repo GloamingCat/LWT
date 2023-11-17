@@ -1,5 +1,6 @@
 package lwt.editor;
 
+import lwt.LContainer;
 import lwt.action.LActionStack;
 import lwt.dataestructure.LDataCollection;
 import lwt.dataestructure.LPath;
@@ -13,7 +14,6 @@ import lwt.event.listener.LCollectionListener;
 import lwt.widget.LCollection;
 
 import org.eclipse.swt.layout.FillLayout;
-import org.eclipse.swt.widgets.Composite;
 
 /**
  * Edits the items in a list.
@@ -31,8 +31,8 @@ public abstract class LCollectionEditor<T, ST> extends LEditor {
 	 * @param parent
 	 * @param style
 	 */
-	public LCollectionEditor(Composite parent, int style) {
-		super(parent, style);
+	public LCollectionEditor(LContainer parent) {
+		super(parent, false);
 		setLayout(new FillLayout());
 	}
 	
@@ -71,7 +71,7 @@ public abstract class LCollectionEditor<T, ST> extends LEditor {
 	}
 	
 	public void setShellFactory(LShellFactory<ST> factory) {
-		editDialog = new LObjectDialog<ST>(getShell(), getShell().getStyle());
+		editDialog = new LObjectDialog<ST>(getShell());
 		editDialog.setFactory(factory);
 	}
 	

@@ -1,6 +1,5 @@
 package lwt.dialog;
 
-import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 
 import lwt.LVocab;
@@ -14,7 +13,7 @@ public class LStringShell extends LObjectShell<String> {
 	
 	private Text txtName;
 
-	public LStringShell(Shell parent) {
+	public LStringShell(LShell parent) {
 		super(parent);
 		
 		content.setLayout(new GridLayout(2, false));

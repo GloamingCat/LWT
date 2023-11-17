@@ -3,6 +3,9 @@ package lwt.editor;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.TabFolder;
 import org.eclipse.swt.widgets.TabItem;
+
+import lwt.LContainer;
+
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.FillLayout;
@@ -13,11 +16,10 @@ public class LViewFolder extends LView {
 	protected TabFolder tabFolder;
 	protected int currentTab = 0;
 	
-	public LViewFolder(Composite parent) {
-		super(parent, SWT.NONE);
+	public LViewFolder(LContainer parent, boolean doubleBuffered) {
+		super(parent, doubleBuffered);
 		setLayout(new FillLayout(SWT.HORIZONTAL));
-		
-		tabFolder = new TabFolder(this, SWT.BORDER);
+		tabFolder = new TabFolder(this, SWT.NONE);
 		tabFolder.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent arg0) {
@@ -36,11 +38,13 @@ public class LViewFolder extends LView {
 		tbtm.setText(name);
 		tbtm.setControl(child);
 	}
-
-	public TabFolder getTabFolder() {
-		return tabFolder;
-	}
 	
+	public void addTab(String name, LContainer child) {
+		TabItem tbtm = new TabItem(tabFolder, SWT.NONE);
+		tbtm.setText(name);
+		tbtm.setControl(child.getComposite());
+	}
+
 	public void undo() {
 		children.get(currentTab).undo();
 	}
@@ -55,6 +59,10 @@ public class LViewFolder extends LView {
 
 	public boolean canRedo() {
 		return children.get(currentTab).canRedo();
+	}
+	
+	public Composite getComposite() {
+		return tabFolder;
 	}
 
 }

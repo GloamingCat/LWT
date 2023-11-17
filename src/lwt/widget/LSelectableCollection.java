@@ -2,16 +2,15 @@ package lwt.widget;
 
 import java.util.ArrayList;
 
+import lwt.LContainer;
 import lwt.dataestructure.LPath;
 import lwt.event.LSelectionEvent;
 import lwt.event.listener.LSelectionListener;
 
-import org.eclipse.swt.widgets.Composite;
-
 public abstract class LSelectableCollection<T, ST> extends LCollection<T, ST> {
 
-	public LSelectableCollection(Composite parent, int style) {
-		super(parent, style);
+	public LSelectableCollection(LContainer parent) {
+		super(parent);
 	}
 	
 	protected ArrayList<LSelectionListener> selectionListeners = new ArrayList<>();

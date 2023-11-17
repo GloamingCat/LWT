@@ -1,10 +1,9 @@
 package myeditor.views;
 
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.layout.GridLayout;
-import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.layout.GridData;
 
+import lwt.LContainer;
 import lwt.editor.LObjectEditor;
 import lwt.widget.LLabel;
 import lwt.widget.LSpinner;
@@ -19,10 +18,8 @@ public class MyContentEditor extends LObjectEditor<MyContent> {
 	 * @param parent
 	 * @param style
 	 */
-	public MyContentEditor(Composite parent, int style) {
-		super(parent, style);
-		
-		setLayout(new GridLayout(2, false));
+	public MyContentEditor(LContainer parent) {
+		super(parent, 2, false, true);
 		
 		new LLabel(this, MyVocab.instance.NAME);
 		
@@ -32,7 +29,7 @@ public class MyContentEditor extends LObjectEditor<MyContent> {
 		
 		new LLabel(this, MyVocab.instance.VALUE);
 		
-		LSpinner spinner = new LSpinner(this, SWT.NONE);
+		LSpinner spinner = new LSpinner(this);
 		spinner.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		addControl(spinner, "value");
 		

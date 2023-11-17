@@ -4,9 +4,10 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.MouseAdapter;
 import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.graphics.Image;
-import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.wb.swt.SWTResourceManager;
+
+import lwt.LContainer;
 
 public class LToggleButton extends LControlWidget<Boolean> {
 
@@ -15,8 +16,8 @@ public class LToggleButton extends LControlWidget<Boolean> {
 	private Image imgFalse;
 	private boolean enabled = true;
 	
-	public LToggleButton(Composite parent, int style) {
-		super(parent, style);
+	public LToggleButton(LContainer parent) {
+		super(parent);
 		icon = new Label(this, SWT.NONE);
 		icon.setAlignment(SWT.CENTER);
 		icon.addMouseListener(new MouseAdapter() {
@@ -30,11 +31,7 @@ public class LToggleButton extends LControlWidget<Boolean> {
 		});
 	}
 	
-	public LToggleButton(Composite parent) {
-		this(parent, SWT.NONE);
-	}
-	
-	public LToggleButton(Composite parent, String imgTrue, String imgFalse) {
+	public LToggleButton(LContainer parent, String imgTrue, String imgFalse) {
 		this(parent);
 		this.imgFalse = SWTResourceManager.getImage(LToggleButton.class, imgFalse);
 		this.imgTrue = SWTResourceManager.getImage(LToggleButton.class, imgTrue);

@@ -1,5 +1,7 @@
 package myeditor.views;
 
+import lwt.LContainer;
+import lwt.LSashPanel;
 import lwt.action.LActionStack;
 import lwt.dataestructure.LDataList;
 import lwt.editor.LDefaultListEditor;
@@ -7,10 +9,7 @@ import lwt.editor.LView;
 import myeditor.data.MyContent;
 
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.custom.SashForm;
-import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridData;
-import org.eclipse.swt.widgets.Composite;
 
 public class MyContentListEditor extends LView {
 
@@ -22,17 +21,15 @@ public class MyContentListEditor extends LView {
 	 * @param parent
 	 * @param style
 	 */
-	public MyContentListEditor(Composite parent, int style) {
-		super(parent, style);
-		
-		setLayout(new FillLayout());
+	public MyContentListEditor(LContainer parent) {
+		super(parent, true, false);
 		
 		actionStack = new LActionStack(this);
 		
-		SashForm sashForm = new SashForm(this, SWT.NONE);
+		LSashPanel sashForm = new LSashPanel(this, SWT.NONE);
 		
 		final LDataList<MyContent> contentList = createExampleList();
-		listEditor = new LDefaultListEditor<MyContent>(sashForm, SWT.NONE) {
+		listEditor = new LDefaultListEditor<MyContent>(sashForm) {
 			@Override
 			public LDataList<MyContent> getDataCollection() {
 				return contentList;
@@ -53,7 +50,7 @@ public class MyContentListEditor extends LView {
 		listEditor.getCollectionWidget().setDeleteEnabled(true);
 		addChild(listEditor);
 		
-		contentEditor = new MyContentEditor(sashForm, SWT.NONE);
+		contentEditor = new MyContentEditor(sashForm);
 		contentEditor.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		listEditor.addChild(contentEditor);
 		

@@ -2,6 +2,7 @@ package lwt.editor;
 
 import java.util.Map;
 
+import lwt.LContainer;
 import lwt.action.LActionStack;
 import lwt.event.LHashEditEvent;
 import lwt.event.LHashKeyEvent;
@@ -9,7 +10,6 @@ import lwt.event.listener.LHashListener;
 import lwt.widget.LHashTable;
 
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.layout.FillLayout;
 
 public class LHashTableEditor<T> extends LEditor {
@@ -17,12 +17,16 @@ public class LHashTableEditor<T> extends LEditor {
 	protected LHashTable<T> table;
 	protected Map<String, T> map;
 	
-	public LHashTableEditor(Composite parent, int style) {
-		super(parent, style);
-
+	/**
+	 * Horizontal fill layout.
+	 * @param parent
+	 * @param doubleBuffered
+	 */
+	public LHashTableEditor(LContainer parent) {
+		super(parent, false);
 		LHashTableEditor<T> self = this;
 		setLayout(new FillLayout(SWT.HORIZONTAL));
-		table = new LHashTable<T>(this, SWT.NONE) {
+		table = new LHashTable<T>(this) {
 			public T createNewValue() {
 				return self.createNewValue();
 			}
@@ -45,6 +49,27 @@ public class LHashTableEditor<T> extends LEditor {
 				map.remove(event.key);
 			}
 		});
+	}
+	
+	/**
+	 * Grid or fill layout.
+	 * @param parent
+	 * @param columns
+	 * @param equalCols
+	 * @param doubleBuffered
+	 */
+	public LHashTableEditor(LContainer parent, int columns, boolean equalCols) {
+		super(parent, columns, equalCols, false);
+	}
+	
+	/**
+	 * Fill layout.
+	 * @param parent
+	 * @param horizontal
+	 * @param doubleBuffered
+	 */
+	public LHashTableEditor(LContainer parent, boolean horizontal) {
+		super(parent, horizontal, false);
 	}
 	
 	public void setActionStack(LActionStack stack) {

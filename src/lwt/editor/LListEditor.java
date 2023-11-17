@@ -1,26 +1,29 @@
 package lwt.editor;
 
+import lwt.LContainer;
 import lwt.dataestructure.LDataList;
 import lwt.dataestructure.LDataTree;
 import lwt.dataestructure.LPath;
 import lwt.event.LEditEvent;
 import lwt.widget.LList;
 
-import org.eclipse.swt.widgets.Composite;
-
 public abstract class LListEditor<T, ST> extends LAbstractTreeEditor<T, ST> {
 	
 	protected LList<T, ST> list;
+	
+	public LListEditor(LContainer parent) {
+		this(parent, false);
+	}
 	
 	/**
 	 * Create the composite.
 	 * @param parent
 	 * @param style
 	 */
-	public LListEditor(Composite parent, int style) {
-		super(parent, style);	
+	public LListEditor(LContainer parent, boolean check) {
+		super(parent);	
 		LListEditor<T, ST> self = this;
-		list = new LList<T, ST>(this, style) {
+		list = new LList<T, ST>(this, check) {
 			@Override
 			public LEditEvent<ST> edit(LPath path) {
 				return onEditItem(path);

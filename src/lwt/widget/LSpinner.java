@@ -1,9 +1,9 @@
 package lwt.widget;
 
+import lwt.LContainer;
 import lwt.LImageHelper;
 
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Spinner;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
@@ -19,8 +19,8 @@ public class LSpinner extends LControlWidget<Integer> {
 	 * @param parent
 	 * @param style
 	 */
-	public LSpinner(Composite parent, int style) {
-		super(parent, style);
+	public LSpinner(LContainer parent) {
+		super(parent);
 		GridLayout gridLayout = new GridLayout(1, false);
 		gridLayout.horizontalSpacing = 0;
 		gridLayout.marginHeight = 0;
@@ -41,13 +41,6 @@ public class LSpinner extends LControlWidget<Integer> {
 				currentValue = spinner.getSelection();
 			}
 		});
-	}
-	
-	/**
-	 * @wbp.parser.constructor
-	 */
-	public LSpinner(Composite parent) {
-		this(parent, SWT.NONE);
 	}
 	
 	public void setValue(Object obj) {

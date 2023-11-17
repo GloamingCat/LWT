@@ -1,24 +1,23 @@
 package lwt.editor;
 
+import lwt.LContainer;
 import lwt.dataestructure.LDataList;
 import lwt.dataestructure.LDataTree;
 import lwt.dataestructure.LPath;
 import lwt.event.LEditEvent;
 import lwt.widget.LGrid;
 
-import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Image;
-import org.eclipse.swt.widgets.Composite;
 
 public abstract class LGridEditor<T, ST> extends LCollectionEditor<T, ST> {
 
 	protected LGrid<T, ST> grid;
 	
-	public LGridEditor(Composite parent, int style) {
-		super(parent, style);
+	public LGridEditor(LContainer parent) {
+		super(parent);
 
 		LGridEditor<T, ST> self = this;
-		grid = new LGrid<T, ST>(this, SWT.NONE) {
+		grid = new LGrid<T, ST>(this) {
 			@Override
 			public LEditEvent<ST> edit(LPath path) {
 				return onEditItem(path);

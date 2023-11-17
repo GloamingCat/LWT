@@ -1,11 +1,10 @@
 package lwt.editor;
 
+import lwt.LContainer;
 import lwt.dataestructure.LDataTree;
 import lwt.dataestructure.LPath;
 import lwt.event.LEditEvent;
 import lwt.widget.LTree;
-
-import org.eclipse.swt.widgets.Composite;
 
 public abstract class LTreeEditor<T, ST> extends LAbstractTreeEditor<T, ST> {
 	
@@ -16,10 +15,10 @@ public abstract class LTreeEditor<T, ST> extends LAbstractTreeEditor<T, ST> {
 	 * @param parent
 	 * @param style
 	 */
-	public LTreeEditor(Composite parent, int style) {
-		super(parent, style);
+	public LTreeEditor(LContainer parent) {
+		super(parent);
 		LTreeEditor<T, ST> self = this;
-		tree = new LTree<T, ST>(this, style) {
+		tree = new LTree<T, ST>(this) {
 			@Override
 			public LEditEvent<ST> edit(LPath path) {
 				return onEditItem(path);

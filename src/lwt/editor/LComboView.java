@@ -2,19 +2,17 @@ package lwt.editor;
 
 import java.util.ArrayList;
 
+import lwt.LContainer;
 import lwt.widget.LCombo;
 import lwt.widget.LControlWidget;
-
-import org.eclipse.swt.SWT;
-import org.eclipse.swt.widgets.Composite;
 
 public class LComboView extends LControlView<Integer> {
 
 	protected LCombo combo;
 	
-	public LComboView(Composite parent, int style) {
-		super(parent, style);
-		combo = new LCombo(this, SWT.NONE);
+	public LComboView(LContainer parent) {
+		super(parent);
+		combo = new LCombo(this);
 	}
 	
 	public void setIncludeID(boolean value) {

@@ -3,6 +3,7 @@ package lwt;
 import lwt.action.LActionManager;
 import lwt.dataserialization.LFileManager;
 import lwt.dataserialization.LSerializer;
+import lwt.dialog.LShell;
 import lwt.editor.LView;
 
 import java.util.ArrayList;
@@ -13,6 +14,7 @@ import org.eclipse.swt.events.MenuAdapter;
 import org.eclipse.swt.events.MenuEvent;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.FileDialog;
@@ -20,10 +22,9 @@ import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.MenuItem;
 import org.eclipse.swt.widgets.MessageBox;
-import org.eclipse.swt.widgets.Shell;
 import org.eclipse.wb.swt.SWTResourceManager;
 
-public abstract class LDefaultApplicationShell extends Shell {
+public abstract class LDefaultApplicationShell extends LShell implements LContainer {
 
 	protected LSerializer project = null;
 	protected String applicationName;
@@ -44,7 +45,7 @@ public abstract class LDefaultApplicationShell extends Shell {
 	 * @param display
 	 */
 	public LDefaultApplicationShell(int initialWidth, int initialHeight, String title, String icon) {
-		super(Display.getDefault(), SWT.SHELL_TRIM | SWT.DOUBLE_BUFFERED);
+		super();
 		if (title != null) {
 			setText(title);
 			applicationName = "LTH Editor";
@@ -351,5 +352,9 @@ public abstract class LDefaultApplicationShell extends Shell {
 	
 	@Override
 	protected void checkSubclass() { }
+	
+	public Composite getComposite() {
+		return this;
+	}
 	
 }

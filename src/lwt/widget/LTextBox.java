@@ -10,13 +10,14 @@ import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.events.MouseMoveListener;
 import org.eclipse.swt.events.TraverseEvent;
 import org.eclipse.swt.events.TraverseListener;
-import org.eclipse.swt.widgets.Composite;
+
+import lwt.LContainer;
 
 public class LTextBox extends LControlWidget<String> {
 	
 	private StyledText text;
 	
-	public LTextBox(Composite parent) {
+	public LTextBox(LContainer parent) {
 		this(parent, false);
 	}
 
@@ -26,10 +27,9 @@ public class LTextBox extends LControlWidget<String> {
 	 * @param parent
 	 * @param style
 	 */
-	public LTextBox(Composite parent, boolean read_only) {
-		super(parent, 0);
+	public LTextBox(LContainer parent, boolean read_only) {
+		super(parent);
 		text = new StyledText(this, SWT.BORDER | SWT.FULL_SELECTION | SWT.WRAP);
-		
 		text.addFocusListener(new FocusAdapter() {
 			@Override
 			public void focusLost(FocusEvent arg0) {

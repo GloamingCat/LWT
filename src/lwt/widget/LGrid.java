@@ -1,5 +1,6 @@
 package lwt.widget;
 
+import lwt.LContainer;
 import lwt.action.LActionStack;
 import lwt.dataestructure.LDataCollection;
 import lwt.dataestructure.LDataList;
@@ -19,7 +20,6 @@ import org.eclipse.swt.events.PaintListener;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.RowLayout;
-import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
@@ -41,8 +41,8 @@ public abstract class LGrid<T, ST> extends LSelectableCollection<T, ST> {
 	 * @param parent
 	 * @param style
 	 */
-	public LGrid(Composite parent, int style) {
-		super(parent, style);
+	public LGrid(LContainer parent) {
+		super(parent);
 		fillLayout = new FillLayout();
 		rowLayout = new RowLayout(SWT.HORIZONTAL);
 		rowLayout.fill = true;

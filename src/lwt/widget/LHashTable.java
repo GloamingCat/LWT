@@ -6,12 +6,14 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import lwt.LContainer;
 import lwt.LVocab;
 import lwt.action.LHashDeleteAction;
 import lwt.action.LHashEditAction;
 import lwt.action.LHashInsertAction;
 import lwt.dialog.LObjectDialog;
 import lwt.dialog.LObjectShell;
+import lwt.dialog.LShell;
 import lwt.dialog.LShellFactory;
 import lwt.dialog.LStringShell;
 import lwt.event.LHashEditEvent;
@@ -21,7 +23,6 @@ import lwt.event.listener.LHashListener;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Menu;
-import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.layout.GridData;
@@ -46,15 +47,15 @@ public class LHashTable<T> extends LWidget {
 	
 	protected HashMap<String, Label> labelMap = new HashMap<>();
 
-	public LHashTable(Composite parent, int style) {
-		super(parent, style);
+	public LHashTable(LContainer parent) {
+		super(parent);
 		
 		LHashTable<T> self = this;
 		valueDialog = new LObjectDialog<>(getShell(), getShell().getStyle());
 		keyDialog = new LObjectDialog<>(getShell(), getShell().getStyle());
 		keyDialog.setFactory(new LShellFactory<String>() {
 			@Override
-			public LObjectShell<String> createShell(Shell parent) {
+			public LObjectShell<String> createShell(LShell parent) {
 				return new LStringShell(parent);
 			}
 		});

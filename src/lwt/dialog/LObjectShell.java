@@ -3,6 +3,7 @@ package lwt.dialog;
 import java.util.ArrayList;
 
 import lwt.LVocab;
+import lwt.editor.LPanel;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
@@ -11,21 +12,20 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Shell;
 
-public abstract class LObjectShell<T> extends Shell {
+public abstract class LObjectShell<T> extends LShell {
 
-	protected Composite content;
+	protected LPanel content;
 	protected T result = null;
 	protected T initial = null;
 	
-	public LObjectShell(Shell parent) {
-		super(parent, parent.getStyle() | SWT.APPLICATION_MODAL);
+	public LObjectShell(LShell parent) {
+		super(parent);
 		
 		setText(getText());
 		setLayout(new GridLayout(1, false));
 		
-		content = new Composite(this, SWT.NONE);
+		content = new LPanel(this);
 		content.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		
 		Composite buttons = new Composite(this, SWT.NONE);

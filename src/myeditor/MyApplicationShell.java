@@ -34,9 +34,9 @@ public class MyApplicationShell extends LDefaultApplicationShell {
 	public MyApplicationShell() {
 		super(450, 300, "My Editor", null);
 		
-		MyContentTreeEditor treeEditor = new MyContentTreeEditor(this, SWT.NONE);
-		MyContentListEditor listEditor = new MyContentListEditor(this, SWT.NONE);
-		MyContentGridEditor gridEditor = new MyContentGridEditor(this, SWT.NONE);
+		MyContentTreeEditor treeEditor = new MyContentTreeEditor(this);
+		MyContentListEditor listEditor = new MyContentListEditor(this);
+		MyContentGridEditor gridEditor = new MyContentGridEditor(this);
 		
 		MenuItem mntmContentList = new MenuItem(menuView, SWT.NONE);
 		mntmContentList.addSelectionListener(new SelectionAdapter() {

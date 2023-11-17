@@ -1,8 +1,7 @@
 package lwt.editor;
 
+import lwt.LContainer;
 import lwt.dataestructure.LPath;
-
-import org.eclipse.swt.widgets.Composite;
 
 public abstract class LDefaultListEditor<T> extends LListEditor<T, T> {
 
@@ -11,8 +10,8 @@ public abstract class LDefaultListEditor<T> extends LListEditor<T, T> {
 	 * @param parent
 	 * @param style
 	 */
-	public LDefaultListEditor(Composite parent, int style) {
-		super(parent, style);
+	public LDefaultListEditor(LContainer parent) {
+		super(parent);
 	}
 
 	public T getEditableData(LPath path) {

@@ -2,6 +2,7 @@ package lwt.editor;
 
 import java.util.ArrayList;
 
+import lwt.LContainer;
 import lwt.dataestructure.LDataTree;
 import lwt.dataestructure.LPath;
 import lwt.event.LDeleteEvent;
@@ -14,7 +15,6 @@ import lwt.event.listener.LSelectionListener;
 import lwt.widget.LTree;
 
 import org.eclipse.swt.layout.FillLayout;
-import org.eclipse.swt.widgets.Composite;
 
 /**
  * Holds common functionalities for LTreeEditor and LListEditor.
@@ -27,8 +27,8 @@ public abstract class LAbstractTreeEditor<T, ST> extends LCollectionEditor<T, ST
 	 * @param parent
 	 * @param style
 	 */
-	public LAbstractTreeEditor(Composite parent, int style) {
-		super(parent, style);
+	public LAbstractTreeEditor(LContainer parent) {
+		super(parent);
 		setLayout(new FillLayout());
 	}
 	

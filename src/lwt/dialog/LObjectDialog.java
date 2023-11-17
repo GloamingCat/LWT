@@ -2,7 +2,6 @@ package lwt.dialog;
 
 import org.eclipse.swt.widgets.Dialog;
 import org.eclipse.swt.widgets.Display;
-import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.SWT;
 
@@ -17,12 +16,12 @@ public class LObjectDialog<T> extends Dialog {
 	 * @param parent
 	 * @param style
 	 */
-	public LObjectDialog(Shell parent, int style) {
+	public LObjectDialog(LShell parent, int style) {
 		super(parent, style | SWT.APPLICATION_MODAL);
 		setText("Object Dialog");
 	}
 	
-	public LObjectDialog(Shell parent) {
+	public LObjectDialog(LShell parent) {
 		this(parent, parent.getStyle());
 	}
 
@@ -31,7 +30,7 @@ public class LObjectDialog<T> extends Dialog {
 	 * @return the result
 	 */
 	public T open(T initial) {
-		LObjectShell<T> shell = factory.createShell(getParent().getShell());
+		LObjectShell<T> shell = factory.createShell(getParent());
 		shell.setText(getText());
 		shell.open(initial);
 		shell.layout();
@@ -47,6 +46,10 @@ public class LObjectDialog<T> extends Dialog {
 	
 	public void setFactory(LShellFactory<T> factory) {
 		this.factory = factory;
+	}
+	
+	public LShell getParent() {
+		return (LShell) super.getParent();
 	}
 	
 }

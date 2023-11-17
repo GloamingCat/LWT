@@ -1,24 +1,28 @@
 package lwt.widget;
 
+import lwt.LContainer;
 import lwt.dataestructure.LDataTree;
 import lwt.dataestructure.LPath;
 
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
-import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.TreeItem;
 
 public abstract class LList<T, ST> extends LTree<T, ST> {
 	
 	protected boolean includeID = false;
 	
+	public LList(LContainer parent) {
+		this(parent, false);
+	}
+	
 	/**
 	 * Create the composite.
 	 * @param parent
 	 * @param style
 	 */
-	public LList(Composite parent, int style) {
-		super(parent, style);
+	public LList(LContainer parent, boolean check) {
+		super(parent, check);
 	}
 	
 	public void setIncludeID(boolean value) {

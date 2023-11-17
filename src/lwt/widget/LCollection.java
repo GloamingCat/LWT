@@ -4,9 +4,9 @@ import java.util.ArrayList;
 
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
-import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Menu;
 
+import lwt.LContainer;
 import lwt.LVocab;
 import lwt.action.collection.LDeleteAction;
 import lwt.action.collection.LEditAction;
@@ -22,8 +22,8 @@ import lwt.event.listener.LCollectionListener;
 
 public abstract class LCollection<T, ST> extends LWidget {
 	
-	public LCollection(Composite parent, int style) {
-		super(parent, style);
+	public LCollection(LContainer parent) {
+		super(parent);
 	}
 	
 	public abstract LDataCollection<T> getDataCollection();

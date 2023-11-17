@@ -2,8 +2,10 @@ package lwt.widget;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Button;
-import org.eclipse.swt.widgets.Composite;
 import org.eclipse.wb.swt.SWTResourceManager;
+
+import lwt.LContainer;
+
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 
@@ -16,8 +18,8 @@ public class LCheckBox extends LControlWidget<Boolean> {
 	 * @param parent
 	 * @param style
 	 */
-	public LCheckBox(Composite parent, int style) {
-		super(parent, style);
+	public LCheckBox(LContainer parent) {
+		super(parent);
 		button = new Button(this, SWT.CHECK);
 		button.addSelectionListener(new SelectionAdapter() {
 			@Override
@@ -28,10 +30,6 @@ public class LCheckBox extends LControlWidget<Boolean> {
 				currentValue = button.getSelection();
 			}
 		});
-	}
-	
-	public LCheckBox(Composite parent) {
-		this(parent, SWT.NONE);
 	}
 
 	public void setValue(Object obj) {

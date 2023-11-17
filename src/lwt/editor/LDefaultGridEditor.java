@@ -1,10 +1,10 @@
 package lwt.editor;
 
+import lwt.LContainer;
 import lwt.dataestructure.LPath;
 import lwt.datainterface.LGraphical;
 
 import org.eclipse.swt.graphics.Image;
-import org.eclipse.swt.widgets.Composite;
 
 public abstract class LDefaultGridEditor<T extends LGraphical> extends LGridEditor<T, T> {
 
@@ -13,8 +13,8 @@ public abstract class LDefaultGridEditor<T extends LGraphical> extends LGridEdit
 	 * @param parent
 	 * @param style
 	 */
-	public LDefaultGridEditor(Composite parent, int style) {
-		super(parent, style);
+	public LDefaultGridEditor(LContainer parent) {
+		super(parent);
 	}
 
 	public T getEditableData(LPath path) {

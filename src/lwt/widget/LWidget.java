@@ -1,8 +1,10 @@
 package lwt.widget;
 
+import lwt.LContainer;
 import lwt.LVocab;
 import lwt.action.LAction;
 import lwt.action.LActionStack;
+import lwt.dialog.LShell;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
@@ -12,7 +14,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.MenuItem;
 
-public abstract class LWidget extends Composite {
+public abstract class LWidget extends Composite implements LContainer {
 
 	public static Object clipboard = null;
 	protected LActionStack actionStack;
@@ -24,6 +26,11 @@ public abstract class LWidget extends Composite {
 	 */
 	public LWidget(Composite parent, int style) {
 		super(parent, style);
+		setLayout(new FillLayout());
+	}
+	
+	public LWidget(LContainer parent) {
+		super(parent.getComposite(), SWT.NONE);
 		setLayout(new FillLayout());
 	}
 
@@ -84,5 +91,16 @@ public abstract class LWidget extends Composite {
 
 	protected abstract void onCopyButton(Menu menu);
 	protected abstract void onPasteButton(Menu menu);
-
+	
+	@Override
+	protected void checkSubclass() { }
+	
+	public Composite getComposite() {
+		return this;
+	}
+	
+	public LShell getShell() {
+		return (LShell) super.getShell();
+	}
+	
 }

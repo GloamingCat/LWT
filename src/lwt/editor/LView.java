@@ -2,21 +2,12 @@ package lwt.editor;
 
 import java.util.ArrayList;
 
+import lwt.LContainer;
 import lwt.action.LActionStack;
 
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.widgets.Composite;
 
-/**
- * This class is a generic node from an editor tree.
- * The state of this editor depends on its children's state.
- * It is associated to an Action Stack. If it's the root 
- * editor, it must create a new stack and handle the undo/redo
- * shortcuts.
- *
- */
-
-public abstract class LView extends Composite {
+public abstract class LView extends LPanel {
 
 	protected LView parent;
 	protected LActionStack actionStack;
@@ -26,18 +17,38 @@ public abstract class LView extends Composite {
 	protected ArrayList<LEditor> subEditors = new ArrayList<>();
 	
 	/**
-	 * Create the composite.
+	 * Horizontal fill layout.
 	 * @param parent
-	 * @param style
+	 * @param doubleBuffered
 	 */
-	public LView(Composite parent) {
-		super(parent, SWT.NONE);
+	public LView(LContainer parent, boolean doubleBuffered) {
+		super(parent.getComposite(), 
+				doubleBuffered ? SWT.DOUBLE_BUFFERED : SWT.NONE);
 	}
 	
-	public LView(Composite parent, int style) {
-		super(parent, style);
+	/**
+	 * Grid or fill layout.
+	 * @param parent
+	 * @param columns
+	 * @param equalCols
+	 * @param doubleBuffered
+	 */
+	public LView(LContainer parent, int columns, boolean equalCols, boolean doubleBuffered) {
+		super(parent.getComposite(), columns, equalCols, 
+				doubleBuffered ? SWT.DOUBLE_BUFFERED : SWT.NONE);
 	}
 	
+	/**
+	 * Fill layout.
+	 * @param parent
+	 * @param horizontal
+	 * @param doubleBuffered
+	 */
+	public LView(LContainer parent, boolean horizontal, boolean doubleBuffered) {
+		super(parent, horizontal,		
+				doubleBuffered ? SWT.DOUBLE_BUFFERED : SWT.NONE);
+	}
+
 	public void addChild(LView child) {
 		if (child.parent != null) {
 			parent.children.remove(child);

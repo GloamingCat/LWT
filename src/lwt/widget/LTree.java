@@ -1,5 +1,6 @@
 package lwt.widget;
 
+import lwt.LContainer;
 import lwt.dataestructure.LDataTree;
 import lwt.dataestructure.LPath;
 import lwt.event.LDeleteEvent;
@@ -8,7 +9,6 @@ import lwt.event.LInsertEvent;
 
 import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.events.MouseListener;
-import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.TreeItem;
 
@@ -18,13 +18,17 @@ public abstract class LTree<T, ST> extends LTreeBase<T, ST> {
 	protected boolean includeID = false;
 	protected boolean editEnabled = false;
 	
+	public LTree(LContainer parent) {
+		this(parent, false);
+	}
+	
 	/**
 	 * Create the composite.
 	 * @param parent
 	 * @param style
 	 */
-	public LTree(Composite parent, int style) {
-		super(parent, style);
+	public LTree(LContainer parent, boolean check) {
+		super(parent, check);
 		menu = new Menu(tree);
 		tree.setMenu(menu);
 		tree.addMouseListener(new MouseListener() {

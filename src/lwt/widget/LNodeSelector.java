@@ -1,5 +1,6 @@
 package lwt.widget;
 
+import lwt.LContainer;
 import lwt.LVocab;
 import lwt.dataestructure.LDataTree;
 import lwt.dataestructure.LPath;
@@ -11,7 +12,6 @@ import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
-import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.layout.GridData;
 
 public class LNodeSelector<T> extends LControlWidget<Integer> {
@@ -20,17 +20,15 @@ public class LNodeSelector<T> extends LControlWidget<Integer> {
 	protected LTree<T, T> tree;
 	protected Button btnNull;
 	
-	public static final int OPTIONAL = 0x1;
-	
 	/**
 	 * Create the composite.
 	 * @param parent
 	 * @param style
 	 */
-	public LNodeSelector(Composite parent, int style) {
-		super(parent, SWT.NONE);
+	public LNodeSelector(LContainer parent, boolean optional) {
+		super(parent);
 		setLayout(new GridLayout(1, false));
-		tree = new LTree<T, T>(this, SWT.NONE) {
+		tree = new LTree<T, T>(this) {
 			@Override
 			public T toObject(LPath path) {
 				LDataTree<T> node = collection.getNode(path);
@@ -65,7 +63,7 @@ public class LNodeSelector<T> extends LControlWidget<Integer> {
 		});
 		tree.dragEnabled = false;
 		
-		if (style % 2 == 0)
+		if (!optional)
 			return;
 		
 		btnNull = new Button(this, SWT.NONE);

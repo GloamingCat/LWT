@@ -1,24 +1,19 @@
 package gson.editor;
 
-import org.eclipse.swt.widgets.Composite;
-
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
+import lwt.LContainer;
 import lwt.editor.LDefaultListEditor;
 
 public abstract class GDefaultListEditor<T> extends LDefaultListEditor<T> {
 
 	protected static Gson gson = new GsonBuilder().setPrettyPrinting().create();
 	
-	public GDefaultListEditor(Composite parent) {
-		super(parent, 0);
+	public GDefaultListEditor(LContainer parent) {
+		super(parent);
 	}
-	
-	public GDefaultListEditor(Composite parent, int style) {
-		super(parent, style);
-	}
-	
+
 	@SuppressWarnings("unchecked")
 	@Override
 	public T createNewData() {

@@ -2,17 +2,38 @@ package lwt.editor;
 
 import java.lang.reflect.Field;
 
-import org.eclipse.swt.widgets.Composite;
+import lwt.LContainer;
 
 public abstract class LEditor extends LView {
 
 	/**
-	 * Create the composite.
+	 * Horizontal fill layout.
 	 * @param parent
-	 * @param style
+	 * @param doubleBuffered
 	 */
-	public LEditor(Composite parent, int style) {
-		super(parent, style);
+	public LEditor(LContainer parent, boolean doubleBuffered) {
+		super(parent, doubleBuffered);
+	}
+	
+	/**
+	 * Grid or fill layout.
+	 * @param parent
+	 * @param columns
+	 * @param equalCols
+	 * @param doubleBuffered
+	 */
+	public LEditor(LContainer parent, int columns, boolean equalCols, boolean doubleBuffered) {
+		super(parent, columns, equalCols, doubleBuffered);
+	}
+	
+	/**
+	 * Fill layout.
+	 * @param parent
+	 * @param horizontal
+	 * @param doubleBuffered
+	 */
+	public LEditor(LContainer parent, boolean horizontal, boolean doubleBuffered) {
+		super(parent, horizontal, doubleBuffered);
 	}
 	
 	public abstract void setObject(Object object);

@@ -2,11 +2,11 @@ package lwt.widget;
 
 import java.util.ArrayList;
 
+import lwt.LContainer;
 import lwt.action.LControlAction;
 import lwt.event.LControlEvent;
 import lwt.event.listener.LControlListener;
 
-import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Menu;
 
 public abstract class LControlWidget<T> extends LWidget implements LControl<T> {
@@ -14,8 +14,8 @@ public abstract class LControlWidget<T> extends LWidget implements LControl<T> {
 	protected ArrayList<LControlListener<T>> modifyListeners = new ArrayList<>();
 	protected T currentValue;
 	
-	public LControlWidget(Composite parent, int style) {
-		super(parent, style);
+	public LControlWidget(LContainer parent) {
+		super(parent);
 	}
 	
 	public void modify(T newValue) {

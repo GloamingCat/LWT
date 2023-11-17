@@ -15,11 +15,11 @@ import org.eclipse.swt.dnd.Transfer;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
-import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Tree;
 import org.eclipse.swt.widgets.TreeItem;
 
+import lwt.LContainer;
 import lwt.action.collection.LMoveAction;
 import lwt.dataestructure.LDataCollection;
 import lwt.dataestructure.LDataTree;
@@ -42,11 +42,15 @@ public abstract class LTreeBase<T, ST> extends LSelectableCollection<T, ST> {
 	private TreeItem dragParent;
 	private int dragIndex;
 	public boolean dragEnabled = true;
+	
+	public LTreeBase(LContainer parent) {
+		this(parent, false);
+	}
 
-	public LTreeBase(Composite parent, int style) {
-		super(parent, style);
+	public LTreeBase(LContainer parent, boolean check) {
+		super(parent);
 
-		tree = new Tree(this, style | SWT.BORDER | SWT.VIRTUAL);
+		tree = new Tree(this, SWT.BORDER | SWT.VIRTUAL | (check ? SWT.CHECK : SWT.NONE));
 		tree.setLinesVisible(true);
 		tree.addSelectionListener(new SelectionAdapter() {
 			@Override

@@ -1,5 +1,6 @@
 package lwt.widget;
 
+import lwt.LContainer;
 import lwt.LImageHelper;
 
 import org.eclipse.swt.SWT;
@@ -11,7 +12,6 @@ import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.events.MouseMoveListener;
 import org.eclipse.swt.events.TraverseEvent;
 import org.eclipse.swt.events.TraverseListener;
-import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
@@ -20,7 +20,7 @@ public class LText extends LControlWidget<String> {
 	
 	private Text text;
 
-	public LText(Composite parent) {
+	public LText(LContainer parent) {
 		this(parent, false);
 	}
 	
@@ -30,8 +30,8 @@ public class LText extends LControlWidget<String> {
 	 * @param parent
 	 * @param style
 	 */
-	public LText(Composite parent, boolean read_only) {
-		super(parent, 0);
+	public LText(LContainer parent, boolean read_only) {
+		super(parent);
 		GridLayout gridLayout = new GridLayout(1, false);
 		gridLayout.horizontalSpacing = 0;
 		gridLayout.marginHeight = 0;

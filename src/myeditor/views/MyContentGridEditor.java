@@ -1,14 +1,11 @@
 package myeditor.views;
 
+import lwt.LContainer;
 import lwt.action.LActionStack;
 import lwt.dataestructure.LDataList;
 import lwt.editor.LDefaultGridEditor;
 import lwt.editor.LView;
 import myeditor.data.MyContent;
-
-import org.eclipse.swt.SWT;
-import org.eclipse.swt.layout.FillLayout;
-import org.eclipse.swt.widgets.Composite;
 
 public class MyContentGridEditor extends LView {
 
@@ -19,15 +16,13 @@ public class MyContentGridEditor extends LView {
 	 * @param parent
 	 * @param style
 	 */
-	public MyContentGridEditor(Composite parent, int style) {
-		super(parent, style);
-		
-		setLayout(new FillLayout());
+	public MyContentGridEditor(LContainer parent) {
+		super(parent, true, false);
 		
 		actionStack = new LActionStack(this);
 		
 		final LDataList<MyContent> contentList = createExampleList();
-		gridEditor = new LDefaultGridEditor<MyContent>(this, SWT.NONE) {
+		gridEditor = new LDefaultGridEditor<MyContent>(this) {
 			@Override
 			public LDataList<MyContent> getDataCollection() {
 				return contentList;

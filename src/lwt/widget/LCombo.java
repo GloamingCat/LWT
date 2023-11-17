@@ -2,11 +2,11 @@ package lwt.widget;
 
 import java.util.ArrayList;
 
+import lwt.LContainer;
 import lwt.LImageHelper;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Combo;
-import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.GridLayout;
@@ -23,8 +23,8 @@ public class LCombo extends LControlWidget<Integer> {
 	 * @param parent
 	 * @param style
 	 */
-	public LCombo(Composite parent, int style) {
-		super(parent, style);
+	public LCombo(LContainer parent) {
+		super(parent);
 		GridLayout gridLayout = new GridLayout(1, false);
 		gridLayout.verticalSpacing = 0;
 		gridLayout.marginWidth = 0;
@@ -45,10 +45,6 @@ public class LCombo extends LControlWidget<Integer> {
 				currentValue = getSelectionIndex();
 			}
 		});
-	}
-	
-	public LCombo(Composite parent) {
-		this(parent, SWT.NONE);
 	}
 
 	public int getSelectionIndex() {

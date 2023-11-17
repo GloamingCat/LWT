@@ -1,22 +1,17 @@
 package gson.editor;
 
-import org.eclipse.swt.widgets.Composite;
-
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
+import lwt.LContainer;
 import lwt.editor.LDefaultTreeEditor;
 
 public abstract class GDefaultTreeEditor<T> extends LDefaultTreeEditor<T> {
 
 	protected static Gson gson = new GsonBuilder().setPrettyPrinting().create();
 	
-	public GDefaultTreeEditor(Composite parent) {
-		super(parent, 0);
-	}
-	
-	public GDefaultTreeEditor(Composite parent, int style) {
-		super(parent, style);
+	public GDefaultTreeEditor(LContainer parent) {
+		super(parent);
 	}
 	
 	@SuppressWarnings("unchecked")

@@ -1,5 +1,6 @@
 package lwt.widget;
 
+import lwt.LContainer;
 import lwt.LVocab;
 import lwt.dialog.LObjectDialog;
 import lwt.dialog.LShellFactory;
@@ -7,7 +8,6 @@ import lwt.dialog.LShellFactory;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.widgets.Button;
-import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.events.SelectionEvent;
 
 public class LObjectButton<T> extends LControlWidget<T> {
@@ -21,8 +21,8 @@ public class LObjectButton<T> extends LControlWidget<T> {
 	 * @param parent
 	 * @param style
 	 */
-	public LObjectButton(Composite parent, int style) {
-		super(parent, style);
+	public LObjectButton(LContainer parent) {
+		super(parent);
 		dialog = new LObjectDialog<T>(getShell(), getShell().getStyle());
 		button = new Button(this, SWT.NONE);
 		button.addSelectionListener(new SelectionAdapter() {
@@ -38,10 +38,7 @@ public class LObjectButton<T> extends LControlWidget<T> {
 		});
 		button.setText(LVocab.instance.SELECT);
 	}
-	public LObjectButton(Composite parent) {
-		this(parent, SWT.NONE);
-	}
-	
+
 	public void setShellFactory(LShellFactory<T> factory) {
 		dialog.setFactory(factory);
 	}

@@ -1,9 +1,8 @@
 package lwt.editor;
 
+import lwt.LContainer;
 import lwt.dataestructure.LDataTree;
 import lwt.dataestructure.LPath;
-
-import org.eclipse.swt.widgets.Composite;
 
 public abstract class LDefaultTreeEditor<T> extends LTreeEditor<T, T> {
 
@@ -12,8 +11,8 @@ public abstract class LDefaultTreeEditor<T> extends LTreeEditor<T, T> {
 	 * @param parent
 	 * @param style
 	 */
-	public LDefaultTreeEditor(Composite parent, int style) {
-		super(parent, style);
+	public LDefaultTreeEditor(LContainer parent) {
+		super(parent);
 	}
 
 	public T getEditableData(LPath path) {
