@@ -60,7 +60,7 @@ public class LPanel extends Composite implements LContainer {
 	}
 	
 	public LPanel(LContainer parent) {
-		this(parent, true);
+		this(parent, SWT.NONE);
 	}
 	
 	public LPanel(LContainer parent, int columns) {

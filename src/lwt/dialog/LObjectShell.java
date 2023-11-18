@@ -25,7 +25,7 @@ public abstract class LObjectShell<T> extends LShell {
 		setText(getText());
 		setLayout(new GridLayout(1, false));
 		
-		content = new LPanel(this);
+		content = new LPanel(this, true);
 		content.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		
 		Composite buttons = new Composite(this, SWT.NONE);

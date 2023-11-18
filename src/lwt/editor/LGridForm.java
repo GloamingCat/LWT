@@ -3,7 +3,6 @@ package lwt.editor;
 import java.util.ArrayList;
 
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Control;
 
 import lwt.LContainer;
@@ -88,7 +87,6 @@ public abstract class LGridForm<T> extends LObjectEditor<LDataList<T>> {
 					}
 				}
 			});
-			control.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 			control.setActionStack(getActionStack());
 			controls.add(control);
 		}

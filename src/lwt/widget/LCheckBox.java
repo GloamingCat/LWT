@@ -8,6 +8,7 @@ import lwt.LContainer;
 
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.layout.GridData;
 
 public class LCheckBox extends LControlWidget<Boolean> {
 
@@ -19,7 +20,12 @@ public class LCheckBox extends LControlWidget<Boolean> {
 	 * @param style
 	 */
 	public LCheckBox(LContainer parent) {
+		this(parent, 1);
+	}
+	
+	public LCheckBox(LContainer parent, int columns) {
 		super(parent);
+		setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false, columns, 1));
 		button = new Button(this, SWT.CHECK);
 		button.addSelectionListener(new SelectionAdapter() {
 			@Override

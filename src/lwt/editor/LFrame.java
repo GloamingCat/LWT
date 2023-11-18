@@ -24,7 +24,8 @@ public class LFrame extends Group implements LContainer {
 		super(parent.getComposite(), SWT.NONE);
 		setText(name);
 		if (columns == 0) {
-			FillLayout layout = new FillLayout(equalColumns ? SWT.VERTICAL : SWT.HORIZONTAL);
+			boolean vertical = !equalColumns;
+			FillLayout layout = new FillLayout(vertical ? SWT.VERTICAL : SWT.HORIZONTAL);
 			layout.spacing = 5;
 			layout.marginWidth = 5;
 			layout.marginHeight = 5;

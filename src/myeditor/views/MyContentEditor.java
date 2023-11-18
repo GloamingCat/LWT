@@ -24,7 +24,6 @@ public class MyContentEditor extends LObjectEditor<MyContent> {
 		new LLabel(this, MyVocab.instance.NAME);
 		
 		LText text = new LText(this);
-		text.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		addControl(text, "name");
 		
 		new LLabel(this, MyVocab.instance.VALUE);

@@ -18,19 +18,33 @@ public class LCombo extends LControlWidget<Integer> {
 	private boolean includeID = true;
 	private boolean optional = true;
 	
+	public LCombo(LContainer parent) {
+		this(parent, 1, false);
+	}
+	
+	public LCombo(LContainer parent, boolean readOnly) {
+		this(parent, 1, readOnly);
+	}
+	
+	
+	public LCombo(LContainer parent, int columns) {
+		this(parent, columns, false);
+	}
+	
 	/**
 	 * Create the composite.
 	 * @param parent
 	 * @param style
 	 */
-	public LCombo(LContainer parent) {
+	public LCombo(LContainer parent, int columns, boolean readOnly) {
 		super(parent);
+		setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, columns, 1));
 		GridLayout gridLayout = new GridLayout(1, false);
 		gridLayout.verticalSpacing = 0;
 		gridLayout.marginWidth = 0;
 		gridLayout.marginHeight = 0;
 		setLayout(gridLayout);
-		combo = new Combo(this, SWT.BORDER | SWT.READ_ONLY);
+		combo = new Combo(this, SWT.BORDER | (readOnly ? SWT.READ_ONLY : 0));
 		GridData gd_combo = new GridData(SWT.FILL, SWT.FILL, true, false, 1, 1);
 		if (!LImageHelper.onWindows)
 			gd_combo.heightHint = 28;

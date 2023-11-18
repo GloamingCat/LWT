@@ -14,7 +14,7 @@ public class LShell extends Shell implements LContainer {
 	}
 	
 	public LShell(LShell parent) {
-		super(parent, SWT.APPLICATION_MODAL);
+		super(parent, SWT.CLOSE | SWT.RESIZE | SWT.APPLICATION_MODAL);
 	}
 
 	public LShell getParent() {

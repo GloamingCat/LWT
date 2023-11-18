@@ -14,13 +14,18 @@ public class LSpinner extends LControlWidget<Integer> {
 
 	private Spinner spinner;
 
+	public LSpinner(LContainer parent) {
+		this(parent, 1);
+	}
+	
 	/**
 	 * Create the composite.
 	 * @param parent
 	 * @param style
 	 */
-	public LSpinner(LContainer parent) {
+	public LSpinner(LContainer parent, int columns) {
 		super(parent);
+		setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, columns, 1));
 		GridLayout gridLayout = new GridLayout(1, false);
 		gridLayout.horizontalSpacing = 0;
 		gridLayout.marginHeight = 0;

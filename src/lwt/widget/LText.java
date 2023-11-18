@@ -21,7 +21,15 @@ public class LText extends LControlWidget<String> {
 	private Text text;
 
 	public LText(LContainer parent) {
-		this(parent, false);
+		this(parent, 1, false);
+	}
+	
+	public LText(LContainer parent, int columns) {
+		this(parent, columns, false);
+	}
+	
+	public LText(LContainer parent, boolean readOnly) {
+		this(parent, 1, readOnly);
 	}
 	
 	/**
@@ -30,15 +38,16 @@ public class LText extends LControlWidget<String> {
 	 * @param parent
 	 * @param style
 	 */
-	public LText(LContainer parent, boolean read_only) {
+	public LText(LContainer parent, int columns, boolean readOnly) {
 		super(parent);
+		setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, columns, 1));
 		GridLayout gridLayout = new GridLayout(1, false);
 		gridLayout.horizontalSpacing = 0;
 		gridLayout.marginHeight = 0;
 		gridLayout.marginWidth = 0;
 		gridLayout.verticalSpacing = 0;
 		setLayout(gridLayout);
-		text = new Text(this, read_only ? (SWT.BORDER | SWT.READ_ONLY) : SWT.BORDER);
+		text = new Text(this, readOnly ? (SWT.BORDER | SWT.READ_ONLY) : SWT.BORDER);
 		GridData gd_text = new GridData(SWT.FILL, SWT.FILL, true, false, 1, 1);
 		if (!LImageHelper.onWindows)
 			gd_text.heightHint = 16;

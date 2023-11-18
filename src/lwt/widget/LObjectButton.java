@@ -9,6 +9,7 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.layout.GridData;
 
 public class LObjectButton<T> extends LControlWidget<T> {
 	
@@ -23,6 +24,7 @@ public class LObjectButton<T> extends LControlWidget<T> {
 	 */
 	public LObjectButton(LContainer parent) {
 		super(parent);
+		setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false, 1, 1));
 		dialog = new LObjectDialog<T>(getShell(), getShell().getStyle());
 		button = new Button(this, SWT.NONE);
 		button.addSelectionListener(new SelectionAdapter() {
