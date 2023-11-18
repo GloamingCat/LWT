@@ -4,10 +4,12 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-import lwt.LContainer;
 import lwt.LVocab;
 import lwt.action.LActionStack;
 import lwt.action.LControlAction;
+import lwt.container.LContainer;
+import lwt.container.LControlView;
+import lwt.container.LView;
 import lwt.dataestructure.LPath;
 import lwt.event.LControlEvent;
 import lwt.event.LSelectionEvent;
@@ -40,29 +42,29 @@ public abstract class LObjectEditor<T> extends LEditor implements LControl<T> {
 	protected LPath currentPath;
 	protected ArrayList<LSelectionListener> selectionListeners = new ArrayList<>();
 	protected ArrayList<LControlListener<T>> modifyListeners = new ArrayList<>();
-
+	
 	/**
-	 * Horizontal fill layout.
+	 * No layout.
 	 * @param parent
 	 * @param doubleBuffered
 	 */
 	public LObjectEditor(LContainer parent, boolean doubleBuffered) {
 		super(parent, doubleBuffered);
 	}
-	
+
 	/**
-	 * Grid or fill layout.
+	 * Fill/row layout.
 	 * @param parent
-	 * @param columns
-	 * @param equalCols
+	 * @param horizontal
+	 * @param equalCells
 	 * @param doubleBuffered
 	 */
-	public LObjectEditor(LContainer parent, int columns, boolean equalCols, boolean doubleBuffered) {
-		super(parent, columns, equalCols, doubleBuffered);
+	public LObjectEditor(LContainer parent, boolean horizontal, boolean equalCells, boolean doubleBuffered) {
+		super(parent, horizontal, equalCells, doubleBuffered);
 	}
 	
 	/**
-	 * Fill layout.
+	 * Fill layout with no margin.
 	 * @param parent
 	 * @param horizontal
 	 * @param doubleBuffered
@@ -71,6 +73,17 @@ public abstract class LObjectEditor<T> extends LEditor implements LControl<T> {
 		super(parent, horizontal, doubleBuffered);
 	}
 	
+	/**
+	 * Grid layout.
+	 * @param parent
+	 * @param columns
+	 * @param equalCols
+	 * @param doubleBuffered
+	 */
+	public LObjectEditor(LContainer parent, int columns, boolean equalCols, boolean doubleBuffered) {
+		super(parent, columns, equalCols, doubleBuffered);
+	}
+
 	public Composite addHeader() {
 		Composite header = new Composite(this, 0); 
 		header.setLayout(new RowLayout());

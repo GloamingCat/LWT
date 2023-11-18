@@ -2,8 +2,8 @@ package lwt.widget;
 
 import java.util.ArrayList;
 
-import lwt.LContainer;
 import lwt.action.LControlAction;
+import lwt.container.LContainer;
 import lwt.event.LControlEvent;
 import lwt.event.listener.LControlListener;
 

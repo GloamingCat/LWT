@@ -2,7 +2,7 @@ package lwt.widget;
 
 import java.util.ArrayList;
 
-import lwt.LContainer;
+import lwt.container.LContainer;
 import lwt.dataestructure.LPath;
 import lwt.event.LSelectionEvent;
 import lwt.event.listener.LSelectionListener;

@@ -1,8 +1,7 @@
-package lwt.editor;
+package lwt.container;
 
 import java.util.ArrayList;
 
-import lwt.LContainer;
 import lwt.widget.LCombo;
 import lwt.widget.LControlWidget;
 

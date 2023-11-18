@@ -6,7 +6,7 @@ import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Button;
 
-import lwt.LContainer;
+import lwt.container.LContainer;
 
 public class LActionButton extends LControlWidget<Object> {
 

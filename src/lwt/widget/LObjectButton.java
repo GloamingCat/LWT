@@ -1,7 +1,7 @@
 package lwt.widget;
 
-import lwt.LContainer;
 import lwt.LVocab;
+import lwt.container.LContainer;
 import lwt.dialog.LObjectDialog;
 import lwt.dialog.LShellFactory;
 

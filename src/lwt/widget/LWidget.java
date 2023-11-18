@@ -1,9 +1,9 @@
 package lwt.widget;
 
-import lwt.LContainer;
 import lwt.LVocab;
 import lwt.action.LAction;
 import lwt.action.LActionStack;
+import lwt.container.LContainer;
 import lwt.dialog.LShell;
 
 import org.eclipse.swt.SWT;

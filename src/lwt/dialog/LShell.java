@@ -5,12 +5,12 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 
-import lwt.LContainer;
+import lwt.container.LContainer;
 
 public class LShell extends Shell implements LContainer {
 
 	public LShell() {
-		super(Display.getDefault(), SWT.SHELL_TRIM | SWT.DOUBLE_BUFFERED);
+		super(Display.getDefault(), SWT.SHELL_TRIM | SWT.DOUBLE_BUFFERED | SWT.NO_BACKGROUND);
 	}
 	
 	public LShell(LShell parent) {

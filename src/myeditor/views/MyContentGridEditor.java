@@ -1,10 +1,10 @@
 package myeditor.views;
 
-import lwt.LContainer;
 import lwt.action.LActionStack;
+import lwt.container.LContainer;
+import lwt.container.LView;
 import lwt.dataestructure.LDataList;
 import lwt.editor.LDefaultGridEditor;
-import lwt.editor.LView;
 import myeditor.data.MyContent;
 
 public class MyContentGridEditor extends LView {

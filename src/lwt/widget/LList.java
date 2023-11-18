@@ -1,6 +1,6 @@
 package lwt.widget;
 
-import lwt.LContainer;
+import lwt.container.LContainer;
 import lwt.dataestructure.LDataTree;
 import lwt.dataestructure.LPath;
 

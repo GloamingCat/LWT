@@ -1,7 +1,7 @@
 package lwt.editor;
 
-import lwt.LContainer;
 import lwt.action.LActionStack;
+import lwt.container.LContainer;
 import lwt.dataestructure.LDataCollection;
 import lwt.dataestructure.LPath;
 import lwt.dialog.LObjectDialog;

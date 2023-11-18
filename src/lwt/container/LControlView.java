@@ -1,6 +1,5 @@
-package lwt.editor;
+package lwt.container;
 
-import lwt.LContainer;
 import lwt.widget.LControlWidget;
 
 public abstract class LControlView<T> extends LView {

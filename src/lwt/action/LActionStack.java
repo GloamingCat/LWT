@@ -2,7 +2,7 @@ package lwt.action;
 
 import java.util.ArrayList;
 
-import lwt.editor.LView;
+import lwt.container.LView;
 import lwt.editor.LState;
 
 public class LActionStack {

@@ -6,7 +6,7 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 
-import lwt.LContainer;
+import lwt.container.LContainer;
 
 public class LLabel extends Composite {
 
@@ -52,7 +52,7 @@ public class LLabel extends Composite {
 			setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false, columns, 1));
 			label.setAlignment(SWT.CENTER);
 		} else {
-			setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false, columns, 1));
+			setLayoutData(new GridData(SWT.FILL, SWT.FILL, false, false, columns, 1));
 		}
 	}
 

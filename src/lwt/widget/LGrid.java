@@ -1,7 +1,7 @@
 package lwt.widget;
 
-import lwt.LContainer;
 import lwt.action.LActionStack;
+import lwt.container.LContainer;
 import lwt.dataestructure.LDataCollection;
 import lwt.dataestructure.LDataList;
 import lwt.dataestructure.LDataTree;

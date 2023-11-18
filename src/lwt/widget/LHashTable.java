@@ -6,11 +6,11 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import lwt.LContainer;
 import lwt.LVocab;
 import lwt.action.LHashDeleteAction;
 import lwt.action.LHashEditAction;
 import lwt.action.LHashInsertAction;
+import lwt.container.LContainer;
 import lwt.dialog.LObjectDialog;
 import lwt.dialog.LObjectShell;
 import lwt.dialog.LShell;

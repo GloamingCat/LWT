@@ -2,8 +2,8 @@ package lwt.editor;
 
 import java.util.Map;
 
-import lwt.LContainer;
 import lwt.action.LActionStack;
+import lwt.container.LContainer;
 import lwt.event.LHashEditEvent;
 import lwt.event.LHashKeyEvent;
 import lwt.event.listener.LHashListener;

@@ -2,32 +2,33 @@ package lwt.editor;
 
 import java.lang.reflect.Field;
 
-import lwt.LContainer;
+import lwt.container.LContainer;
+import lwt.container.LView;
 
 public abstract class LEditor extends LView {
-
+	
 	/**
-	 * Horizontal fill layout.
+	 * No layout.
 	 * @param parent
 	 * @param doubleBuffered
 	 */
 	public LEditor(LContainer parent, boolean doubleBuffered) {
 		super(parent, doubleBuffered);
 	}
-	
+
 	/**
-	 * Grid or fill layout.
+	 * Fill/row layout.
 	 * @param parent
-	 * @param columns
-	 * @param equalCols
+	 * @param horizontal
+	 * @param equalCells
 	 * @param doubleBuffered
 	 */
-	public LEditor(LContainer parent, int columns, boolean equalCols, boolean doubleBuffered) {
-		super(parent, columns, equalCols, doubleBuffered);
+	public LEditor(LContainer parent, boolean horizontal, boolean equalCells, boolean doubleBuffered) {
+		super(parent, horizontal, equalCells, doubleBuffered);
 	}
 	
 	/**
-	 * Fill layout.
+	 * Fill layout with no margin.
 	 * @param parent
 	 * @param horizontal
 	 * @param doubleBuffered
@@ -36,6 +37,17 @@ public abstract class LEditor extends LView {
 		super(parent, horizontal, doubleBuffered);
 	}
 	
+	/**
+	 * Grid layout.
+	 * @param parent
+	 * @param columns
+	 * @param equalCols
+	 * @param doubleBuffered
+	 */
+	public LEditor(LContainer parent, int columns, boolean equalCols, boolean doubleBuffered) {
+		super(parent, columns, equalCols, doubleBuffered);
+	}
+
 	public abstract void setObject(Object object);
 	
 	public abstract void saveObjectValues();

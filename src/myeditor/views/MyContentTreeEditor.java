@@ -1,11 +1,11 @@
 package myeditor.views;
 
-import lwt.LContainer;
-import lwt.LSashPanel;
 import lwt.action.LActionStack;
+import lwt.container.LContainer;
+import lwt.container.LSashPanel;
+import lwt.container.LView;
 import lwt.dataestructure.LDataTree;
 import lwt.editor.LDefaultTreeEditor;
-import lwt.editor.LView;
 import myeditor.data.MyContent;
 
 import org.eclipse.swt.SWT;
@@ -21,7 +21,7 @@ public class MyContentTreeEditor extends LView {
 		
 		actionStack = new LActionStack(this);
 		
-		LSashPanel sashForm = new LSashPanel(this);
+		LSashPanel sashForm = new LSashPanel(this, true);
 		
 		final LDataTree<MyContent> contentTree = createExampleTree();
 		treeEditor = new LDefaultTreeEditor<MyContent>(sashForm) {

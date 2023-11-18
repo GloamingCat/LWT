@@ -3,7 +3,7 @@ package myeditor.views;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 
-import lwt.LContainer;
+import lwt.container.LContainer;
 import lwt.editor.LObjectEditor;
 import lwt.widget.LLabel;
 import lwt.widget.LSpinner;

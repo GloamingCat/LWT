@@ -1,10 +1,11 @@
 package lwt;
 
 import lwt.action.LActionManager;
+import lwt.container.LContainer;
+import lwt.container.LView;
 import lwt.dataserialization.LFileManager;
 import lwt.dataserialization.LSerializer;
 import lwt.dialog.LShell;
-import lwt.editor.LView;
 
 import java.util.ArrayList;
 
@@ -242,8 +243,10 @@ public abstract class LDefaultApplicationShell extends LShell implements LContai
 	protected void setCurrentView(LView view) {
 		currentView = view;
 		stackLayout.topControl = currentView;
+		setRedraw(false);
 		layout();
 		currentView.onVisible();
+		setRedraw(true);
 	}
 	
 	protected abstract LSerializer createProject(String path);

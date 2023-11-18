@@ -1,4 +1,4 @@
-package lwt;
+package lwt.container;
 
 import org.eclipse.swt.widgets.Composite;
 

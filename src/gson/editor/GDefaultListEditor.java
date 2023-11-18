@@ -3,7 +3,7 @@ package gson.editor;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
-import lwt.LContainer;
+import lwt.container.LContainer;
 import lwt.editor.LDefaultListEditor;
 
 public abstract class GDefaultListEditor<T> extends LDefaultListEditor<T> {

@@ -1,11 +1,11 @@
 package myeditor.views;
 
-import lwt.LContainer;
-import lwt.LSashPanel;
 import lwt.action.LActionStack;
+import lwt.container.LContainer;
+import lwt.container.LSashPanel;
+import lwt.container.LView;
 import lwt.dataestructure.LDataList;
 import lwt.editor.LDefaultListEditor;
-import lwt.editor.LView;
 import myeditor.data.MyContent;
 
 import org.eclipse.swt.SWT;
@@ -26,7 +26,7 @@ public class MyContentListEditor extends LView {
 		
 		actionStack = new LActionStack(this);
 		
-		LSashPanel sashForm = new LSashPanel(this, SWT.NONE);
+		LSashPanel sashForm = new LSashPanel(this, true);
 		
 		final LDataList<MyContent> contentList = createExampleList();
 		listEditor = new LDefaultListEditor<MyContent>(sashForm) {

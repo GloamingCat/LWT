@@ -11,7 +11,7 @@ import org.eclipse.swt.events.MouseMoveListener;
 import org.eclipse.swt.events.TraverseEvent;
 import org.eclipse.swt.events.TraverseListener;
 
-import lwt.LContainer;
+import lwt.container.LContainer;
 
 public class LTextBox extends LControlWidget<String> {
 	

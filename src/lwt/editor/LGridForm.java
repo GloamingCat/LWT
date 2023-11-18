@@ -5,8 +5,9 @@ import java.util.ArrayList;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Control;
 
-import lwt.LContainer;
-import lwt.LScrollPanel;
+import lwt.container.LContainer;
+import lwt.container.LPanel;
+import lwt.container.LScrollPanel;
 import lwt.dataestructure.LDataList;
 import lwt.event.LControlEvent;
 import lwt.event.listener.LControlListener;
@@ -17,15 +18,15 @@ public abstract class LGridForm<T> extends LObjectEditor<LDataList<T>> {
 
 	protected LDataList<T> values;
 	protected ArrayList<LControlWidget<T>> controls;
-	protected LScrollPanel scrollComp;
+	protected LScrollPanel scroll;
 	protected LPanel content;
 	
 	public LGridForm(LContainer parent, int columns) {
 		super(parent, true, false);
 		controls = new ArrayList<>();
-		scrollComp = new LScrollPanel(this, true, false);
-		content = new LPanel(scrollComp, columns * 2, false);
-		scrollComp.setContent(content);
+		scroll = new LScrollPanel(this, true);
+		content = new LPanel(scroll, columns * 2, false);
+		scroll.setContent(content);
 	}
 	
 	public void setObject(Object obj) {
@@ -76,7 +77,7 @@ public abstract class LGridForm<T> extends LObjectEditor<LDataList<T>> {
 		}
 		// Add missing controls for exceeding attributes
 		for(int i = children.length / 2; i < data.size(); i ++) {
-			new LLabel(content, "");
+			new LLabel(content, getLabelText(i, data.get(i)));
 			LControlWidget<T> control = createControl(i, data.get(i));
 			final int k = i;
 			control.addModifyListener(new LControlListener<T>() {
@@ -94,8 +95,9 @@ public abstract class LGridForm<T> extends LObjectEditor<LDataList<T>> {
 		for (int i = data.size() * 2; i < children.length; i++) {
 			children[i].dispose();
 		}
-		scrollComp.setContent(content);
-		scrollComp.setMinSize(content.computeSize(SWT.DEFAULT, SWT.DEFAULT));
+		layout();
+		scroll.setContent(content);
+		scroll.setMinSize(content.computeSize(SWT.DEFAULT, SWT.DEFAULT));
 	}
 	
 	protected abstract T getDefaultValue();

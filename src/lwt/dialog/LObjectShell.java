@@ -3,7 +3,7 @@ package lwt.dialog;
 import java.util.ArrayList;
 
 import lwt.LVocab;
-import lwt.editor.LPanel;
+import lwt.container.LPanel;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;

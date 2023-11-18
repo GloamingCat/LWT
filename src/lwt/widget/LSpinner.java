@@ -1,7 +1,7 @@
 package lwt.widget;
 
-import lwt.LContainer;
 import lwt.LImageHelper;
+import lwt.container.LContainer;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Spinner;

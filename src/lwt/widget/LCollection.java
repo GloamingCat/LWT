@@ -6,11 +6,11 @@ import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.widgets.Menu;
 
-import lwt.LContainer;
 import lwt.LVocab;
 import lwt.action.collection.LDeleteAction;
 import lwt.action.collection.LEditAction;
 import lwt.action.collection.LInsertAction;
+import lwt.container.LContainer;
 import lwt.dataestructure.LDataCollection;
 import lwt.dataestructure.LDataTree;
 import lwt.dataestructure.LPath;

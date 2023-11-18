@@ -2,7 +2,7 @@ package lwt.editor;
 
 import java.util.ArrayList;
 
-import lwt.LContainer;
+import lwt.container.LContainer;
 import lwt.dataestructure.LDataTree;
 import lwt.dataestructure.LPath;
 import lwt.event.LDeleteEvent;

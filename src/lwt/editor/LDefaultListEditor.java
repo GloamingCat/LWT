@@ -1,6 +1,6 @@
 package lwt.editor;
 
-import lwt.LContainer;
+import lwt.container.LContainer;
 import lwt.dataestructure.LPath;
 
 public abstract class LDefaultListEditor<T> extends LListEditor<T, T> {
