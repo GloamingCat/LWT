@@ -13,6 +13,10 @@ public class LViewFolder extends LView {
 	protected TabFolder tabFolder;
 	protected int currentTab = 0;
 	
+	/**
+	 * @wbp.parser.constructor
+	 * @wbp.eval.method.parameter parent new lwt.dialog.LShell()
+	 */
 	public LViewFolder(LContainer parent, boolean doubleBuffered) {
 		super(parent, doubleBuffered);
 		setLayout(new FillLayout(SWT.HORIZONTAL));

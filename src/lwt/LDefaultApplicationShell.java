@@ -15,6 +15,7 @@ import org.eclipse.swt.events.MenuAdapter;
 import org.eclipse.swt.events.MenuEvent;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Event;
@@ -29,24 +30,26 @@ public abstract class LDefaultApplicationShell extends LShell implements LContai
 
 	protected LSerializer project = null;
 	protected String applicationName;
-	
+
 	protected ArrayList<LView> views = new ArrayList<>();
 	protected LView defaultView = null;
 	protected LView currentView;
 	protected StackLayout stackLayout;
-	
+
 	protected Menu menuProject;
 	protected Menu menuEdit;
 	protected Menu menuView;
 	protected Menu menuHelp;
 	protected MenuItem mntmView;
-	
+
 	/**
 	 * Create the shell.
-	 * @param display
+	 * @wbp.eval.method.parameter initialWidth 800
+	 * @wbp.eval.method.parameter initialHeight 600
 	 */
 	public LDefaultApplicationShell(int initialWidth, int initialHeight, String title, String icon) {
 		super();
+		setSize(new Point(initialWidth, initialHeight));
 		if (title != null) {
 			setText(title);
 			applicationName = "LTH Editor";
@@ -54,29 +57,27 @@ public abstract class LDefaultApplicationShell extends LShell implements LContai
 		if (icon != null) {
 			setImage(SWTResourceManager.getImage(LDefaultApplicationShell.class, icon));
 		}
-		
+
 		LVocab vocab = LVocab.instance;
-		
-		setSize(initialWidth, initialHeight);
-		
+
 		stackLayout = new StackLayout();
 		setLayout(stackLayout);
-		
+
 		addListener(SWT.Close, new Listener() {
 			public void handleEvent(Event event) {
-		        event.doit = askSave();
-		    }
+				event.doit = askSave();
+			}
 		});
-		
+
 		Menu menu = new Menu(this, SWT.BAR);
 		setMenuBar(menu);
-		
+
 		MenuItem mntmProject = new MenuItem(menu, SWT.CASCADE);
 		mntmProject.setText(vocab.PROJECT);
-		
+
 		menuProject = new Menu(mntmProject);
 		mntmProject.setMenu(menuProject);
-		
+
 		MenuItem mntmNew = new MenuItem(menuProject, SWT.NONE);
 		mntmNew.addSelectionListener(new SelectionAdapter() {
 			@Override
@@ -86,7 +87,7 @@ public abstract class LDefaultApplicationShell extends LShell implements LContai
 		});
 		mntmNew.setText(vocab.NEW + "\tCtrl + &N");
 		mntmNew.setAccelerator(SWT.MOD1 | 'N');
-		
+
 		MenuItem mntmOpen = new MenuItem(menuProject, SWT.NONE);
 		mntmOpen.addSelectionListener(new SelectionAdapter() {
 			@Override
@@ -96,7 +97,7 @@ public abstract class LDefaultApplicationShell extends LShell implements LContai
 		});
 		mntmOpen.setText(vocab.OPEN + "\tCtrl + &O");
 		mntmOpen.setAccelerator(SWT.MOD1 | 'O');
-		
+
 		MenuItem mntmSave = new MenuItem(menuProject, SWT.NONE);
 		mntmSave.addSelectionListener(new SelectionAdapter() {
 			@Override
@@ -106,16 +107,16 @@ public abstract class LDefaultApplicationShell extends LShell implements LContai
 		});
 		mntmSave.setText(vocab.SAVE + "\tCtrl + &S");
 		mntmSave.setAccelerator(SWT.MOD1 | 'S');
-		
+
 		menuProject.addMenuListener(new MenuAdapter() {
 			@Override
 			public void menuShown(MenuEvent arg0) {
 				mntmSave.setEnabled(project != null && LActionManager.getInstance().hasChanges());
 			}
 		});
-		
+
 		new MenuItem(menuProject, SWT.SEPARATOR);
-		
+
 		MenuItem mntmExit = new MenuItem(menuProject, SWT.NONE);
 		mntmExit.addSelectionListener(new SelectionAdapter() {
 			@Override
@@ -125,13 +126,13 @@ public abstract class LDefaultApplicationShell extends LShell implements LContai
 		});
 		mntmExit.setText(vocab.EXIT + "\t Alt + F4");
 		mntmExit.setAccelerator(SWT.ALT | SWT.F4);
-		
+
 		MenuItem mntmEdit = new MenuItem(menu, SWT.CASCADE);
 		mntmEdit.setText(vocab.EDIT);
-		
+
 		menuEdit = new Menu(mntmEdit);
 		mntmEdit.setMenu(menuEdit);
-		
+
 		MenuItem mntmUndo = new MenuItem(menuEdit, SWT.NONE);
 		mntmUndo.addSelectionListener(new SelectionAdapter() {
 			@Override
@@ -141,7 +142,7 @@ public abstract class LDefaultApplicationShell extends LShell implements LContai
 		});
 		mntmUndo.setAccelerator(SWT.MOD1 | 'Z');
 		mntmUndo.setText(vocab.UNDO + "\t Ctrl + &Z");
-		
+
 		MenuItem mntmRedo = new MenuItem(menuEdit, SWT.NONE);
 		mntmRedo.addSelectionListener(new SelectionAdapter() {
 			@Override
@@ -151,7 +152,7 @@ public abstract class LDefaultApplicationShell extends LShell implements LContai
 		});
 		mntmRedo.setAccelerator(SWT.MOD1 | 'Y');
 		mntmRedo.setText(vocab.REDO + "\t Ctrl + &Y");
-		
+
 		menuEdit.addMenuListener(new MenuAdapter() {
 			@Override
 			public void menuShown(MenuEvent arg0) {
@@ -164,24 +165,24 @@ public abstract class LDefaultApplicationShell extends LShell implements LContai
 				}
 			}
 		});
-		
+
 		mntmView = new MenuItem(menu, SWT.CASCADE);
 		mntmView.setText(vocab.VIEW);
-		
+
 		menuView = new Menu(mntmView);
 		mntmView.setMenu(menuView);
-		
+
 		MenuItem mntmHelp = new MenuItem(menu, SWT.CASCADE);
 		mntmHelp.setText(vocab.HELP);
-		
+
 		menuHelp = new Menu(mntmHelp);
 		mntmHelp.setMenu(menuHelp);
-		
+
 		mntmView.setEnabled(false);
 		mntmSave.setEnabled(false);
-		
+
 	}
-	
+
 	public void run() {
 		open();
 		layout();
@@ -191,7 +192,7 @@ public abstract class LDefaultApplicationShell extends LShell implements LContai
 			}
 		}
 	}
-	
+
 	protected void addView(final LView view, String name, String shortcut) {
 		MenuItem item = new MenuItem(menuView, SWT.NONE);
 		item.addSelectionListener(new SelectionAdapter() {
@@ -208,7 +209,7 @@ public abstract class LDefaultApplicationShell extends LShell implements LContai
 			item.setText(name);
 		}
 	}
-	
+
 	protected boolean loadDefault(String path) {
 		if (path == null) {
 			String lattest = LFileManager.appDataPath(applicationName) + "lattest.txt";
@@ -235,11 +236,11 @@ public abstract class LDefaultApplicationShell extends LShell implements LContai
 			return true;
 		}
 	}
-	
+
 	protected boolean loadDefault() {
 		return loadDefault(null);
 	}
-	
+
 	protected void setCurrentView(LView view) {
 		currentView = view;
 		stackLayout.topControl = currentView;
@@ -248,9 +249,9 @@ public abstract class LDefaultApplicationShell extends LShell implements LContai
 		currentView.onVisible();
 		setRedraw(true);
 	}
-	
+
 	protected abstract LSerializer createProject(String path);
-	
+
 	public LSerializer newProject() {
 		if (!askSave()) {
 			return project;
@@ -284,7 +285,7 @@ public abstract class LDefaultApplicationShell extends LShell implements LContai
 			setCurrentView(defaultView);
 		return newProject;
 	}
-	
+
 	public LSerializer openProject() {
 		if (!askSave()) {
 			return project;
@@ -318,7 +319,7 @@ public abstract class LDefaultApplicationShell extends LShell implements LContai
 		}
 		return project;
 	}
-	
+
 	public void saveProject() {
 		if (project == null || !LActionManager.getInstance().hasChanges())
 			return;
@@ -332,7 +333,7 @@ public abstract class LDefaultApplicationShell extends LShell implements LContai
 			LActionManager.getInstance().onSave();
 		}
 	}
-	
+
 	protected boolean askSave() {
 		if (project != null && LActionManager.getInstance().hasChanges()) {
 			LVocab vocab = LVocab.instance;
@@ -352,12 +353,12 @@ public abstract class LDefaultApplicationShell extends LShell implements LContai
 			return true;
 		}
 	}
-	
+
 	@Override
 	protected void checkSubclass() { }
-	
+
 	public Composite getComposite() {
 		return this;
 	}
-	
+
 }

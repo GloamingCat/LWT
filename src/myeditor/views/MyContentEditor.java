@@ -15,8 +15,8 @@ public class MyContentEditor extends LObjectEditor<MyContent> {
 
 	/**
 	 * Create the composite.
-	 * @param parent
-	 * @param style
+	 * @wbp.parser.constructor
+	 * @wbp.eval.method.parameter parent new lwt.dialog.LShell()
 	 */
 	public MyContentEditor(LContainer parent) {
 		super(parent, 2, false, true);
