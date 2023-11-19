@@ -191,6 +191,7 @@ public abstract class LDefaultApplicationShell extends LShell implements LContai
 				Display.getDefault().sleep();
 			}
 		}
+		System.exit(0);
 	}
 
 	protected void addView(final LView view, String name, String shortcut) {
