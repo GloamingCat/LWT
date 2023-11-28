@@ -32,12 +32,6 @@ public class LText extends LControlWidget<String> {
 		this(parent, 1, readOnly);
 	}
 	
-	/**
-	 * @wbp.parser.constructor
-	 * Create the composite.
-	 * @param parent
-	 * @param style
-	 */
 	public LText(LContainer parent, int columns, boolean readOnly) {
 		super(parent);
 		setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, columns, 1));

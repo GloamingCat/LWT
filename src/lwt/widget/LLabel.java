@@ -5,16 +5,12 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.Menu;
 
+import lwt.LFlags;
 import lwt.container.LContainer;
 
-public class LLabel extends Composite {
-
-	// Style
-	public static final int TOP = 0x1;
-	public static final int BOTTOM = 0x10;
-	public static final int CENTER = 0x100;
-	public static final int RIGHT = 0x1000;
+public class LLabel extends LWidget {
 
 	private Label label;
 	
@@ -42,17 +38,18 @@ public class LLabel extends Composite {
 		gridLayout.marginWidth = 0;
 		gridLayout.marginHeight = 3;
 		setLayout(gridLayout);
-		if ((style & TOP) > 0) {
-			setLayoutData(new GridData(SWT.LEFT, SWT.TOP, false, false, columns, 1));
-		} else if ((style & BOTTOM) > 0) {
-			setLayoutData(new GridData(SWT.LEFT, SWT.BOTTOM, false, false, columns, 1));
-		} else if ((style & RIGHT) > 0) {
-			setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, columns, 1));			
-		} else if ((style & CENTER) > 0) {
-			setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false, columns, 1));
+		boolean expand = (style & LFlags.EXPAND) > 0;
+		if ((style & LFlags.TOP) > 0) {
+			setLayoutData(new GridData(SWT.LEFT, SWT.TOP, expand, false, columns, 1));
+		} else if ((style & LFlags.BOTTOM) > 0) {
+			setLayoutData(new GridData(SWT.LEFT, SWT.BOTTOM, expand, false, columns, 1));
+		} else if ((style & LFlags.RIGHT) > 0) {
+			setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, expand, false, columns, 1));			
+		} else if ((style & LFlags.CENTER) > 0) {
+			setLayoutData(new GridData(SWT.FILL, SWT.FILL, expand, false, columns, 1));
 			label.setAlignment(SWT.CENTER);
 		} else {
-			setLayoutData(new GridData(SWT.FILL, SWT.FILL, false, false, columns, 1));
+			setLayoutData(new GridData(SWT.FILL, SWT.FILL, expand, false, columns, 1));
 		}
 	}
 
@@ -82,5 +79,11 @@ public class LLabel extends Composite {
 	public void setText(String text) {
 		label.setText(text);
 	}
+
+	@Override
+	protected void onCopyButton(Menu menu) {}
+
+	@Override
+	protected void onPasteButton(Menu menu) {}
 
 }

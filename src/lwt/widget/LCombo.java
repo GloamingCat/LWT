@@ -31,11 +31,6 @@ public class LCombo extends LControlWidget<Integer> {
 		this(parent, columns, false);
 	}
 	
-	/**
-	 * Create the composite.
-	 * @param parent
-	 * @param style
-	 */
 	public LCombo(LContainer parent, int columns, boolean readOnly) {
 		super(parent);
 		setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, columns, 1));

@@ -1,5 +1,6 @@
 package lwt.widget;
 
+import lwt.LFlags;
 import lwt.LImageHelper;
 
 import org.eclipse.swt.SWT;
@@ -10,15 +11,15 @@ import org.eclipse.swt.graphics.ImageData;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Menu;
 import org.eclipse.wb.swt.SWTResourceManager;
 
-public class LImage extends Composite {
+public class LImage extends LWidget {
 
 	private Image image = null;
 	private Image original = null;
 	private Rectangle rectangle;
-	private int alignv = SWT.TOP;
-	private int alignh = SWT.LEFT;
+	private int align = LFlags.MIDDLE | LFlags.CENTER;
 	
 	private float r = 1, g = 1, b = 1;
 	private float h = 0, s = 1, v = 1;
@@ -31,7 +32,7 @@ public class LImage extends Composite {
 	 * @param parent
 	 * @param style
 	 */
-	public LImage(Composite parent, int style) {
+	LImage(Composite parent, int style) {
 		super(parent, style);
 		setBackground(SWTResourceManager.getColor(224, 224, 224));
 		setLayout(new FillLayout());
@@ -46,14 +47,14 @@ public class LImage extends Composite {
 				int y = 0;
 				int w = Math.round(rect.width * sx);
 				int h = Math.round(rect.height * sy);
-				if (alignh == SWT.RIGHT) {
+				if ((align & LFlags.RIGHT) > 0) {
 					x = bounds.width - w;
-				} else if (alignh == SWT.CENTER) {
+				} else if ((align & LFlags.MIDDLE) > 0) {
 					x = (bounds.width - w) / 2;
 				}
-				if (alignv == SWT.BOTTOM) {
+				if ((align & LFlags.BOTTOM) > 0) {
 					y = bounds.height - h;
-				} else if (alignv == SWT.CENTER) {
+				} else if ((align & LFlags.CENTER) > 0) {
 					y = (bounds.height - h) / 2;
 				}
 				try {
@@ -118,22 +119,9 @@ public class LImage extends Composite {
 		return rectangle;
 	}
 	
-	public void setHorizontalAlign(int i) {
-		alignh = i;
+	public void setAlignment(int a) {
+		align = a;
 		redraw();
-	}
-	
-	public void setVerticalAlign(int i) {
-		alignv = i;
-		redraw();
-	}
-	
-	public int getHorizontalAlign() {
-		return alignh;
-	}
-	
-	public int getVerticalAlign() {
-		return alignv;
 	}
 	
 	public void setRGBA(float _r, float _g, float _b, float _a) {
@@ -155,6 +143,8 @@ public class LImage extends Composite {
 	};
 	
 	@Override
-	protected void checkSubclass() {}
+	protected void onCopyButton(Menu menu) {}
+	@Override
+	protected void onPasteButton(Menu menu) {}
 
 }
