@@ -31,6 +31,10 @@ public abstract class LWidget extends Composite implements LContainer {
 		setLayout(new FillLayout());
 	}
 	
+	/**
+	 * @wbp.parser.constructor
+	 * @wbp.eval.method.parameter parent new lwt.container.LPanel(new LShell(800, 600), true)
+	 */
 	public LWidget(LContainer parent) {
 		super(parent.getComposite(), SWT.NONE);
 		setLayout(new FillLayout());

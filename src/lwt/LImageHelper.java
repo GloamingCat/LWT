@@ -13,11 +13,11 @@ import org.eclipse.swt.graphics.RGB;
 import org.eclipse.swt.widgets.Display;
 
 public class LImageHelper {
-	
+
 	public static final boolean onWindows = System.getProperty("os.name").
 			toLowerCase().contains("win");
 	public static final int libVersion = SWT.getVersion();
-	
+
 	/** Creates new, 32-bit transparent image.
 	 * @param imgW Image width.
 	 * @param imgH Image height.
@@ -31,11 +31,10 @@ public class LImageHelper {
 		Image src = new Image(Display.getCurrent(), data);
 		return src;
 	}
-	
-	//-------------------------------------------------------------------------------------
-	// Transparency Correction
-	//-------------------------------------------------------------------------------------
-	
+
+	//////////////////////////////////////////////////
+	// {{ Transparency Correction
+
 	public static Image correctTransparency(Image image) {
 		if (!onWindows || libVersion >= 4963)
 			return image;
@@ -44,7 +43,7 @@ public class LImageHelper {
 		image.dispose();
 		return new Image(Display.getCurrent(), data);
 	}
-	
+
 	public static void correctTransparency(ImageData data) {
 		try {
 			if (!onWindows || libVersion >= 4963)
@@ -60,14 +59,15 @@ public class LImageHelper {
 				data.alphaData[i] = data.data[i * 4 + 3];
 			}
 		} catch(Exception e) {
-			
+
 		}
 	}
-	
-	//-------------------------------------------------------------------------------------
-	// Color Transform
-	//-------------------------------------------------------------------------------------
-	
+
+	// }}
+
+	//////////////////////////////////////////////////
+	// {{ Color Transform
+
 	/** Applies color transformation on color matrix.
 	 * @param src
 	 * @param _r [0, 1]
@@ -106,7 +106,7 @@ public class LImageHelper {
 			}
 		}
 	}
-	
+
 	public static Image colorTransform(Image src, 
 			float r, float g, float b,
 			float h, float s, float v) {
@@ -118,11 +118,12 @@ public class LImageHelper {
 		src.dispose();
 		return new Image(Display.getCurrent(), newdata);
 	}
-	
-	//-------------------------------------------------------------------------------------
-	// String Image
-	//-------------------------------------------------------------------------------------
-	
+
+	// }}
+
+	//////////////////////////////////////////////////
+	// {{ String Image
+
 	public static Image getStringImage(String s, int w, int h, Color background, boolean borders) {
 		Image image = new Image(Display.getCurrent(), w, h);
 		GC gc = new GC(image);
@@ -139,14 +140,16 @@ public class LImageHelper {
 			gc.drawRectangle(2, 2, w - 5, h - 5);
 		}
 		gc.dispose();
-	    ImageData imageData = image.getImageData();
-	    imageData.transparentPixel = imageData.getPixel(0, 0);
-	    image.dispose();
+		ImageData imageData = image.getImageData();
+		imageData.transparentPixel = imageData.getPixel(0, 0);
+		image.dispose();
 		return new Image(Display.getCurrent(), imageData);
 	}
-	
+
 	public static Image getStringImage(String s, int w, int h, Color background) {
 		return getStringImage(s, w, h, background, false);
 	}
-	
+
+	// }}
+
 }

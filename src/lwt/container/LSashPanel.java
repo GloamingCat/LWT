@@ -13,15 +13,16 @@ public class LSashPanel extends SashForm implements LContainer {
 		super(parent, style);
 	}
 
-	 /**
-	  * Fill layout.
-	  * @param parent
-	  * @param horizontal
-	  */
+	/**
+	 * Fill layout.
+	 */
 	public LSashPanel(LContainer parent, boolean horizontal) {
 		super(parent.getComposite(), horizontal ? SWT.HORIZONTAL : SWT.VERTICAL);
 	}
 
+	/**
+	 * Fill horizontal layout.
+	 */
 	public LSashPanel(LContainer parent) {
 		this(parent, true);
 	}

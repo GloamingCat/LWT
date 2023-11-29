@@ -6,8 +6,7 @@ import lwt.dataestructure.LDataTree;
 import lwt.dataestructure.LPath;
 import lwt.event.LEditEvent;
 import lwt.widget.LGrid;
-
-import org.eclipse.swt.graphics.Image;
+import lwt.widget.LImage;
 
 public abstract class LGridEditor<T, ST> extends LCollectionEditor<T, ST> {
 
@@ -37,8 +36,8 @@ public abstract class LGridEditor<T, ST> extends LCollectionEditor<T, ST> {
 				return new LDataTree<T> (duplicateData(getDataCollection().get(path.index)));
 			}
 			@Override
-			protected Image getImage(int i) {
-				return self.getImage(i);
+			protected void setImage(LImage img, int i) {
+				self.setImage(img, i);
 			}
 		};
 		setListeners();
@@ -55,7 +54,7 @@ public abstract class LGridEditor<T, ST> extends LCollectionEditor<T, ST> {
 	}
 	protected abstract T createNewData();
 	protected abstract T duplicateData(T original);
-	protected abstract Image getImage(int i);
+	protected abstract void setImage(LImage label, int i);
 	
 	protected abstract LDataList<T> getDataCollection();
 

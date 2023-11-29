@@ -1,5 +1,6 @@
 package myeditor.project;
 
+import lwt.dataserialization.LFileManager;
 import lwt.dataserialization.LSerializer;
 
 public class MyProject implements LSerializer {
@@ -8,7 +9,7 @@ public class MyProject implements LSerializer {
 	public String path;
 	
 	public MyProject(String path) {
-		this.path = path;
+		this.path = LFileManager.getDirectory(path);
 		current = this;
 	}
 	

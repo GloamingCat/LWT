@@ -3,8 +3,7 @@ package lwt.editor;
 import lwt.container.LContainer;
 import lwt.dataestructure.LPath;
 import lwt.datainterface.LGraphical;
-
-import org.eclipse.swt.graphics.Image;
+import lwt.widget.LImage;
 
 public abstract class LDefaultGridEditor<T extends LGraphical> extends LGridEditor<T, T> {
 
@@ -25,8 +24,8 @@ public abstract class LDefaultGridEditor<T extends LGraphical> extends LGridEdit
 		getDataCollection().set(path.index, data);
 	}
 
-	protected Image getImage(int i) {
-		return getDataCollection().get(i).toImage();
+	protected void setImage(LImage img, int i) {
+		img.setImage(getDataCollection().get(i).toImage());
 	}
 
 }

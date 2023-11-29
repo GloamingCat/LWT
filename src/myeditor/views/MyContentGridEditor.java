@@ -36,6 +36,9 @@ public class MyContentGridEditor extends LView {
 				return new MyContent(original.name, original.value);
 			}
 		};
+		gridEditor.getCollectionWidget().cellWidth = 40;
+		gridEditor.getCollectionWidget().cellHeight = 40;
+		gridEditor.getCollectionWidget().setColumns(4);
 		addChild(gridEditor);
 
 	}

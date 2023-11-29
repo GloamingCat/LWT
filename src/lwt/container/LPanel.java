@@ -52,25 +52,27 @@ public class LPanel extends Composite implements LContainer {
 	// {{ Public Constructors
 	
 	/** Grid layout.
-	 * @param parent
-	 * @param columns
-	 * @param equalCols
 	 */
 	public LPanel(LContainer parent, int columns, boolean equalCols) {
 		this(parent.getComposite(), columns, equalCols, SWT.NONE);
 	}
 	
+	/** Grid layout with unequal columns.
+	 */
+	public LPanel(LContainer parent, int columns) {
+		this(parent, columns, false);
+	}
+	
 	/** Fill/row layout.
-	 * @param parent
-	 * @param horizontal
 	 */
 	public LPanel(LContainer parent, boolean horizontal, boolean equalCells) {
 		this(parent.getComposite(), horizontal, equalCells, SWT.NONE);
 	}
 	
 	/** Fill layout with no margin.
-	 * @param parent
-	 * @param horizontal
+	 * @wbp.parser.constructor
+	 * @wbp.eval.method.parameter parent new LShell(800, 600)
+	 * @wbp.eval.method.parameter horizontal true
 	 */
 	public LPanel(LContainer parent, boolean horizontal) {
 		this(parent.getComposite(), horizontal, SWT.NONE);
@@ -81,13 +83,6 @@ public class LPanel extends Composite implements LContainer {
 	 */
 	public LPanel(LContainer parent) {
 		this(parent.getComposite(), SWT.NONE);
-	}
-	
-	/** Grid layout.
-	 * @param parent
-	 */
-	public LPanel(LContainer parent, int columns) {
-		this(parent, columns, false);
 	}
 	
 	// }}

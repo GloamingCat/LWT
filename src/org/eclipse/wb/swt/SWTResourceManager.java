@@ -41,6 +41,9 @@ import org.eclipse.swt.widgets.Display;
  * @author Dan Rubel
  */
 public class SWTResourceManager {
+	
+	public static Class<?> rootClass = null;
+	
 	////////////////////////////////////////////////////////////////////////////
 	//
 	// Color
@@ -133,17 +136,7 @@ public class SWTResourceManager {
 	 * @return the {@link Image} stored in the file at the specified path
 	 */
 	public static Image getImage(String path) {
-		Image image = m_imageMap.get(path);
-		if (image == null) {
-			try {
-				image = getImage(new FileInputStream(path));
-				m_imageMap.put(path, image);
-			} catch (Exception e) {
-				//image = getMissingImage();
-				m_imageMap.put(path, image);
-			}
-		}
-		return image;
+		return getImage(rootClass, path);
 	}
 	/**
 	 * Returns an {@link Image} stored in the file at the specified path relative to the specified class.
@@ -155,33 +148,20 @@ public class SWTResourceManager {
 	 * @return the {@link Image} stored in the file at the specified path
 	 */
 	public static Image getImage(Class<?> clazz, String path) {
-		String key = clazz.getName() + '|' + path;
-		Image image = m_imageMap.get(key);
+		Image image = m_imageMap.get(path);
 		if (image == null) {
 			try {
-				image = getImage(clazz.getResourceAsStream(path));
-				m_imageMap.put(key, image);
+				image = getImage(new FileInputStream(path));
 			} catch (Exception e) {
-				image = getMissingImage();
-				m_imageMap.put(key, image);
+				try {
+					image = getImage(clazz.getResourceAsStream(path));
+				} catch (Exception e2) {}
+				m_imageMap.put(path, image);
 			}
 		}
 		return image;
 	}
-	private static final int MISSING_IMAGE_SIZE = 10;
-	/**
-	 * @return the small {@link Image} that can be used as placeholder for missing image.
-	 */
-	private static Image getMissingImage() {
-		Image image = new Image(Display.getCurrent(), MISSING_IMAGE_SIZE, MISSING_IMAGE_SIZE);
-		//
-		GC gc = new GC(image);
-		gc.setBackground(getColor(SWT.COLOR_RED));
-		gc.fillRectangle(0, 0, MISSING_IMAGE_SIZE, MISSING_IMAGE_SIZE);
-		gc.dispose();
-		//
-		return image;
-	}
+
 	/**
 	 * Style constant for placing decorator image in top left corner of base image.
 	 */

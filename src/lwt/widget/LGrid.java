@@ -17,24 +17,31 @@ import org.eclipse.swt.events.MouseAdapter;
 import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.events.PaintEvent;
 import org.eclipse.swt.events.PaintListener;
-import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.FillLayout;
+import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.layout.RowData;
 import org.eclipse.swt.layout.RowLayout;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
-import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.Layout;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.MenuItem;
 
 public abstract class LGrid<T, ST> extends LSelectableCollection<T, ST> {
 
 	protected LActionStack actionStack;
-	protected RowLayout rowLayout;
+	protected Layout layout;
 	protected FillLayout fillLayout;
 	protected int selectedIndex = -1;
 	protected T selectedObj = null;
 
-	protected boolean editable = true;
+	private boolean editEnabled = false;
+	private boolean insertEnabled = false;
+	private boolean duplicateEnabled = false;
+	private boolean deleteEnabled = false;
+	
+	public int cellWidth = 24;
+	public int cellHeight = 24;
 	
 	/**
 	 * Create the composite.
@@ -44,25 +51,32 @@ public abstract class LGrid<T, ST> extends LSelectableCollection<T, ST> {
 	public LGrid(LContainer parent) {
 		super(parent);
 		fillLayout = new FillLayout();
-		rowLayout = new RowLayout(SWT.HORIZONTAL);
-		rowLayout.fill = true;
-		rowLayout.pack = true;
-		rowLayout.wrap = true;
+		setColumns(-1);
 		setLayout(fillLayout);
-		Label label = new Label(this, SWT.NONE);
+		LImage label = new LImage(this);
 		Menu menu = new Menu(label);
 		label.setMenu(menu);
 		MenuItem mntmNewItem = new MenuItem(menu, SWT.NONE);
 		mntmNewItem.setText("New Item");
 	}
 	
-	public boolean getEditable() {
-		return editable;
-	}
-	
-	public void setEditable(boolean value) {
-		if (editable != value) {
-			editable = value;
+	public void setColumns(int columns) {
+		if (columns <= 0) {
+			RowLayout rowLayout = new RowLayout(SWT.HORIZONTAL);
+			rowLayout.fill = true;
+			rowLayout.pack = true;
+			rowLayout.wrap = true;
+			rowLayout.spacing = 5;
+			rowLayout.marginWidth = 0;
+			rowLayout.marginHeight = 0;
+			layout = rowLayout;
+		} else {
+			GridLayout gridLayout = new GridLayout(columns, true);
+			gridLayout.marginWidth = 0;
+			gridLayout.marginHeight = 0;
+			gridLayout.horizontalSpacing = 5;
+			gridLayout.verticalSpacing = 5;
+			layout = gridLayout;
 		}
 	}
 
@@ -92,7 +106,7 @@ public abstract class LGrid<T, ST> extends LSelectableCollection<T, ST> {
 		layout();
 	}
 	
-	private int indexOf(Label label) {
+	private int indexOf(LImage label) {
 		int i = 0;
 		for(Control c : getChildren()) {
 			if (c == label)
@@ -107,11 +121,11 @@ public abstract class LGrid<T, ST> extends LSelectableCollection<T, ST> {
 		clear();
 		if (list != null) {
 			if (list.size() > 0) {
-				setLayout(rowLayout);
+				setLayout(layout);
 				int i = 0;
 				for(T data : list) {
-					Label label = addLabel(i, data, false);
-					label.setImage(getImage(i));
+					LImage label = addLabel(i, data, false);
+					setImage(label, i);
 					i++;
 				}
 				layout();
@@ -121,14 +135,21 @@ public abstract class LGrid<T, ST> extends LSelectableCollection<T, ST> {
 		}
 	}
 	
-	private Label addLabel(int i, T data, boolean placeholder) {
-		Label label = new Label(this, SWT.NONE);
+	private LImage addLabel(int i, T data, boolean placeholder) {
+		LImage label = new LImage(this);
+		if (layout instanceof GridLayout) {
+			//label.setExpand(true, true);
+			label.setMinimumWidth(cellWidth);
+			label.setMinimumHeight(cellHeight);
+		} else {
+			label.setLayoutData(new RowData(cellWidth, cellHeight));
+		}
 		Menu menu = new Menu(label);
 		label.setMenu(menu);
 		menu.setData("label", label);
 		
 		if (placeholder) {
-			if (editable)
+			if (insertEnabled)
 				setInsertNewEnabled(menu, true);
 		} else {
 			label.setData(data);
@@ -152,48 +173,74 @@ public abstract class LGrid<T, ST> extends LSelectableCollection<T, ST> {
 					notifySelectionListeners(e);
 				}
 			});
-			if (!editable)
+			if (!isEditable())
 				return label;
-			setEditEnabled(menu, true);
-			setInsertNewEnabled(menu, true);
-			setDuplicateEnabled(menu, true);
-			setDeleteEnabled(menu, true);
+			setEditEnabled(menu, editEnabled);
+			setInsertNewEnabled(menu, insertEnabled);
+			setDuplicateEnabled(menu, duplicateEnabled);
+			setDeleteEnabled(menu, deleteEnabled);
 		}
 		
 		return label;
 	}
+	
+	private boolean isEditable() {
+		return editEnabled || insertEnabled || duplicateEnabled || deleteEnabled;
+	}
 
-	protected abstract Image getImage(int i);
+	protected abstract void setImage(LImage label, int i);
+	
+	public LImage getSelectedCell() {
+		if (selectedIndex == -1)
+			return null;
+		return (LImage) getChildren()[selectedIndex];
+	}
 	
 	//-------------------------------------------------------------------------------------
 	// Button Handler
 	//-------------------------------------------------------------------------------------
 	
 	protected void onEditButton(Menu menu) {
-		Label label = (Label) menu.getData("label");
+		LImage label = (LImage) menu.getData("label");
 		int i = indexOf(label);
 		LPath path = new LPath(i);
 		newEditAction(path);
 	}
 	
 	protected void onInsertNewButton(Menu menu) {
-		Label label = (Label) menu.getData("label");
+		LImage label = (LImage) menu.getData("label");
 		int i = indexOf(label) + 1;
 		LDataTree<T> newNode = emptyNode();
 		newInsertAction(null, i, newNode);
 	}
 	
 	protected void onDuplicateButton(Menu menu) {
-		Label label = (Label) menu.getData("label");
+		LImage label = (LImage) menu.getData("label");
 		int i = indexOf(label);
 		LDataTree<T> newNode = duplicateNode(new LPath(i));
 		newInsertAction(null, i, newNode);
 	}
 	
 	protected void onDeleteButton(Menu menu) {
-		Label label = (Label) menu.getData("label");
+		LImage label = (LImage) menu.getData("label");
 		int i = indexOf(label);
 		newDeleteAction(null, i);
+	}
+	
+	public void setEditEnabled(boolean value) {
+		editEnabled = value;
+	}
+	
+	public void setInsertNewEnabled(boolean value) {
+		insertEnabled = value;
+	}
+	
+	public void setDuplicateEnabled(boolean value) {
+		duplicateEnabled = value;
+	}
+	
+	public void setDeleteEnabled(boolean value) {
+		deleteEnabled = value;
 	}
 	
 	//-------------------------------------------------------------------------------------
@@ -211,7 +258,7 @@ public abstract class LGrid<T, ST> extends LSelectableCollection<T, ST> {
 	public LInsertEvent<T> insert(LPath parentPath, int index, LDataTree<T> node) {
 		if (getLayout() == fillLayout) {
 			clear();
-			setLayout(rowLayout);
+			setLayout(layout);
 		}
 		addLabel(index, node.data, false);
 		return new LInsertEvent<T>(parentPath, index, node);
@@ -260,15 +307,19 @@ public abstract class LGrid<T, ST> extends LSelectableCollection<T, ST> {
 	
 	@Override
 	public void refreshObject(LPath path) { 
-		Label label = (Label) getChildren()[path.index];
+		LImage label = (LImage) getChildren()[path.index];
 		T data = toObject(path);
 		label.setData(data);
-		label.setImage(getImage(path.index));
+		if (path.index == selectedIndex)
+			label.reskin(SWT.BORDER);
+		else
+			label.reskin(SWT.NONE);
+		setImage(label, path.index);
 	}
 
 	@Override
 	public void refreshAll() {
-		if (getLayout() == rowLayout) {
+		if (getLayout() == layout) {
 			LPath p = new LPath(0);
 			Control[] c = getChildren();
 			for(p.index = 0; p.index < c.length; p.index++) {
@@ -283,7 +334,7 @@ public abstract class LGrid<T, ST> extends LSelectableCollection<T, ST> {
 	
 	public LSelectionEvent select(LPath path) {
 		if (path.index >= 0) {
-			Label l = (Label) getChildren()[path.index];
+			LImage l = (LImage) getChildren()[path.index];
 			@SuppressWarnings("unchecked")
 			T data = (T) l.getData("data");
 			select(data, path.index);

@@ -1,7 +1,10 @@
 package lwt.widget;
 
+import lwt.LColor;
 import lwt.LFlags;
 import lwt.LImageHelper;
+import lwt.container.LCanvas;
+import lwt.container.LContainer;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.PaintEvent;
@@ -10,11 +13,10 @@ import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.ImageData;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.layout.FillLayout;
-import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Menu;
+import org.eclipse.swt.widgets.Listener;
 import org.eclipse.wb.swt.SWTResourceManager;
 
-public class LImage extends LWidget {
+public class LImage extends LCanvas {
 
 	private Image image = null;
 	private Image original = null;
@@ -26,16 +28,18 @@ public class LImage extends LWidget {
 	private int a = 255;
 	
 	private float sx = 1, sy = 1;
-	
+
 	/**
 	 * Create the composite.
 	 * @param parent
 	 * @param style
 	 */
-	LImage(Composite parent, int style) {
-		super(parent, style);
+	public LImage(LContainer parent) {
+		super(parent);
 		setBackground(SWTResourceManager.getColor(224, 224, 224));
 		setLayout(new FillLayout());
+		Listener oldListeter = getListeners(SWT.Paint)[0];
+		removeListener(SWT.Paint, oldListeter);
 		addPaintListener(new PaintListener() {
 			@Override
 			public void paintControl(PaintEvent e) {
@@ -64,20 +68,40 @@ public class LImage extends LWidget {
 				} catch (IllegalArgumentException ex) { System.out.println("Problem printing quad."); }
 				e.x = x;
 				e.y = y;
+				for (LPainter p : painters) {
+					p.paint();
+				}
 			}
 		});
+		addListener(SWT.Paint, oldListeter);
 	}
 	
-	public LImage(Composite parent) {
-		this(parent, SWT.NONE);
+	public void addPainter(LPainter painter) {
+		painters.add(painter);
+	}
+	
+	public void removePainter(LPainter painter) {
+		painters.remove(painter);
+	}
+	
+	public void setBackground(LColor color) {
+		setBackground(color.convert());
 	}
 	
 	public void setImage(String path) {
+		if (path == null) {
+			setImage((Image) null, null);
+			return;
+		}
 		Image img = SWTResourceManager.getImage(path);
 		setImage(img);
 	}
 	
 	public void setImage(String path, Rectangle r) {
+		if (path == null) {
+			setImage((Image) null, null);
+			return;
+		}
 		Image img = SWTResourceManager.getImage(path);
 		setImage(img, r);
 	}
@@ -141,10 +165,5 @@ public class LImage extends LWidget {
 		if (image != null)
 			image.dispose();
 	};
-	
-	@Override
-	protected void onCopyButton(Menu menu) {}
-	@Override
-	protected void onPasteButton(Menu menu) {}
 
 }

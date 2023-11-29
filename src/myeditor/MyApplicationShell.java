@@ -34,9 +34,18 @@ public class MyApplicationShell extends LDefaultApplicationShell {
 	public MyApplicationShell() {
 		super(450, 300, "My Editor", null);
 		
+		MyContentGridEditor gridEditor = new MyContentGridEditor(this);
 		MyContentTreeEditor treeEditor = new MyContentTreeEditor(this);
 		MyContentListEditor listEditor = new MyContentListEditor(this);
-		MyContentGridEditor gridEditor = new MyContentGridEditor(this);
+		
+		MenuItem mntmContentGrid = new MenuItem(menuView, SWT.NONE);
+		mntmContentGrid.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent arg0) {
+				setCurrentView(gridEditor);
+			}
+		});
+		mntmContentGrid.setText(MyVocab.instance.CONTENTGRID);
 		
 		MenuItem mntmContentList = new MenuItem(menuView, SWT.NONE);
 		mntmContentList.addSelectionListener(new SelectionAdapter() {
@@ -56,14 +65,8 @@ public class MyApplicationShell extends LDefaultApplicationShell {
 		});
 		mntmContentTree.setText(MyVocab.instance.CONTENTTREE);
 		
-		MenuItem mntmContentGrid = new MenuItem(menuView, SWT.NONE);
-		mntmContentGrid.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(SelectionEvent arg0) {
-				setCurrentView(gridEditor);
-			}
-		});
-		mntmContentGrid.setText(MyVocab.instance.CONTENTGRID);
+		defaultView = gridEditor;
+		
 	}
 	
 	@Override

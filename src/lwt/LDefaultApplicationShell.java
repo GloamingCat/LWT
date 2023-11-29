@@ -6,7 +6,6 @@ import lwt.container.LView;
 import lwt.dataserialization.LFileManager;
 import lwt.dataserialization.LSerializer;
 import lwt.dialog.LShell;
-
 import java.util.ArrayList;
 
 import org.eclipse.swt.SWT;
@@ -49,6 +48,7 @@ public abstract class LDefaultApplicationShell extends LShell implements LContai
 	 */
 	public LDefaultApplicationShell(int initialWidth, int initialHeight, String title, String icon) {
 		super();
+		SWTResourceManager.rootClass = getClass();
 		setSize(new Point(initialWidth, initialHeight));
 		if (title != null) {
 			setText(title);
@@ -262,11 +262,10 @@ public abstract class LDefaultApplicationShell extends LShell implements LContai
 		dialog.setText(vocab.NEWPROJECT);
 		dialog.setFilterExtensions(new String[] {"*.json"});
 		dialog.setFilterPath(LFileManager.applicationPath());
-		String resultFile = dialog.open();
-		if (resultFile == null)
+		String resultPath = dialog.open();
+		if (resultPath == null)
 			return project;
-		String resultPath = LFileManager.getDirectory(resultFile);
-		LSerializer newProject = createProject(resultFile);
+		LSerializer newProject = createProject(resultPath);
 		if (newProject.isDataFolder(resultPath)) {
 			MessageBox msg = new MessageBox(this, SWT.ICON_QUESTION | SWT.YES | SWT.NO | SWT.CANCEL);
 			msg.setText(vocab.EXISTINGPROJECT);
@@ -280,7 +279,7 @@ public abstract class LDefaultApplicationShell extends LShell implements LContai
 		newProject.save();
 		mntmView.setEnabled(true);
 		String path = LFileManager.appDataPath(applicationName) + "lattest.txt";
-		byte[] bytes = resultFile.getBytes();
+		byte[] bytes = resultPath.getBytes();
 		LFileManager.save(path, bytes);
 		if (defaultView != null)
 			setCurrentView(defaultView);

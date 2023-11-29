@@ -1,8 +1,10 @@
 package myeditor.data;
 
 import org.eclipse.swt.graphics.Image;
+import org.eclipse.wb.swt.SWTResourceManager;
 
 import lwt.datainterface.LGraphical;
+import myeditor.project.MyProject;
 
 public class MyContent implements LGraphical {
 
@@ -22,7 +24,7 @@ public class MyContent implements LGraphical {
 
 	@Override
 	public Image toImage() {
-		return null;
+		return SWTResourceManager.getImage(MyProject.current.imagePath() + "img.png");
 	}
 	
 	public MyContent clone() {

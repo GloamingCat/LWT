@@ -8,7 +8,7 @@ import lwt.editor.LState;
 
 import org.eclipse.swt.SWT;
 
-public abstract class LView extends LPanel {
+public class LView extends LPanel {
 
 	protected LView parent;
 	protected LActionStack actionStack;
