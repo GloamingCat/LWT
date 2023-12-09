@@ -11,13 +11,10 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.wb.swt.SWTResourceManager;
 
 import lwt.LColor;
+import lwt.event.listener.LPainter;
 
 public class LCanvas extends LView {
 	
-	public interface LPainter {
-		public void paint();
-	}
-
 	protected PaintEvent currentEvent;
 	protected ArrayList<LPainter> painters;
 	
@@ -30,7 +27,7 @@ public class LCanvas extends LView {
 	 */
 	public LCanvas(LContainer parent) {
 		super(parent, false);
-		painters = new ArrayList<LCanvas.LPainter>();
+		painters = new ArrayList<LPainter>();
 		addPaintListener(new PaintListener() {
 			public void paintControl(PaintEvent e) {
 				currentEvent = e;
@@ -61,6 +58,10 @@ public class LCanvas extends LView {
 	
 	public void drawRect(int x, int y, int w, int h) {
 		getGC().drawRectangle(x, y, w, h);
+	}
+	
+	public void drawLine(int x1, int y1, int x2, int y2) {
+		getGC().drawLine(x1, y1, x2, y2);
 	}
 
 	public void drawPolygon(int[] p, boolean close) {

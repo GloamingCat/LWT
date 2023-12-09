@@ -5,6 +5,7 @@ import lwt.LFlags;
 import lwt.LImageHelper;
 import lwt.container.LCanvas;
 import lwt.container.LContainer;
+import lwt.event.listener.LPainter;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.PaintEvent;
@@ -74,14 +75,6 @@ public class LImage extends LCanvas {
 			}
 		});
 		addListener(SWT.Paint, oldListeter);
-	}
-	
-	public void addPainter(LPainter painter) {
-		painters.add(painter);
-	}
-	
-	public void removePainter(LPainter painter) {
-		painters.remove(painter);
 	}
 	
 	public void setBackground(LColor color) {
