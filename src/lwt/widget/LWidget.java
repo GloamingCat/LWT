@@ -39,6 +39,11 @@ public abstract class LWidget extends Composite implements LContainer {
 		super(parent.getComposite(), SWT.NONE);
 		setLayout(new FillLayout());
 	}
+	
+	@Override
+	public Object getChild(int i) {
+		return getChildren()[i];
+	}
 
 	public void setActionStack(LActionStack stack) {
 		this.actionStack = stack;
@@ -167,12 +172,25 @@ public abstract class LWidget extends Composite implements LContainer {
 	@Override
 	protected void checkSubclass() { }
 	
+	@Override
 	public Composite getComposite() {
 		return this;
 	}
 	
+	@Override
 	public LShell getShell() {
 		return (LShell) super.getShell();
 	}
+	
+	@Override
+	public Object getData() {
+		return super.getData();
+	}
+	
+	@Override
+	public Object getData(String key) {
+		return super.getData(key);
+	}
+	
 	
 }

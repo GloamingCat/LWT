@@ -33,6 +33,12 @@ public abstract class LControlWidget<T> extends LWidget implements LControl<T> {
 		return currentValue;
 	}
 	
+	public boolean isEnabled() {
+		return currentValue != null;
+	}
+	
+	public void setEnabled(boolean value) {}
+	
 	//-------------------------------------------------------------------------------------
 	// Modify Events
 	//-------------------------------------------------------------------------------------

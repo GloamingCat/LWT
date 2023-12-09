@@ -59,7 +59,7 @@ public abstract class LTreeBase<T, ST> extends LSelectableCollection<T, ST> {
 					TreeItem item = (TreeItem) e.item;//tree.getSelection()[0];
 					LPath path = toPath(item);
 					LSelectionEvent event = new LSelectionEvent(path, toObject(path), getID(item));
-					event.detail = e.detail;
+					event.check = e.detail == SWT.CHECK;
 					notifySelectionListeners(event);
 				}
 			}

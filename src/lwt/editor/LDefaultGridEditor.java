@@ -1,9 +1,9 @@
 package lwt.editor;
 
 import lwt.container.LContainer;
+import lwt.container.LImage;
 import lwt.dataestructure.LPath;
 import lwt.datainterface.LGraphical;
-import lwt.widget.LImage;
 
 public abstract class LDefaultGridEditor<T extends LGraphical> extends LGridEditor<T, T> {
 

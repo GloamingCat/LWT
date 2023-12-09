@@ -29,7 +29,6 @@ public class LShell extends Shell implements LContainer {
 		super(Display.getDefault(), SWT.SHELL_TRIM | SWT.DOUBLE_BUFFERED | SWT.NO_BACKGROUND);
 	}
 	
-	
 	/**
 	 * @wbp.parser.constructor
 	 * Sub-shell.
@@ -37,15 +36,33 @@ public class LShell extends Shell implements LContainer {
 	public LShell(LShell parent) {
 		super(parent, SWT.CLOSE | SWT.RESIZE | SWT.APPLICATION_MODAL);
 	}
+	
+	public void setMinimumSize(int width, int height) {
+		super.setMinimumSize(width, height);
+	}
 
 	@Override
 	public LShell getParent() {
 		return (LShell) super.getParent();
 	}
+	
+	@Override
+	public void pack() {
+		super.pack();
+	}
+	
+	public void setTitle(String title) {
+		setText(title);
+	}
 
 	@Override
 	public Composite getComposite() {
 		return this;
+	}
+		
+	@Override
+	public Object getChild(int i) {
+		return getChildren()[i];
 	}
 	
 	@Override

@@ -92,9 +92,18 @@ public class LSashPanel extends SashForm implements LContainer {
 	
 	// }}
 	
+	public void setWeights(int... w) {
+		super.setWeights(w);
+	}
+	
 	@Override
 	public Composite getComposite() {
 		return this;
+	}
+	
+	@Override
+	public Object getChild(int i) {
+		return getChildren()[i];
 	}
 	
 	@Override

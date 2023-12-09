@@ -1,7 +1,7 @@
 package lwt.widget;
 
-import lwt.LImageHelper;
 import lwt.container.LContainer;
+import lwt.graphics.LTexture;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.FocusAdapter;
@@ -43,7 +43,7 @@ public class LText extends LControlWidget<String> {
 		setLayout(gridLayout);
 		text = new Text(this, readOnly ? (SWT.BORDER | SWT.READ_ONLY) : SWT.BORDER);
 		GridData gd_text = new GridData(SWT.FILL, SWT.FILL, true, false, 1, 1);
-		if (!LImageHelper.onWindows)
+		if (!LTexture.onWindows)
 			gd_text.heightHint = 16;
 		text.setLayoutData(gd_text);
 		

@@ -8,10 +8,9 @@ import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.widgets.Display;
-import org.eclipse.wb.swt.SWTResourceManager;
 
-import lwt.LColor;
-import lwt.event.listener.LPainter;
+import lwt.graphics.LPainter;
+import lwt.graphics.LTexture;
 
 public class LCanvas extends LView {
 	
@@ -32,6 +31,7 @@ public class LCanvas extends LView {
 			public void paintControl(PaintEvent e) {
 				currentEvent = e;
 				for (LPainter p : painters) {
+					p.setGC(e.gc);
 					p.paint();
 				}
 			}
@@ -49,105 +49,33 @@ public class LCanvas extends LView {
 	//////////////////////////////////////////////////
 	// {{ Draw
 	
-	private GC getGC() {
-		if (bufferGC != null)
-			return bufferGC;
-		else 
-			return currentEvent.gc;
-	}
-	
-	public void drawRect(int x, int y, int w, int h) {
-		getGC().drawRectangle(x, y, w, h);
-	}
-	
-	public void drawLine(int x1, int y1, int x2, int y2) {
-		getGC().drawLine(x1, y1, x2, y2);
-	}
-
-	public void drawPolygon(int[] p, boolean close) {
-		if (close)
-			getGC().drawPolygon(p);
-		else
-			getGC().drawPolyline(p);
-	}
-	
-	public void drawImage(Image img, int x0, int y0, int w0, int h0, int x, int y, float sx, float sy) {
-		getGC().drawImage(img, x0, y0, 
-				Math.min(w0, img.getBounds().width), 
-				Math.min(h0, img.getBounds().height),
-				x, y, 
-				Math.round(w0 * sx), 
-				Math.round(h0 * sy));
-	}
-	
-	public void drawImage(String path, int x0, int y0, int w0, int h0, int x, int y, float sx, float sy) {
-		Image img = SWTResourceManager.getImage(path);
-		drawImage(img, x0, y0, w0, h0, x, y, sx, sy);
-	}
-	
-	public void drawImage(Image img, int x, int y, float sx, float sy) {
-		Rectangle r = img.getBounds();
-		getGC().drawImage(img, 0, 0, r.width, r.height,
-				x, y, Math.round(r.width * sx), Math.round(r.height * sy));
-	}
-	
-	public void drawImage(Image img, int x, int y) {
-		getGC().drawImage(img, x, y);
-	}
-	
-	public void drawImageCenter(String path, int x, int y, float sx, float sy) {
-		Image img = SWTResourceManager.getImage(path);
-		drawImage(img,
-				(int) (x - img.getBounds().width * sx / 2),
-				(int) (y - img.getBounds().width * sy / 2),
-				sx, sy);
-	}
-	
-	public void fillPolygon(int[] p) {
-		getGC().fillPolygon(p);
-	}
-	
-	public void fillRect(int x, int y, int w, int h) {
-		getGC().fillRectangle(x, y, w, h);
-	}
-	
 	public void fillRect() {
 		if (bufferGC == null) {
 			Rectangle r = getBounds();
-			fillRect(r.x, r.y, r.width, r.height);
+			currentEvent.gc.fillRectangle(r.x, r.y, r.width, r.height);
 		} else {
 			Rectangle r = buffer.getBounds();
-			fillRect(r.x, r.y, r.width, r.height);
+			bufferGC.fillRectangle(r.x, r.y, r.width, r.height);
 		}
 	}
 	
-	public void setTransparency(int alpha) {
-		getGC().setAlpha(alpha);
-	}
-	
-	public void setPaintColor(LColor color) {
-		getGC().setForeground(color.convert());
-	}
-	
-	public void setFillColor(LColor color) {
-		getGC().setBackground(color.convert());
-	}
-
 	// }}
 	
 	//////////////////////////////////////////////////
 	// {{ Buffer
 	
-	public void setBuffer(Image image) {
-		buffer = image;
+	public void setBuffer(LTexture image) {
+		buffer = image.convert();
 	}
 	
 	public void drawBuffer(int x, int y, float sx, float sy) {
-		drawImage(buffer, x, y, sx, sy);
+		Rectangle r = buffer.getBounds();
+		currentEvent.gc.drawImage(buffer, 0, 0, r.width, r.height,
+				x, y, Math.round(r.width * sx), Math.round(r.height * sy));
 	}
 	
 	public void drawBuffer(int x, int y) {
-		drawImage(buffer, x, y);
+		currentEvent.gc.drawImage(buffer, x, y);
 	}
 	
 	public void pushBuffer() {
@@ -166,11 +94,28 @@ public class LCanvas extends LView {
 		bufferGC = null;
 	}
 	
+	public LPainter getBufferPainter() {
+		return new LPainter(bufferGC) {
+			@Override
+			public void paint() {}
+		};
+	}
+	
 	public void disposeBuffer() {
 		if (buffer != null)
 			buffer.dispose();
+		buffer = null;
 	}
 	
+	public void dispose() {
+		super.dispose();
+		disposeBuffer();
+	};
+	
 	// }}
+	
+	public void redraw() {
+		super.redraw();
+	}
 	
 }

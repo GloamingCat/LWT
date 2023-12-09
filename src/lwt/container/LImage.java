@@ -1,11 +1,11 @@
-package lwt.widget;
+package lwt.container;
 
-import lwt.LColor;
 import lwt.LFlags;
-import lwt.LImageHelper;
-import lwt.container.LCanvas;
-import lwt.container.LContainer;
-import lwt.event.listener.LPainter;
+import lwt.graphics.LColor;
+import lwt.graphics.LPainter;
+import lwt.graphics.LPoint;
+import lwt.graphics.LRect;
+import lwt.graphics.LTexture;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.PaintEvent;
@@ -19,9 +19,8 @@ import org.eclipse.wb.swt.SWTResourceManager;
 
 public class LImage extends LCanvas {
 
-	private Image image = null;
 	private Image original = null;
-	private Rectangle rectangle;
+	private LRect rectangle;
 	private int align = LFlags.MIDDLE | LFlags.CENTER;
 	
 	private float r = 1, g = 1, b = 1;
@@ -49,9 +48,9 @@ public class LImage extends LCanvas {
 				currentEvent = e;
 				int x = 0;
 				int y = 0;
-				if (image != null) {
+				if (buffer != null) {
 					Rectangle bounds = getBounds();
-					Rectangle rect = rectangle == null ? image.getBounds() : rectangle;
+					LRect rect = rectangle == null ? new LRect(buffer.getBounds()) : rectangle;
 					int w = Math.round(rect.width * sx);
 					int h = Math.round(rect.height * sy);
 					if ((align & LFlags.RIGHT) > 0) {
@@ -66,13 +65,14 @@ public class LImage extends LCanvas {
 					}
 					try {
 						e.gc.setAlpha(a);
-						e.gc.drawImage(image, rect.x, rect.y, rect.width, rect.height, 
+						e.gc.drawImage(buffer, rect.x, rect.y, rect.width, rect.height, 
 								x, y, w, h);
 					} catch (IllegalArgumentException ex) { System.out.println("Problem printing quad."); }
 				}
 				ox = x;
 				oy = y;
 				for (LPainter p : painters) {
+					p.setGC(e.gc);
 					p.paint();
 				}
 			}
@@ -93,7 +93,7 @@ public class LImage extends LCanvas {
 		setImage(img);
 	}
 	
-	public void setImage(String path, Rectangle r) {
+	public void setImage(String path, LRect r) {
 		if (path == null) {
 			setImage((Image) null, null);
 			return;
@@ -106,37 +106,49 @@ public class LImage extends LCanvas {
 		if (img == null) {
 			setImage((Image) null, null);
 		} else {
-			setImage(img, img.getBounds());
+			setImage(img, new LRect(img.getBounds()));
 		}
 	}
 	
-	public void setImage(Image img, Rectangle rect) {
+	public void setImage(Image img, LRect rect) {
 		rectangle = rect;
 		original = img;
-		if (image != null)
-			image.dispose();
-		if (img == null) {
-			image = null;
-		} else {
-			ImageData imgData = img.getImageData();
-			LImageHelper.correctTransparency(imgData);
-			LImageHelper.colorTransform(imgData, r, g, b, h, s, v);
-			image = new Image(getDisplay(), imgData);
-		}
+		disposeBuffer();
+		refreshImage();
 		rectangle = rect;
 		redraw();
 	}
 	
-	public Image getImage() {
-		return image;
+	public void refreshImage() {
+		if (original == null)
+			return;
+		disposeBuffer();
+		ImageData imgData = original.getImageData();
+		LTexture.correctTransparency(imgData);
+		LTexture.colorTransform(imgData, r, g, b, h, s, v);
+		buffer = new Image(getDisplay(), imgData);
+	}
+
+	public boolean hasImage() {
+		return buffer != null;
 	}
 	
 	public Image getOriginalImage() {
 		return original;
 	}
 	
-	public Rectangle getRectangle() {
+	public LRect getRect() {
 		return rectangle;
+	}	
+	
+	public void setRect(LRect rect) {
+		rectangle = rect;
+		redraw();
+	}
+	
+	public LPoint getImageSize() {
+		Rectangle r = buffer.getBounds();
+		return new LPoint(r.width, r.height);
 	}
 	
 	public void setAlignment(int a) {
@@ -156,10 +168,4 @@ public class LImage extends LCanvas {
 		sx = _sx; sy = _sy;
 	}
 	
-	public void dispose() {
-		super.dispose();
-		if (image != null)
-			image.dispose();
-	};
-
 }

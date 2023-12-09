@@ -1,4 +1,4 @@
-package lwt;
+package lwt.graphics;
 
 import java.util.HashMap;
 

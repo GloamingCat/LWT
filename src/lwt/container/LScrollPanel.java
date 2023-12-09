@@ -2,13 +2,19 @@ package lwt.container;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.ScrolledComposite;
+import org.eclipse.swt.events.ControlEvent;
+import org.eclipse.swt.events.ControlListener;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Control;
 
 import lwt.LFlags;
+import lwt.graphics.LPoint;
 
 public class LScrollPanel extends ScrolledComposite implements LContainer {
+	
+	private Control content;
 
 	/**
 	 * Internal, no layout.
@@ -16,6 +22,20 @@ public class LScrollPanel extends ScrolledComposite implements LContainer {
 	LScrollPanel(Composite parent, int style) {
 		super(parent, style);
 		setLayout(new FillLayout());
+		addControlListener(new ControlListener() {
+			@Override
+			public void controlResized(ControlEvent e) {
+				if (content == null) {
+					content = getChildren()[0];
+					setContent(content);
+				}
+				layout();
+			}
+			@Override
+			public void controlMoved(ControlEvent e) {
+				
+			}
+		});
 	}
 	
 	/**
@@ -104,13 +124,28 @@ public class LScrollPanel extends ScrolledComposite implements LContainer {
 	}
 	
 	// }}
+	
+	public void refreshSize(LPoint size) {
+		setMinSize(size.x, size.y);
+	}
+	
+	public void refreshSize(int width, int height) {
+		setMinSize(width, height);
+		layout();
+	}
 
 	@Override
 	public Composite getComposite() {
 		return this;
 	}
+	
+	@Override
+	public Object getChild(int i) {
+		return getChildren()[i];
+	}
 
 	@Override
 	protected void checkSubclass() { }
+
 	
 }

@@ -1,6 +1,11 @@
 package lwt.container;
 
+import java.util.ArrayList;
+
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.MouseEvent;
+import org.eclipse.swt.events.MouseListener;
+import org.eclipse.swt.events.MouseMoveListener;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.layout.RowLayout;
@@ -9,9 +14,14 @@ import org.eclipse.swt.widgets.Composite;
 
 import lwt.LFlags;
 import lwt.dialog.LShell;
+import lwt.event.LMouseEvent;
+import lwt.event.listener.LMouseListener;
+import lwt.graphics.LPoint;
 
 public class LPanel extends Composite implements LContainer {
 
+	private ArrayList<LMouseListener> mouseListeners = null;
+	
 	//////////////////////////////////////////////////
 	// {{ Internal Constructors
 	
@@ -45,7 +55,7 @@ public class LPanel extends Composite implements LContainer {
 		super(parent, style);
 		setLinearLayout(horizontal, equalCells);
 	}
-		
+
 	// }}
 	
 	//////////////////////////////////////////////////
@@ -84,7 +94,7 @@ public class LPanel extends Composite implements LContainer {
 	public LPanel(LContainer parent) {
 		this(parent.getComposite(), SWT.NONE);
 	}
-	
+
 	// }}
 	
 	//////////////////////////////////////////////////
@@ -181,9 +191,89 @@ public class LPanel extends Composite implements LContainer {
 	
 	// }}
 
+	//////////////////////////////////////////////////
+	// {{ Listeners
+	
+	public void addMouseListener(LMouseListener l) {
+		if (mouseListeners == null) {
+			mouseListeners = new ArrayList<>();
+			setMouseListeners();
+		}
+		mouseListeners.add(l);
+	}
+	
+	public void removeMouseListener(LMouseListener l) {
+		mouseListeners.remove(l);
+	}
+	
+	private void setMouseListeners() {
+		addMouseListener(new MouseListener() {
+			@Override
+			public void mouseUp(MouseEvent e0) {
+				LMouseEvent e = new LMouseEvent(e0, true, false);
+				for (LMouseListener l : mouseListeners)
+					l.onMouseChange(e);
+			}
+			@Override
+			public void mouseDown(MouseEvent e0) {
+				LMouseEvent e = new LMouseEvent(e0, false, false);
+				for (LMouseListener l : mouseListeners)
+					l.onMouseChange(e);
+			}
+			@Override
+			public void mouseDoubleClick(MouseEvent e0) {
+				LMouseEvent e = new LMouseEvent(e0, true, true);
+				for (LMouseListener l : mouseListeners)
+					l.onMouseChange(e);
+			}
+		});
+		addMouseMoveListener(new MouseMoveListener() {
+			@Override
+			public void mouseMove(MouseEvent e0) {
+				LMouseEvent e = new LMouseEvent(e0, false, false);
+				for (LMouseListener l : mouseListeners)
+					l.onMouseChange(e);
+			}
+		});
+	}
+		
+	// }}
+	
+	//////////////////////////////////////////////////
+	// {{ Size
+	
+	public LPoint getCurrentSize() {
+		return new LPoint(getSize());
+	}
+	
+	public void setCurrentSize(LPoint size) {
+		setSize(size.x, size.y);
+	}
+	
+	public void setCurrentSize(int x, int y) {
+		setSize(x, y);
+	}
+	
+	// }}
+	
 	@Override
 	public Composite getComposite() {
 		return this;
+	}
+	
+	@Override
+	public Object getChild(int i) {
+		return getChildren()[i];
+	}
+	
+	@Override
+	public Object getData() {
+		return super.getData();
+	}
+	
+	@Override
+	public Object getData(String key) {
+		return super.getData(key);
 	}
 	
 	@Override

@@ -31,24 +31,23 @@ public class LHashTableEditor<T> extends LEditor {
 				return self.createNewValue();
 			}
 		};
-		table.addEditListener(new LHashListener<T> () {
+		LHashListener<T> listener = new LHashListener<T>() {
 			@Override
 			public void onEdit(LHashEditEvent<T> event) {
 				map.put(event.key, event.newValue);
 			}
-		});
-		table.addInsertListener(new LHashListener<T> () {
 			@Override
 			public void onInsert(LHashKeyEvent<T> event) {
 				map.put(event.key, event.value);
 			}
-		});
-		table.addDeleteListener(new LHashListener<T> () {
 			@Override
 			public void onDelete(LHashKeyEvent<T> event) {
 				map.remove(event.key);
 			}
-		});
+		};
+		table.addEditListener(listener);
+		table.addInsertListener(listener);
+		table.addDeleteListener(listener);
 	}
 	
 	/**

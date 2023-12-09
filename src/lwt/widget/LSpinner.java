@@ -1,7 +1,7 @@
 package lwt.widget;
 
-import lwt.LImageHelper;
 import lwt.container.LContainer;
+import lwt.graphics.LTexture;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Spinner;
@@ -34,7 +34,7 @@ public class LSpinner extends LControlWidget<Integer> {
 		setLayout(gridLayout);
 		spinner = new Spinner(this, SWT.BORDER);
 		GridData gd_spinner = new GridData(SWT.FILL, SWT.FILL, true, false, 1, 1);
-		if (!LImageHelper.onWindows)
+		if (!LTexture.onWindows)
 			gd_spinner.heightHint = 26;
 		spinner.setLayoutData(gd_spinner);
 		spinner.addSelectionListener(new SelectionAdapter() {

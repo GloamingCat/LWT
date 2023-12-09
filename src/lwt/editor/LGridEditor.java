@@ -1,12 +1,12 @@
 package lwt.editor;
 
 import lwt.container.LContainer;
+import lwt.container.LImage;
 import lwt.dataestructure.LDataList;
 import lwt.dataestructure.LDataTree;
 import lwt.dataestructure.LPath;
 import lwt.event.LEditEvent;
 import lwt.widget.LGrid;
-import lwt.widget.LImage;
 
 public abstract class LGridEditor<T, ST> extends LCollectionEditor<T, ST> {
 

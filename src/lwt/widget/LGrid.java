@@ -2,6 +2,7 @@ package lwt.widget;
 
 import lwt.action.LActionStack;
 import lwt.container.LContainer;
+import lwt.container.LImage;
 import lwt.dataestructure.LDataCollection;
 import lwt.dataestructure.LDataList;
 import lwt.dataestructure.LDataTree;

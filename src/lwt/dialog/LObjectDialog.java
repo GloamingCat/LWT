@@ -33,7 +33,7 @@ public class LObjectDialog<T> extends Dialog {
 		LObjectShell<T> shell = factory.createShell(getParent());
 		shell.setText(getText());
 		shell.open(initial);
-		shell.layout();
+		shell.layout(true, true);
 		Display display = getParent().getDisplay();
 		while (!shell.isDisposed()) {
 			if (!display.readAndDispatch()) {

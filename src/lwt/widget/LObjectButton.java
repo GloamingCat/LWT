@@ -14,8 +14,8 @@ import org.eclipse.swt.layout.GridData;
 public class LObjectButton<T> extends LControlWidget<T> {
 	
 	public String name = "";
-	protected Button button;
 	protected LObjectDialog<T> dialog;
+	private Button button;
 
 	/**
 	 * Create the composite.

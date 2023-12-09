@@ -178,6 +178,11 @@ public class LFrame extends Group implements LContainer {
 	public Composite getComposite() {
 		return this;
 	}
+	
+	@Override
+	public Object getChild(int i) {
+		return getChildren()[i];
+	}
 
 	@Override
 	protected void checkSubclass() { }

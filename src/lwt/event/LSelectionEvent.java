@@ -7,7 +7,7 @@ public class LSelectionEvent {
 	public LPath path;
 	public Object data;
 	public int id;
-	public int detail;
+	public boolean check;
 	
 	public LSelectionEvent(LPath path, Object data, int id) {
 		this.path = path;
