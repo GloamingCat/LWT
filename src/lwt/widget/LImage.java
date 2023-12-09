@@ -29,6 +29,8 @@ public class LImage extends LCanvas {
 	private int a = 255;
 	
 	private float sx = 1, sy = 1;
+	
+	public float ox = 0, oy = 0;
 
 	/**
 	 * Create the composite.
@@ -44,31 +46,32 @@ public class LImage extends LCanvas {
 		addPaintListener(new PaintListener() {
 			@Override
 			public void paintControl(PaintEvent e) {
-				if (image == null)
-					return;
-				Rectangle bounds = getBounds();
-				Rectangle rect = rectangle == null ? image.getBounds() : rectangle;
+				currentEvent = e;
 				int x = 0;
 				int y = 0;
-				int w = Math.round(rect.width * sx);
-				int h = Math.round(rect.height * sy);
-				if ((align & LFlags.RIGHT) > 0) {
-					x = bounds.width - w;
-				} else if ((align & LFlags.MIDDLE) > 0) {
-					x = (bounds.width - w) / 2;
+				if (image != null) {
+					Rectangle bounds = getBounds();
+					Rectangle rect = rectangle == null ? image.getBounds() : rectangle;
+					int w = Math.round(rect.width * sx);
+					int h = Math.round(rect.height * sy);
+					if ((align & LFlags.RIGHT) > 0) {
+						x = bounds.width - w;
+					} else if ((align & LFlags.MIDDLE) > 0) {
+						x = (bounds.width - w) / 2;
+					}
+					if ((align & LFlags.BOTTOM) > 0) {
+						y = bounds.height - h;
+					} else if ((align & LFlags.CENTER) > 0) {
+						y = (bounds.height - h) / 2;
+					}
+					try {
+						e.gc.setAlpha(a);
+						e.gc.drawImage(image, rect.x, rect.y, rect.width, rect.height, 
+								x, y, w, h);
+					} catch (IllegalArgumentException ex) { System.out.println("Problem printing quad."); }
 				}
-				if ((align & LFlags.BOTTOM) > 0) {
-					y = bounds.height - h;
-				} else if ((align & LFlags.CENTER) > 0) {
-					y = (bounds.height - h) / 2;
-				}
-				try {
-					e.gc.setAlpha(a);
-					e.gc.drawImage(image, rect.x, rect.y, rect.width, rect.height, 
-							x, y, w, h);
-				} catch (IllegalArgumentException ex) { System.out.println("Problem printing quad."); }
-				e.x = x;
-				e.y = y;
+				ox = x;
+				oy = y;
 				for (LPainter p : painters) {
 					p.paint();
 				}
