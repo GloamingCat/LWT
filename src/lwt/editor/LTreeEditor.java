@@ -17,8 +17,14 @@ public abstract class LTreeEditor<T, ST> extends LAbstractTreeEditor<T, ST> {
 	 */
 	public LTreeEditor(LContainer parent) {
 		super(parent);
+		tree = createTree();
+		setListeners();
+		tree.setActionStack(getActionStack());
+	}
+	
+	protected LTree<T, ST> createTree() { 
 		LTreeEditor<T, ST> self = this;
-		tree = new LTree<T, ST>(this) {
+		return new LTree<T, ST>(this) {
 			@Override
 			public LEditEvent<ST> edit(LPath path) {
 				return onEditItem(path);
@@ -36,31 +42,26 @@ public abstract class LTreeEditor<T, ST> extends LAbstractTreeEditor<T, ST> {
 			}
 			@Override
 			protected LDataTree<T> emptyNode() {
-				return new LDataTree<T>(createNewData());
+				return new LDataTree<T>(createNewElement());
 			}
 			@Override
 			protected LDataTree<T> duplicateNode(LDataTree<T> node) {
-				return self.duplicateNode(node);
+				return self.duplicateData(node);
 			}
 			@Override
 			protected String encodeNode(LDataTree<T> node) {
-				return self.encodeNode(node);
+				return self.encodeData(node);
 			}
 			@Override
 			protected LDataTree<T> decodeNode(String str) {
-				return self.decodeNode(str);
+				return self.decodeData(str);
+			}
+			@Override
+			public boolean canDecode(String str) {
+				return true;
 			}
 		};
-		LTree<T, ST> customTree = createTree();
-		if (customTree != null) {
-			tree.dispose();
-			tree = customTree;
-		}
-		setListeners();
-		tree.setActionStack(getActionStack());
 	}
-	
-	protected LTree<T, ST> createTree() { return null; }
 
 	public LTree<T, ST> getCollectionWidget() {
 		return tree;

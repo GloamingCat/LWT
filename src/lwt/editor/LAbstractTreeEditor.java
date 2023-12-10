@@ -3,6 +3,7 @@ package lwt.editor;
 import java.util.ArrayList;
 
 import lwt.container.LContainer;
+import lwt.dataestructure.LDataCollection;
 import lwt.dataestructure.LDataTree;
 import lwt.dataestructure.LPath;
 import lwt.event.LDeleteEvent;
@@ -77,30 +78,35 @@ public abstract class LAbstractTreeEditor<T, ST> extends LCollectionEditor<T, ST
 	}
 	
 	public abstract LTree<T, ST> getCollectionWidget();
-	protected abstract T createNewData();
-	protected abstract T duplicateData(T original);
-	protected abstract String encodeData(T data);
-	protected abstract T decodeData(String str);
-	
-	public LDataTree<T> duplicateNode(LDataTree<T> node) {
-		LDataTree<T> copy = new LDataTree<T>(duplicateData(node.data));
+	protected abstract T createNewElement();
+	protected abstract T duplicateElement(T original);
+	protected abstract String encodeElement(T data);
+	protected abstract T decodeElement(String str);
+
+	@Override
+	public LDataTree<T> duplicateData(LDataCollection<T> collection) {
+		LDataTree<T> node = (LDataTree<T>) collection;
+		LDataTree<T> copy = new LDataTree<T>(duplicateElement(node.data));
 		for(LDataTree<T> child : node.children) {
-			LDataTree<T> childCopy = duplicateNode(child);
+			LDataTree<T> childCopy = duplicateData(child);
 			childCopy.setParent(copy);
 		}
 		return copy;
 	}
 	
-	public String encodeNode(LDataTree<T> node) {
+	@Override
+	public String encodeData(LDataCollection<T> collection) {
+		LDataTree<T> node = (LDataTree<T>) collection;
 		String str = node.id + " | " + node.children.size() + " | "
-				+ encodeData(node.data) + " | ";
+				+ encodeElement(node.data) + " | ";
 		for (LDataTree<T> child : node.children) {
-			str = str + encodeNode(child);
+			str = str + encodeData(child);
 		}
 		return str;
 	}
 	
-	public LDataTree<T> decodeNode(String str) {
+	@Override
+	public LDataTree<T> decodeData(String str) {
 		// Get ID
 		int i = str.indexOf(" | ");
 		int id = Integer.parseInt(str.substring(0, i));
@@ -111,13 +117,13 @@ public abstract class LAbstractTreeEditor<T, ST> extends LCollectionEditor<T, ST
 		str = str.substring(i + 3);
 		// Get data
 		i = str.indexOf(" | ");
-		T data = decodeData(str.substring(0, i));
+		T data = decodeElement(str.substring(0, i));
 		str = str.substring(i + 3);
 		// Get children
 		LDataTree<T> node = new LDataTree<T>(data);
 		node.id = id;
 		for (i = 0; i < children; i++) {
-			LDataTree<T> child = decodeNode(str);
+			LDataTree<T> child = decodeData(str);
 			child.setParent(node);
 		}
 		return node;
@@ -171,5 +177,5 @@ public abstract class LAbstractTreeEditor<T, ST> extends LCollectionEditor<T, ST
 			}
 		};
 	}
-	
+
 }

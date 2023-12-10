@@ -1,6 +1,7 @@
 package lwt.editor;
 
-import lwt.action.LActionStack;
+import lwt.LGlobals;
+import lwt.LMenuInterface;
 import lwt.container.LContainer;
 import lwt.dataestructure.LDataCollection;
 import lwt.dataestructure.LPath;
@@ -13,14 +14,17 @@ import lwt.event.LMoveEvent;
 import lwt.event.listener.LCollectionListener;
 import lwt.widget.LCollection;
 
+import org.eclipse.swt.dnd.TextTransfer;
+import org.eclipse.swt.dnd.Transfer;
 import org.eclipse.swt.layout.FillLayout;
+import org.eclipse.swt.widgets.Menu;
 
 /**
  * Edits the items in a list.
  *
  */
 
-public abstract class LCollectionEditor<T, ST> extends LEditor {
+public abstract class LCollectionEditor<T, ST> extends LObjectEditor<LDataCollection<T>> {
 
 	public String name = "";
 	public String fieldName = "";
@@ -90,18 +94,46 @@ public abstract class LCollectionEditor<T, ST> extends LEditor {
 	public void refreshObject(LPath path) {
 		getCollectionWidget().refreshObject(path);
 	}
-	
-	public void setActionStack(LActionStack stack) {
-		super.setActionStack(stack);
-		getCollectionWidget().setActionStack(stack);
+
+	@Override
+	public void setMenuInterface(LMenuInterface mi) {
+		super.setMenuInterface(mi);
+		getCollectionWidget().setActionStack(mi.actionStack);
 	}
-	
+
+	@Override
 	public void restart() {
 		getCollectionWidget().setDataCollection(getDataCollection());
 	}
-	
+
+	@Override
 	public void saveObjectValues() {
 		getDataCollection().set(getCollectionWidget().getDataCollection());
+	}
+	
+	@Override
+	public void onCopyButton(Menu menu) {
+		//LControlWidget.clipboard = duplicateData(currentObject);
+		LGlobals.clipboard.setContents(new Object[] { encodeData(getDataCollection()) },
+				new Transfer[] { TextTransfer.getInstance() });
+	}
+	
+	@Override
+	public void onPasteButton(Menu menu) {
+		String str = (String) LGlobals.clipboard.getContents(TextTransfer.getInstance());
+		if (str == null)
+			return;
+		try {
+			LDataCollection<T> newValue = decodeData(str);
+			LDataCollection<T> oldValue = getDataCollection();
+			if (!newValue.equals(oldValue)) {
+				getCollectionWidget().setDataCollection(newValue);
+				newModifyAction(oldValue, newValue);
+			}
+		} catch (ClassCastException e) {
+			System.err.println(e.getMessage());
+			return;
+		}
 	}
 	
 	// Widget
@@ -113,5 +145,6 @@ public abstract class LCollectionEditor<T, ST> extends LEditor {
 	// Editable Data
 	protected abstract ST getEditableData(LPath path);
 	protected abstract void setEditableData(LPath path, ST newData);
+
 	
 }

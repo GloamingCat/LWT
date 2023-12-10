@@ -2,10 +2,10 @@ package myeditor;
 
 import lwt.LDefaultApplicationShell;
 import lwt.dataserialization.LSerializer;
+import myeditor.gui.MyContentGridEditor;
+import myeditor.gui.MyContentListEditor;
+import myeditor.gui.MyContentTreeEditor;
 import myeditor.project.MyProject;
-import myeditor.views.MyContentGridEditor;
-import myeditor.views.MyContentListEditor;
-import myeditor.views.MyContentTreeEditor;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;

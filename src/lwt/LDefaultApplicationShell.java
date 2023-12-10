@@ -35,10 +35,10 @@ public abstract class LDefaultApplicationShell extends LShell implements LContai
 	protected LView currentView;
 	protected StackLayout stackLayout;
 
-	protected Menu menuProject;
-	protected Menu menuEdit;
-	protected Menu menuView;
-	protected Menu menuHelp;
+	public Menu menuProject;
+	public Menu menuEdit;
+	public Menu menuView;
+	public Menu menuHelp;
 	protected MenuItem mntmView;
 	protected MenuItem mntmUndo;
 	protected MenuItem mntmRedo;
@@ -143,7 +143,7 @@ public abstract class LDefaultApplicationShell extends LShell implements LContai
 		mntmUndo.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent arg0) {
-				currentView.undo();
+				currentView.getActionStack().undo();
 			}
 		});
 		mntmUndo.setAccelerator(SWT.MOD1 | 'Z');
@@ -154,7 +154,7 @@ public abstract class LDefaultApplicationShell extends LShell implements LContai
 		mntmRedo.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent arg0) {
-				currentView.redo();
+				currentView.getActionStack().redo();
 			}
 		});
 		mntmRedo.setAccelerator(SWT.MOD1 | 'Y');
@@ -167,7 +167,7 @@ public abstract class LDefaultApplicationShell extends LShell implements LContai
 		mntmCopy.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent arg0) {
-				//currentView.copy();
+				currentView.getMenuInterface().copy();
 			}
 		});
 		mntmCopy.setAccelerator(SWT.MOD1 | 'C');
@@ -178,7 +178,7 @@ public abstract class LDefaultApplicationShell extends LShell implements LContai
 		mntmPaste.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent arg0) {
-				//currentView.paste();
+				currentView.getMenuInterface().paste();
 			}
 		});
 		mntmPaste.setAccelerator(SWT.MOD1 | 'V');
@@ -273,9 +273,13 @@ public abstract class LDefaultApplicationShell extends LShell implements LContai
 	}
 	
 	public void refreshEditButtons() {
-		mntmUndo.setEnabled(currentView.canUndo());
-		mntmRedo.setEnabled(currentView.canRedo());
-		
+		mntmUndo.setEnabled(currentView.getActionStack().canUndo());
+		mntmRedo.setEnabled(currentView.getActionStack().canRedo());
+	}
+	
+	public void refreshClipboardButtons() {
+		mntmCopy.setEnabled(currentView.getMenuInterface().canCopy());
+		mntmPaste.setEnabled(currentView.getMenuInterface().canPaste());
 	}
 
 	protected abstract LSerializer createProject(String path);

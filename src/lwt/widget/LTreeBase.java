@@ -48,10 +48,7 @@ public abstract class LTreeBase<T, ST> extends LSelectableCollection<T, ST> {
 	}
 
 	public LTreeBase(LContainer parent, boolean check) {
-		super(parent);
-
-		tree = new Tree(this, SWT.BORDER | SWT.VIRTUAL | (check ? SWT.CHECK : SWT.NONE));
-		tree.setLinesVisible(true);
+		super(parent, (check ? SWT.CHECK : SWT.NONE));
 		tree.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
@@ -64,12 +61,16 @@ public abstract class LTreeBase<T, ST> extends LSelectableCollection<T, ST> {
 				}
 			}
 		});
-
 		Transfer[] types = new Transfer[] { TextTransfer.getInstance() };
 		int operations = DND.DROP_MOVE | DND.DROP_COPY | DND.DROP_LINK;
-
 		createDragSource(types, operations);
 		createDropTarget(types, operations);
+	}
+	
+	@Override
+	protected void createContent(int flags) {
+		tree = new Tree(this, SWT.BORDER | SWT.VIRTUAL | flags);
+		tree.setLinesVisible(true);
 	}
 
 	private DragSource createDragSource(Transfer[] types, int operations) {

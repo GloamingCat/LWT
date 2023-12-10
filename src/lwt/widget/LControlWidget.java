@@ -1,5 +1,6 @@
 package lwt.widget;
 
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 
 import lwt.LGlobals;
@@ -12,8 +13,6 @@ import org.eclipse.swt.dnd.TextTransfer;
 import org.eclipse.swt.dnd.Transfer;
 import org.eclipse.swt.widgets.Menu;
 
-import com.google.gson.reflect.TypeToken;
-
 public abstract class LControlWidget<T> extends LWidget implements LControl<T> {
 	
 	protected ArrayList<LControlListener<T>> modifyListeners = new ArrayList<>();
@@ -21,6 +20,10 @@ public abstract class LControlWidget<T> extends LWidget implements LControl<T> {
 	
 	public LControlWidget(LContainer parent) {
 		super(parent);
+	}
+	
+	public LControlWidget(LContainer parent, int flags) {
+		super(parent.getComposite(), flags);
 	}
 	
 	public void modify(T newValue) {
@@ -96,7 +99,7 @@ public abstract class LControlWidget<T> extends LWidget implements LControl<T> {
 		if (json == null)
 			return;
 		try {
-			T newValue = (T) LGlobals.gson.fromJson(json, new TypeToken<T>(){}.getType());
+			T newValue = (T) LGlobals.gson.fromJson(json, getType());
 			if (!newValue.equals(currentValue))
 				modify(newValue);	
 		} catch (ClassCastException e) {
@@ -104,5 +107,18 @@ public abstract class LControlWidget<T> extends LWidget implements LControl<T> {
 			return;
 		}
 	}
+	
+	public boolean canDecode(String str) {
+		try {
+			@SuppressWarnings("unchecked")
+			T newValue = (T) LGlobals.gson.fromJson(str, getType());	
+			return newValue != null;
+		} catch (ClassCastException e) {
+			System.err.println(e.getMessage());
+			return false;
+		}
+	}
+	
+	protected abstract Type getType();
 	
 }

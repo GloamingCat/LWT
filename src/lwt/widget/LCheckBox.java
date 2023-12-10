@@ -1,5 +1,7 @@
 package lwt.widget;
 
+import java.lang.reflect.Type;
+
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.wb.swt.SWTResourceManager;
@@ -27,7 +29,6 @@ public class LCheckBox extends LControlWidget<Boolean> {
 		super(parent);
 		if (columns > 1)
 			setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false, columns, 1));
-		button = new Button(this, SWT.CHECK);
 		button.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent arg0) {
@@ -37,6 +38,11 @@ public class LCheckBox extends LControlWidget<Boolean> {
 				currentValue = button.getSelection();
 			}
 		});
+	}
+	
+	@Override
+	protected void createContent(int flags) {
+		button = new Button(this, SWT.CHECK);
 	}
 
 	public void setValue(Object obj) {
@@ -59,6 +65,11 @@ public class LCheckBox extends LControlWidget<Boolean> {
 	public void setEnabled(boolean enabled) {
 		super.setEnabled(enabled);
 		button.setForeground(SWTResourceManager.getColor(enabled ? SWT.COLOR_BLACK : SWT.COLOR_DARK_GRAY));
+	}
+
+	@Override
+	protected Type getType() {
+		return Boolean.class;
 	}
 
 }

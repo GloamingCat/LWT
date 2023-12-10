@@ -8,7 +8,11 @@ public class MyVocab {
 	public String CONTENTTREE = "Content Tree";
 	public String CONTENTGRID = "Content Grid";
 	
-	public String VALUE = "Value";
 	public String NAME = "Name";
+	public String VALUE = "Value";
+	public String IMAGE = "Image";
+	public String SUBCONTENT = "Subcontent";
+	public String DESCRIPTION = "Description";
+	public String TYPE = "Type";
 	
 }

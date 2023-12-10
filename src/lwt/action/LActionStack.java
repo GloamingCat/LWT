@@ -21,11 +21,21 @@ public class LActionStack {
 	private int lastAction = 0;
 	private ArrayList<Node> actions = new ArrayList<>();
 	private LView rootEditor;
+	private LDefaultApplicationShell shell;
 	
 	public LActionStack(LView rootEditor) {
 		this.rootEditor = rootEditor;
 		LActionManager.getInstance().addStack(this);
+		if (rootEditor.getShell() instanceof LDefaultApplicationShell)
+			shell = (LDefaultApplicationShell) rootEditor.getShell();
 	}
+	
+	public LView getRootView() {
+		return rootEditor;
+	}
+	
+	//////////////////////////////////////////////////
+	// {{ Actions
 	
 	public void newAction(LAction action) {
 		while (lastAction < actions.size()) {
@@ -34,10 +44,8 @@ public class LActionStack {
 		}
 		actions.add(new Node(action, rootEditor.getState()));
 		lastAction++;
-		if (rootEditor.getShell() instanceof LDefaultApplicationShell) {
-			LDefaultApplicationShell shell = (LDefaultApplicationShell) rootEditor.getShell();
+		if (shell != null)
 			shell.refreshEditButtons();
-		}
 	}
 	
 	public void undo() {
@@ -45,10 +53,8 @@ public class LActionStack {
 			lastAction--;
 			actions.get(lastAction).state.reset();
 			actions.get(lastAction).action.undo();
-			if (rootEditor.getShell() instanceof LDefaultApplicationShell) {
-				LDefaultApplicationShell shell = (LDefaultApplicationShell) rootEditor.getShell();
+			if (shell != null)
 				shell.refreshEditButtons();
-			}
 		}
 	}
 	
@@ -85,5 +91,7 @@ public class LActionStack {
 		lastAction = 0;
 		actions.clear();
 	}
+	
+	// }}
 	
 }

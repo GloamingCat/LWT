@@ -8,6 +8,8 @@ import lwt.dialog.LShell;
 import lwt.LFlags;
 
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.MouseAdapter;
+import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.FillLayout;
@@ -16,34 +18,32 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.MenuItem;
 
-public abstract class LWidget extends Composite implements LContainer {
+public abstract class LWidget extends Composite {
 
 	//public static Object clipboard = null;
 	protected LActionStack actionStack;
 
-	/**
-	 * Create the composite.
-	 * @param parent
-	 * @param style
-	 */
 	public LWidget(Composite parent, int style) {
 		super(parent, style);
 		setLayout(new FillLayout());
+		parent.setTabList(null);
+		addMouseListener(new MouseAdapter() {
+			public void mouseDown(MouseEvent e) {
+				System.out.println("widget");
+			}
+		});
+		createContent(style);
 	}
-	
+
 	/**
 	 * @wbp.parser.constructor
 	 * @wbp.eval.method.parameter parent new lwt.container.LPanel(new LShell(800, 600), true)
 	 */
 	public LWidget(LContainer parent) {
-		super(parent.getComposite(), SWT.NONE);
-		setLayout(new FillLayout());
+		this(parent.getComposite(), SWT.NONE);
 	}
 	
-	@Override
-	public Object getChild(int i) {
-		return getChildren()[i];
-	}
+	protected abstract void createContent(int flags);
 
 	public void setActionStack(LActionStack stack) {
 		this.actionStack = stack;
@@ -100,9 +100,9 @@ public abstract class LWidget extends Composite implements LContainer {
 		}, 'V');
 	}
 
-	protected abstract void onCopyButton(Menu menu);
-	protected abstract void onPasteButton(Menu menu);
-	
+	public abstract void onCopyButton(Menu menu);
+	public abstract void onPasteButton(Menu menu);
+	public abstract boolean canDecode(String str);
 	
 	//////////////////////////////////////////////////
 	// {{ Layout
@@ -171,12 +171,7 @@ public abstract class LWidget extends Composite implements LContainer {
 	
 	@Override
 	protected void checkSubclass() { }
-	
-	@Override
-	public Composite getComposite() {
-		return this;
-	}
-	
+
 	@Override
 	public LShell getShell() {
 		return (LShell) super.getShell();

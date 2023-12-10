@@ -107,6 +107,11 @@ public class LSashPanel extends SashForm implements LContainer {
 	}
 	
 	@Override
+	public int getChildCount() {
+		return this.getChildren().length;
+	}
+
+	@Override
 	protected void checkSubclass() { }
 	
 }

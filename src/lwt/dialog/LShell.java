@@ -1,7 +1,6 @@
 package lwt.dialog;
 
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
@@ -18,8 +17,8 @@ public class LShell extends Shell implements LContainer {
 	 */
 	public LShell(int width, int height) {
 		super(Display.getDefault(), SWT.SHELL_TRIM | SWT.DOUBLE_BUFFERED | SWT.NO_BACKGROUND);
-		setMinimumSize(new Point(width, height));
-		setSize(new Point(width, height));
+		setMinimumSize(width, height);
+		setSize(width, height);
 	}
 	
 	/**
@@ -59,12 +58,17 @@ public class LShell extends Shell implements LContainer {
 	public Composite getComposite() {
 		return this;
 	}
-		
+	
 	@Override
 	public Object getChild(int i) {
 		return getChildren()[i];
 	}
 	
+	@Override
+	public int getChildCount() {
+		return this.getChildren().length;
+	}
+
 	@Override
 	protected void checkSubclass() { }
 

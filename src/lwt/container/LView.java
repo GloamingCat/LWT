@@ -2,6 +2,7 @@ package lwt.container;
 
 import java.util.ArrayList;
 
+import lwt.LMenuInterface;
 import lwt.action.LActionStack;
 import lwt.editor.LEditor;
 import lwt.editor.LState;
@@ -11,8 +12,7 @@ import org.eclipse.swt.SWT;
 public class LView extends LPanel {
 
 	protected LView parent;
-	protected LActionStack actionStack;
-	protected boolean isActionRoot = false;
+	protected LMenuInterface menuInterface;
 	boolean doubleBuffered = false;
 	
 	protected ArrayList<LView> children = new ArrayList<>();
@@ -68,8 +68,8 @@ public class LView extends LPanel {
 			parent.children.remove(child);
 		}
 		child.parent = this;
-		if (child.getActionStack() == null) {
-			child.setActionStack(actionStack);
+		if (child.getMenuInterface() == null) {
+			child.setMenuInterface(menuInterface);
 		}
 		children.add(child);
 	}
@@ -143,42 +143,31 @@ public class LView extends LPanel {
 		}
 	}
 	
-	public void createActionStack() {
-		actionStack = new LActionStack(this);
-		isActionRoot = true;
+	public void createMenuInterface() {
+		menuInterface = new LMenuInterface(this);
 	}
 	
-	public void setActionStack(LActionStack stack) {
-		this.actionStack = stack;
-		isActionRoot = false;
+	public void setMenuInterface(LMenuInterface mi) {
+		this.menuInterface = mi;
 		for(LView child : children) {
-			child.setActionStack(stack);
+			child.setMenuInterface(mi);
 		}
 	}
 	
 	public LActionStack getActionStack() {
-		return actionStack;
+		LMenuInterface mi = getMenuInterface();
+		if (mi == null)
+			return null;
+		return mi.actionStack;
 	}
 	
-	public void undo() {
-		actionStack.undo();
-	}
-	
-	public void redo() {
-		actionStack.redo();
+	public LMenuInterface getMenuInterface() {
+		return menuInterface;
 	}
 
-	public boolean canUndo() {
-		return actionStack.canUndo();
-	}
-
-	public boolean canRedo() {
-		return actionStack.canRedo();
-	}
-	
 	public void restart() {
-		if (isActionRoot)
-			actionStack.clear();
+		if (getActionStack().getRootView() == this)
+			getActionStack().clear();
 		restartChildren();
 	}
 	

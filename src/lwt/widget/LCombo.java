@@ -1,5 +1,6 @@
 package lwt.widget;
 
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 
 import lwt.container.LContainer;
@@ -32,18 +33,13 @@ public class LCombo extends LControlWidget<Integer> {
 	}
 	
 	public LCombo(LContainer parent, int columns, boolean readOnly) {
-		super(parent);
+		super(parent, (readOnly ? SWT.READ_ONLY : 0));
 		setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, columns, 1));
 		GridLayout gridLayout = new GridLayout(1, false);
 		gridLayout.verticalSpacing = 0;
 		gridLayout.marginWidth = 0;
 		gridLayout.marginHeight = 0;
 		setLayout(gridLayout);
-		combo = new Combo(this, SWT.BORDER | (readOnly ? SWT.READ_ONLY : 0));
-		GridData gd_combo = new GridData(SWT.FILL, SWT.FILL, true, false, 1, 1);
-		if (!LTexture.onWindows)
-			gd_combo.heightHint = 28;
-		combo.setLayoutData(gd_combo);
 		combo.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent arg0) {
@@ -54,6 +50,15 @@ public class LCombo extends LControlWidget<Integer> {
 				currentValue = getSelectionIndex();
 			}
 		});
+	}
+	
+	@Override
+	protected void createContent(int flags) {
+		combo = new Combo(this, SWT.BORDER | flags);
+		GridData gd_combo = new GridData(SWT.FILL, SWT.FILL, true, false, 1, 1);
+		if (!LTexture.onWindows)
+			gd_combo.heightHint = 28;
+		combo.setLayoutData(gd_combo);
 	}
 
 	public int getSelectionIndex() {
@@ -129,6 +134,11 @@ public class LCombo extends LControlWidget<Integer> {
 	
 	public void setOptional(boolean value) {
 		optional = value;
+	}
+
+	@Override
+	protected Type getType() {
+		return Integer.class;
 	}
 	
 }

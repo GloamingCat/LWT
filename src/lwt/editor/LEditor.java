@@ -1,11 +1,19 @@
 package lwt.editor;
 
-import java.lang.reflect.Field;
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.widgets.Menu;
+import org.eclipse.swt.widgets.MenuItem;
 
+import lwt.LVocab;
 import lwt.container.LContainer;
 import lwt.container.LView;
 
 public abstract class LEditor extends LView {
+
+	//////////////////////////////////////////////////
+	// {{ Constructors
 	
 	/**
 	 * No layout.
@@ -48,40 +56,67 @@ public abstract class LEditor extends LView {
 		super(parent, columns, equalCols, doubleBuffered);
 	}
 
-	public abstract void setObject(Object object);
+	// }}
 	
+	//////////////////////////////////////////////////
+	// {{ Object
+	
+	public abstract void setObject(Object object);
 	public abstract void saveObjectValues();
 
-	protected Object getFieldValue(Object object, String name) {
-		try {
-			Field field = object.getClass().getField(name);
-			return field.get(object);
-		} catch (NoSuchFieldException e) {
-			System.out.println(name + " not found in " + object.getClass().toString());
-			e.printStackTrace();
-		} catch (SecurityException e) {
-			e.printStackTrace();
-		} catch (IllegalArgumentException e) {
-			e.printStackTrace();
-		} catch (IllegalAccessException e) {
-			e.printStackTrace();
+	// }}
+	
+	//////////////////////////////////////////////////
+	// {{ Menu
+	
+	protected void setMenuButton(Menu menu, boolean value, String buttonName, String buttonKey, 
+			SelectionAdapter adapter) {
+		setMenuButton(menu, value, buttonName, buttonKey, adapter, (char) 0);
+	}
+
+	protected void setMenuButton(Menu menu, boolean value, String buttonName, String buttonKey, 
+			SelectionAdapter adapter, char acc) {
+		if (value) {
+			if (menu.getData(buttonKey) == null) {
+				MenuItem item = new MenuItem(menu, SWT.NONE);
+				item.addSelectionListener(adapter);
+				menu.setData(buttonKey, item);
+				if (acc != 0) {
+					item.setAccelerator(SWT.MOD1 | acc);
+					buttonName += "\tCtrl + &" + acc;
+				}
+				item.setText(buttonName);
+			}
+		} else {
+			if (menu.getData(buttonKey) != null) {
+				MenuItem item = (MenuItem) menu.getData(buttonKey);
+				item.dispose();
+			}
 		}
-		return null;
 	}
 	
-	protected void setFieldValue(Object object, String name, Object value) {
-		try {
-			Field field = object.getClass().getField(name);
-			field.set(object, value);
-		} catch (NoSuchFieldException e) {
-			e.printStackTrace();
-		} catch (SecurityException e) {
-			e.printStackTrace();
-		} catch (IllegalArgumentException e) {
-			e.printStackTrace();
-		} catch (IllegalAccessException e) {
-			e.printStackTrace();
-		}
+	public void setCopyEnabled(Menu menu, boolean value) {
+		setMenuButton(menu, value, LVocab.instance.COPY, "copy", new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent arg0) {
+				onCopyButton(menu);
+			}
+		}, 'C');
 	}
+
+	public void setPasteEnabled(Menu menu, boolean value) {
+		setMenuButton(menu, value, LVocab.instance.PASTE, "paste", new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent arg0) {
+				onPasteButton(menu);
+			}
+		}, 'V');
+	}
+	
+	public abstract void onCopyButton(Menu menu);
+	public abstract void onPasteButton(Menu menu);
+	public abstract boolean canDecode(String str);
+	
+	// }}
 	
 }

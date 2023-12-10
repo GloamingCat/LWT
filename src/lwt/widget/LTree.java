@@ -156,7 +156,7 @@ public abstract class LTree<T, ST> extends LTreeBase<T, ST> {
 		}
 	}
 	
-	protected void onCopyButton(Menu menu) {
+	public void onCopyButton(Menu menu) {
 		LPath path = getSelectedPath();
 		if (path != null) {
 			LDataTree<T> node = toNode(path);
@@ -165,7 +165,7 @@ public abstract class LTree<T, ST> extends LTreeBase<T, ST> {
 		}
 	}
 	
-	protected void onPasteButton(Menu menu) {
+	public void onPasteButton(Menu menu) {
 		String str = (String) LGlobals.clipboard.getContents(TextTransfer.getInstance());
 		if (str == null)
 			return;

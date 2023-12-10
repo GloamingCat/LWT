@@ -1,15 +1,17 @@
 package lwt.editor;
 
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
 import lwt.LGlobals;
+import lwt.LMenuInterface;
 import lwt.LVocab;
-import lwt.action.LActionStack;
 import lwt.action.LControlAction;
 import lwt.container.LContainer;
 import lwt.container.LControlView;
+import lwt.container.LFrame;
 import lwt.container.LView;
 import lwt.dataestructure.LPath;
 import lwt.event.LControlEvent;
@@ -18,10 +20,13 @@ import lwt.event.listener.LControlListener;
 import lwt.event.listener.LSelectionListener;
 import lwt.widget.LControl;
 import lwt.widget.LControlWidget;
+import lwt.widget.LWidget;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.dnd.TextTransfer;
 import org.eclipse.swt.dnd.Transfer;
+import org.eclipse.swt.events.MouseAdapter;
+import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.RowLayout;
@@ -35,7 +40,6 @@ import org.eclipse.swt.widgets.Menu;
  * object's fields.
  *
  */
-
 public abstract class LObjectEditor<T> extends LEditor implements LControl<T> {
 
 	protected HashMap<LControlWidget<?>, String> controlMap = new HashMap<>();
@@ -46,6 +50,9 @@ public abstract class LObjectEditor<T> extends LEditor implements LControl<T> {
 	protected ArrayList<LSelectionListener> selectionListeners = new ArrayList<>();
 	protected ArrayList<LControlListener<T>> modifyListeners = new ArrayList<>();
 	
+	//////////////////////////////////////////////////
+	// {{ Constructors
+	
 	/**
 	 * No layout.
 	 * @param parent
@@ -53,6 +60,7 @@ public abstract class LObjectEditor<T> extends LEditor implements LControl<T> {
 	 */
 	public LObjectEditor(LContainer parent, boolean doubleBuffered) {
 		super(parent, doubleBuffered);
+		addMenu();
 	}
 
 	/**
@@ -64,6 +72,7 @@ public abstract class LObjectEditor<T> extends LEditor implements LControl<T> {
 	 */
 	public LObjectEditor(LContainer parent, boolean horizontal, boolean equalCells, boolean doubleBuffered) {
 		super(parent, horizontal, equalCells, doubleBuffered);
+		addMenu();
 	}
 	
 	/**
@@ -74,6 +83,7 @@ public abstract class LObjectEditor<T> extends LEditor implements LControl<T> {
 	 */
 	public LObjectEditor(LContainer parent, boolean horizontal, boolean doubleBuffered) {
 		super(parent, horizontal, doubleBuffered);
+		addMenu();
 	}
 	
 	/**
@@ -85,12 +95,16 @@ public abstract class LObjectEditor<T> extends LEditor implements LControl<T> {
 	 */
 	public LObjectEditor(LContainer parent, int columns, boolean equalCols, boolean doubleBuffered) {
 		super(parent, columns, equalCols, doubleBuffered);
+		addMenu();
 	}
-
-	public Composite addHeader() {
-		Composite header = new Composite(this, 0); 
-		header.setLayout(new RowLayout());
-		Button copyButton = new Button(header, SWT.NONE);
+	
+	// }}
+	
+	//////////////////////////////////////////////////
+	// {{ Menu
+	
+	private void addHeaderButtons(Composite parent) {
+		Button copyButton = new Button(parent, SWT.NONE);
 		copyButton.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent arg0) {
@@ -98,7 +112,7 @@ public abstract class LObjectEditor<T> extends LEditor implements LControl<T> {
 			}
 		});
 		copyButton.setText(LVocab.instance.COPY);
-		Button pasteButton = new Button(header, SWT.NONE);
+		Button pasteButton = new Button(parent, SWT.NONE);
 		pasteButton.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent arg0) {
@@ -106,8 +120,67 @@ public abstract class LObjectEditor<T> extends LEditor implements LControl<T> {
 			}
 		});
 		pasteButton.setText(LVocab.instance.PASTE);
-		return header;
 	}
+	
+	private Menu addMenu(Composite parent) {
+		Menu menu = new Menu(parent);
+		parent.setMenu(menu);
+		setCopyEnabled(menu, true);
+		setPasteEnabled(menu, true);
+		addFocusOnClick(parent);
+		return menu;
+	}
+	
+	private void addFocusOnClick(Composite c) {
+		LEditor editor = this;
+		c.addMouseListener(new MouseAdapter() {
+			public void mouseUp(MouseEvent e) {
+				if (e.button == 1) { // Left button
+					getMenuInterface().setFocusEditor(editor);
+				}
+			}
+		});
+	}
+	
+	public void addMenu() {
+		addMenu(getComposite());
+	}
+	
+	public void addMenu(LFrame frame) {
+		Menu menu = getMenu();
+		if (menu == null) {
+			menu = addMenu(frame.getComposite());
+			setMenu(menu);
+			addFocusOnClick(this);
+		} else if (frame.getMenu() == null) {
+			frame.setMenu(menu);
+			addFocusOnClick(frame);
+		}
+	}
+	
+	public void addMenu(LWidget widget) {
+		Menu menu = getMenu();
+		if (menu == null) {
+			menu = addMenu((Composite) widget);
+			setMenu(menu);
+		} else if (widget.getMenu() == null) {
+			widget.setMenu(menu);
+			addFocusOnClick(widget);
+		}
+	}
+	
+	public void addHeader(LContainer parent) {
+		if (parent == null)
+			parent = this;
+		Composite header = new Composite(parent.getComposite(), 0); 
+		header.setLayout(new RowLayout());
+		addHeaderButtons(header);
+	}
+	
+	// }}
+	
+	//////////////////////////////////////////////////
+	// {{ Children
 	
 	public <CT> void addChild(LEditor editor, String key) {
 		if (key.isEmpty()) {
@@ -126,7 +199,7 @@ public abstract class LObjectEditor<T> extends LEditor implements LControl<T> {
 	public <CT> void addControl(LControlWidget<CT> control, String key) {
 		controlMap.put(control, key);
 		LObjectEditor<T> self = this;
-		control.setActionStack(actionStack);
+		control.setActionStack(getActionStack());
 		control.addModifyListener(new LControlListener<CT>() {
 			@SuppressWarnings("unchecked")
 			@Override
@@ -157,14 +230,19 @@ public abstract class LObjectEditor<T> extends LEditor implements LControl<T> {
 		controlMap.remove(control);
 	}
 	
+	// }}
+	
 	public void refresh() {}
 	
-	public void setActionStack(LActionStack stack) {
-		super.setActionStack(stack);
+	public void setMenuInterface(LMenuInterface mi) {
+		super.setMenuInterface(mi);
 		for(LControlWidget<?> control : controlMap.keySet()) {
-			control.setActionStack(stack);
+			control.setActionStack(mi == null ? null : mi.actionStack);
 		}
 	}
+	
+	//////////////////////////////////////////////////
+	// {{ Object
 	
 	@SuppressWarnings("unchecked")
 	public void setObject(Object obj) {
@@ -233,6 +311,66 @@ public abstract class LObjectEditor<T> extends LEditor implements LControl<T> {
 	public void addSelectionListener(LSelectionListener listener) {
 		selectionListeners.add(listener);
 	}
+
+	public void setValue(Object value) {
+		T oldValue = currentObject;
+		setObject(value);
+		currentObject = oldValue;
+		saveObjectValues();
+		currentObject = null;
+		setObject(oldValue);
+	}
+	
+	protected Object getFieldValue(Object object, String name) {
+		try {
+			Field field = object.getClass().getField(name);
+			return field.get(object);
+		} catch (NoSuchFieldException e) {
+			System.out.println(name + " not found in " + object.getClass().toString());
+			e.printStackTrace();
+		} catch (SecurityException e) {
+			e.printStackTrace();
+		} catch (IllegalArgumentException e) {
+			e.printStackTrace();
+		} catch (IllegalAccessException e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+	
+	protected void setFieldValue(Object object, String name, Object value) {
+		try {
+			Field field = object.getClass().getField(name);
+			field.set(object, value);
+		} catch (NoSuchFieldException e) {
+			e.printStackTrace();
+		} catch (SecurityException e) {
+			e.printStackTrace();
+		} catch (IllegalArgumentException e) {
+			e.printStackTrace();
+		} catch (IllegalAccessException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	// }}
+	
+	//////////////////////////////////////////////////
+	// {{ Events
+	
+	protected void newModifyAction(T oldValue, T newValue) {
+		LControlEvent<T> event = new LControlEvent<T>(oldValue, newValue);
+		if (getActionStack() != null) {
+			getActionStack().newAction(new LControlAction<T>(this, event));
+		}
+		notifyListeners(event);
+	}
+	
+	public void notifyListeners(LControlEvent<T> event) {
+		for(LControlListener<T> listener : modifyListeners) {
+			listener.onModify(event);
+		}
+	}
 	
 	public void addModifyListener(LControlListener<T> listener) {
 		modifyListeners.add(listener);
@@ -244,36 +382,10 @@ public abstract class LObjectEditor<T> extends LEditor implements LControl<T> {
 		newModifyAction(oldValue, newValue);
 	}
 	
-	public void setValue(Object value) {
-		T oldValue = currentObject;
-		setObject(value);
-		currentObject = oldValue;
-		saveObjectValues();
-		currentObject = null;
-		setObject(oldValue);
-	}
+	// }}
 	
-	//-------------------------------------------------------------------------------------
-	// Modify Events
-	//-------------------------------------------------------------------------------------
-	
-	protected void newModifyAction(T oldValue, T newValue) {
-		LControlEvent<T> event = new LControlEvent<T>(oldValue, newValue);
-		if (actionStack != null) {
-			actionStack.newAction(new LControlAction<T>(this, event));
-		}
-		notifyListeners(event);
-	}
-	
-	public void notifyListeners(LControlEvent<T> event) {
-		for(LControlListener<T> listener : modifyListeners) {
-			listener.onModify(event);
-		}
-	}
-	
-	//-------------------------------------------------------------------------------------
-	// Copy / Paste
-	//-------------------------------------------------------------------------------------
+	//////////////////////////////////////////////////
+	// {{ Clipboard
 	
 	public void onCopyButton(Menu menu) {
 		//LControlWidget.clipboard = duplicateData(currentObject);
@@ -298,5 +410,7 @@ public abstract class LObjectEditor<T> extends LEditor implements LControl<T> {
 	public abstract T duplicateData(T obj);
 	public abstract String encodeData(T obj);
 	public abstract T decodeData(String str);
+	
+	// }}
 
 }

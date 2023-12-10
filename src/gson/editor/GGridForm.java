@@ -42,6 +42,11 @@ public abstract class GGridForm<T> extends LGridForm<T> {
 		}
 		return (LDataList<T>) LGlobals.gson.fromJson(str, getType());
 	}
+
+	@Override
+	public boolean canDecode(String str) {
+		return true;
+	}
 	
 	public abstract Class<?> getType();
 	

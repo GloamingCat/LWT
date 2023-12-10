@@ -36,11 +36,11 @@ public abstract class LListEditor<T, ST> extends LAbstractTreeEditor<T, ST> {
 			}
 			@Override
 			public LDataTree<T> emptyNode() {
-				return new LDataTree<T>(createNewData());
+				return new LDataTree<T>(createNewElement());
 			}
 			@Override
 			public LDataTree<T> duplicateNode(LDataTree<T> node) {
-				T data = duplicateData(node.data);
+				T data = duplicateElement(node.data);
 				return new LDataTree<T> (data);
 			}
 			@Override
@@ -50,11 +50,15 @@ public abstract class LListEditor<T, ST> extends LAbstractTreeEditor<T, ST> {
 			}
 			@Override
 			protected String encodeNode(LDataTree<T> node) {
-				return self.encodeNode(node);
+				return self.encodeData(node);
 			}
 			@Override
 			protected LDataTree<T> decodeNode(String str) {
-				return self.decodeNode(str);
+				return self.decodeData(str);
+			}
+			@Override
+			public boolean canDecode(String str) {
+				return true;
 			}
 		};
 		LList<T, ST> customList = createList();

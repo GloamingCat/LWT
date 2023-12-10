@@ -7,14 +7,17 @@ import lwt.dataestructure.LPath;
 import lwt.event.LSelectionEvent;
 import lwt.event.listener.LSelectionListener;
 
+import java.lang.reflect.Type;
+
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
+import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.layout.GridData;
 
-public class LNodeSelector<T> extends LControlWidget<Integer> {
+public class LNodeSelector<T> extends LControlWidget<Integer> implements LContainer {
 
 	protected LDataTree<T> collection;
 	protected LTree<T, T> tree;
@@ -28,35 +31,6 @@ public class LNodeSelector<T> extends LControlWidget<Integer> {
 	public LNodeSelector(LContainer parent, boolean optional) {
 		super(parent);
 		setLayout(new GridLayout(1, false));
-		tree = new LTree<T, T>(this) {
-			@Override
-			public T toObject(LPath path) {
-				LDataTree<T> node = collection.getNode(path);
-				if (node == null)
-					return null;
-				return node.data;
-			}
-			@Override
-			public LDataTree<T> emptyNode() {
-				return null;
-			}
-			@Override
-			public LDataTree<T> duplicateNode(LDataTree<T> node) {
-				return null;
-			}
-			@Override
-			public LDataTree<T> toNode(LPath path) {
-				return collection.getNode(path);
-			}
-			@Override
-			protected String encodeNode(LDataTree<T> node) {
-				return null;
-			}
-			@Override
-			protected LDataTree<T> decodeNode(String node) {
-				return null;
-			}
-		};
 		tree.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		tree.addSelectionListener(new LSelectionListener() {
 			@Override
@@ -85,7 +59,44 @@ public class LNodeSelector<T> extends LControlWidget<Integer> {
 		btnNull.setText(LVocab.instance.DESELECT);
 		
 	}
-	
+
+	@Override
+	protected void createContent(int flags) {
+		tree = new LTree<T, T>(this) {
+			@Override
+			public T toObject(LPath path) {
+				LDataTree<T> node = collection.getNode(path);
+				if (node == null)
+					return null;
+				return node.data;
+			}
+			@Override
+			public LDataTree<T> emptyNode() {
+				return null;
+			}
+			@Override
+			public LDataTree<T> duplicateNode(LDataTree<T> node) {
+				return null;
+			}
+			@Override
+			public LDataTree<T> toNode(LPath path) {
+				return collection.getNode(path);
+			}
+			@Override
+			protected String encodeNode(LDataTree<T> node) {
+				return null;
+			}
+			@Override
+			protected LDataTree<T> decodeNode(String node) {
+				return null;
+			}
+			@Override
+			public boolean canDecode(String str) {
+				return false;
+			}
+		};
+	}
+
 	public void selectNone() {
 		tree.notifySelectionListeners(tree.select(null));
 	}
@@ -149,5 +160,25 @@ public class LNodeSelector<T> extends LControlWidget<Integer> {
 		else 
 			tree.select(null);
 	}
+
+	@Override
+	protected Type getType() {
+		return Integer.class;
+	}
 	
+	@Override
+	public Composite getComposite() {
+		return this;
+	}
+	
+	@Override
+	public Object getChild(int i) {
+		return getChildren()[i];
+	}
+	
+	@Override
+	public int getChildCount() {
+		return this.getChildren().length;
+	}
+
 }

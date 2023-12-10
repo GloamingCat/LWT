@@ -1,5 +1,7 @@
 package lwt.widget;
 
+import java.lang.reflect.Type;
+
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.MouseAdapter;
 import org.eclipse.swt.events.MouseEvent;
@@ -18,7 +20,6 @@ public class LToggleButton extends LControlWidget<Boolean> {
 	
 	public LToggleButton(LContainer parent) {
 		super(parent);
-		icon = new Label(this, SWT.NONE);
 		icon.setAlignment(SWT.CENTER);
 		icon.addMouseListener(new MouseAdapter() {
 			@Override
@@ -36,7 +37,11 @@ public class LToggleButton extends LControlWidget<Boolean> {
 		this.imgFalse = SWTResourceManager.getImage(LToggleButton.class, imgFalse);
 		this.imgTrue = SWTResourceManager.getImage(LToggleButton.class, imgTrue);
 		icon.setImage(this.imgFalse);
-		
+	}
+
+	@Override
+	protected void createContent(int flags) {
+		icon = new Label(this, SWT.NONE);
 	}
 	
 	public void setImages(Image imgTrue, Image imgFalse) {
@@ -55,6 +60,11 @@ public class LToggleButton extends LControlWidget<Boolean> {
 			icon.setImage(imgFalse);
 			currentValue = null;
 		}
+	}
+
+	@Override
+	protected Type getType() {
+		return Boolean.class;
 	}
 
 }

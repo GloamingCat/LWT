@@ -14,7 +14,7 @@ public abstract class GDefaultListEditor<T> extends LDefaultListEditor<T> {
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public T createNewData() {
+	public T createNewElement() {
 		if (getType() == String.class) {
 			return (T) "";
 		} else if (getType() == Integer.class) {
@@ -26,7 +26,7 @@ public abstract class GDefaultListEditor<T> extends LDefaultListEditor<T> {
 	
 	@SuppressWarnings("unchecked")
 	@Override
-	public T duplicateData(Object original) {
+	public T duplicateElement(Object original) {
 		if (getType() != original)
 			throw new ClassCastException("Object cannot be cast to " + getType().getTypeName());
 		String json = LGlobals.gson.toJson(original, original.getClass());
@@ -34,13 +34,18 @@ public abstract class GDefaultListEditor<T> extends LDefaultListEditor<T> {
 	}
 	
 	@Override
-	protected String encodeData(Object data) {
+	protected String encodeElement(Object data) {
 		return LGlobals.gson.toJson(data, getType());
+	}
+
+	@Override
+	public boolean canDecode(String str) {
+		return true;
 	}
 	
 	@SuppressWarnings("unchecked")
 	@Override
-	protected T decodeData(String str) {
+	protected T decodeElement(String str) {
 		return (T) LGlobals.gson.fromJson(str, getType());
 	}
 	

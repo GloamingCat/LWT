@@ -183,6 +183,11 @@ public class LFrame extends Group implements LContainer {
 	public Object getChild(int i) {
 		return getChildren()[i];
 	}
+	
+	@Override
+	public int getChildCount() {
+		return this.getChildren().length;
+	}
 
 	@Override
 	protected void checkSubclass() { }

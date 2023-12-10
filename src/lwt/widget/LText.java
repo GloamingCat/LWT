@@ -1,7 +1,9 @@
 package lwt.widget;
 
-import lwt.container.LContainer;
+import lwt.container.*;
 import lwt.graphics.LTexture;
+
+import java.lang.reflect.Type;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.FocusAdapter;
@@ -18,12 +20,16 @@ import org.eclipse.swt.layout.GridLayout;
 
 public class LText extends LControlWidget<String> {
 	
-	private Text text;
+	protected Text text;
 
+	/**
+	 * @wbp.parser.constructor
+	 * @wbp.eval.method.parameter parent new LPanel(new lwt.dialog.LShell(400, 200), 2, true)
+	 */
 	public LText(LContainer parent) {
-		this(parent, 1, false);
+		this(parent, 1);
 	}
-	
+
 	public LText(LContainer parent, int columns) {
 		this(parent, columns, false);
 	}
@@ -33,20 +39,22 @@ public class LText extends LControlWidget<String> {
 	}
 	
 	public LText(LContainer parent, int columns, boolean readOnly) {
-		super(parent);
+		super(parent, readOnly ? SWT.READ_ONLY : SWT.NONE);
 		setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, columns, 1));
+	}
+	
+	protected void createContent(int flags) {
 		GridLayout gridLayout = new GridLayout(1, false);
 		gridLayout.horizontalSpacing = 0;
 		gridLayout.marginHeight = 0;
 		gridLayout.marginWidth = 0;
 		gridLayout.verticalSpacing = 0;
 		setLayout(gridLayout);
-		text = new Text(this, readOnly ? (SWT.BORDER | SWT.READ_ONLY) : SWT.BORDER);
+		text = new Text(this, SWT.BORDER | flags);
 		GridData gd_text = new GridData(SWT.FILL, SWT.FILL, true, false, 1, 1);
 		if (!LTexture.onWindows)
 			gd_text.heightHint = 16;
 		text.setLayoutData(gd_text);
-		
 		text.addFocusListener(new FocusAdapter() {
 			@Override
 			public void focusLost(FocusEvent e) {
@@ -75,6 +83,10 @@ public class LText extends LControlWidget<String> {
 		});
 	}
 	
+	protected Text createText() {
+		return new Text(this, SWT.BORDER);
+	}
+	
 	public void updateCurrentText() {
 		if (!text.getText().equals(currentValue)) {
 			newModifyAction(currentValue, text.getText());
@@ -96,4 +108,9 @@ public class LText extends LControlWidget<String> {
 		}
 	}
 
+	@Override
+	protected Type getType() {
+		return String.class;
+	}
+	
 }

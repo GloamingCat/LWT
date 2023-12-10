@@ -26,6 +26,10 @@ public abstract class LCollection<T, ST> extends LWidget {
 		super(parent);
 	}
 	
+	public LCollection(LContainer parent, int flags) {
+		super(parent.getComposite(), flags);
+	}
+	
 	public abstract LDataCollection<T> getDataCollection();
 	public abstract void setDataCollection(LDataCollection<T> collection);
 	

@@ -15,18 +15,18 @@ public class LLabel extends LWidget {
 	private Label label;
 	
 	LLabel (Composite parent, int style) {
-		super(parent, style);
-		label = new Label(this, SWT.NONE);
+		super(parent, SWT.NONE);
 		label.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
+		setEnabled(false);
 	}
 	
 	LLabel(Composite parent, int style, int hfill, int vfill) {
-		super(parent, style);
-		label = null;
+		super(parent, SWT.FILL);
 		GridData gridData = new GridData(SWT.FILL, SWT.FILL, false, false, hfill, vfill);
 		gridData.widthHint = 0;
 		gridData.heightHint = 0;
 		setLayoutData(gridData);
+		setEnabled(false);
 	}
 
 	public LLabel(LContainer parent, int style, String text, int columns) {
@@ -75,15 +75,28 @@ public class LLabel extends LWidget {
 	public LLabel(LContainer parent) {
 		this(parent, "Text");
 	}
+	
+	@Override
+	protected void createContent(int flags) {
+		if (flags != SWT.NONE)
+			return;
+		label = new Label(this, SWT.NONE);
+	}
 
 	public void setText(String text) {
 		label.setText(text);
 	}
 
 	@Override
-	protected void onCopyButton(Menu menu) {}
+	public void onCopyButton(Menu menu) {}
 
 	@Override
-	protected void onPasteButton(Menu menu) {}
+	public void onPasteButton(Menu menu) {}
+
+	@Override
+	public boolean canDecode(String str) {
+		return false;
+	}
+
 
 }

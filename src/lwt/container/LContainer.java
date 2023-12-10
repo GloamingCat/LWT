@@ -6,5 +6,6 @@ public interface LContainer {
 
 	Composite getComposite();
 	Object getChild(int i);
+	int getChildCount();
 	
 }

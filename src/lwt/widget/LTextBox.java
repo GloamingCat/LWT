@@ -1,5 +1,7 @@
 package lwt.widget;
 
+import java.lang.reflect.Type;
+
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.StyledText;
 import org.eclipse.swt.events.FocusAdapter;
@@ -27,14 +29,13 @@ public class LTextBox extends LControlWidget<String> {
 		this(parent, false, cols, rows);
 	}
 	
-	public LTextBox(LContainer parent, boolean read_only, int cols, int rows) {
-		this(parent, read_only);
+	public LTextBox(LContainer parent, boolean readOnly, int cols, int rows) {
+		this(parent, readOnly);
 		setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, cols, rows));
 	}
 
-	public LTextBox(LContainer parent, boolean read_only) {
-		super(parent);
-		text = new StyledText(this, SWT.BORDER | SWT.FULL_SELECTION | SWT.WRAP);
+	public LTextBox(LContainer parent, boolean readOnly) {
+		super(parent, readOnly ? SWT.READ_ONLY : SWT.NONE);
 		text.addFocusListener(new FocusAdapter() {
 			@Override
 			public void focusLost(FocusEvent arg0) {
@@ -61,6 +62,11 @@ public class LTextBox extends LControlWidget<String> {
 				updateCurrentText();
 			}
 		});
+	}
+
+	@Override
+	protected void createContent(int flags) {
+		text = new StyledText(this, SWT.BORDER | SWT.FULL_SELECTION | SWT.WRAP | flags);
 	}
 	
 	public void updateCurrentText() {
@@ -148,5 +154,10 @@ public class LTextBox extends LControlWidget<String> {
 	}
 	
 	// }}
+
+	@Override
+	protected Type getType() {
+		return String.class;
+	}
 
 }

@@ -25,11 +25,11 @@ public class LCommandButton extends LWidget {
 
 	public LSerializer projectSerializer = null;
 	public String command = null;
+	protected Button button;
 	
 	public LCommandButton(LContainer parent, String text) {
 		super(parent);
 		setLayout(new FillLayout());
-		Button button = new Button(this, SWT.NONE);
 		button.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
@@ -38,6 +38,11 @@ public class LCommandButton extends LWidget {
 			}
 		});
 		button.setText(text);
+	}
+
+	@Override
+	protected void createContent(int flags) {
+		button = new Button(this, SWT.NONE);
 	}
 
 	protected boolean execute(String command) {
@@ -114,11 +119,16 @@ public class LCommandButton extends LWidget {
 	}	
 	
 	@Override
-	protected void onCopyButton(Menu menu) {}
+	public void onCopyButton(Menu menu) {}
 	
 	@Override
-	protected void onPasteButton(Menu menu) {}
-	
+	public void onPasteButton(Menu menu) {}
+
+	@Override
+	public boolean canDecode(String str) {
+		return false;
+	}
+
 	@Override
 	protected void checkSubclass() { }
 

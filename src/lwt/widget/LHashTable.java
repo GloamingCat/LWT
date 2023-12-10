@@ -49,8 +49,6 @@ public class LHashTable<T> extends LWidget {
 
 	public LHashTable(LContainer parent) {
 		super(parent);
-		
-		LHashTable<T> self = this;
 		valueDialog = new LObjectDialog<>(getShell(), getShell().getStyle());
 		keyDialog = new LObjectDialog<>(getShell(), getShell().getStyle());
 		keyDialog.setFactory(new LShellFactory<String>() {
@@ -59,12 +57,14 @@ public class LHashTable<T> extends LWidget {
 				return new LStringShell(parent);
 			}
 		});
-		
 		GridLayout gridLayout = new GridLayout(1, false);
 		gridLayout.marginWidth = 0;
 		gridLayout.marginHeight = 0;
 		setLayout(gridLayout);
-		
+	}
+
+	@Override
+	protected void createContent(int flags) {
 		scrolledComposite = new ScrolledComposite(this, SWT.BORDER | SWT.H_SCROLL | SWT.V_SCROLL);
 		scrolledComposite.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		scrolledComposite.setExpandHorizontal(true);
@@ -83,6 +83,7 @@ public class LHashTable<T> extends LWidget {
 		gl_insert.marginHeight = 0;
 		insert.setLayout(gl_insert);
 		
+		LHashTable<T> self = this;
 		Button btnInsert = new Button(insert, SWT.NONE);
 		btnInsert.addSelectionListener(new SelectionAdapter() {
 			@Override
@@ -245,15 +246,21 @@ public class LHashTable<T> extends LWidget {
 	}
 
 	@Override
-	protected void onCopyButton(Menu menu) {
+	public void onCopyButton(Menu menu) {
 		// TODO Auto-generated method stub
 		
 	}
 
 	@Override
-	protected void onPasteButton(Menu menu) {
+	public void onPasteButton(Menu menu) {
 		// TODO Auto-generated method stub
 		
 	}
-	
+
+	@Override
+	public boolean canDecode(String str) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
 }

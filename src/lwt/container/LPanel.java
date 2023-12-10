@@ -11,6 +11,7 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.layout.RowLayout;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Layout;
 
 import lwt.LFlags;
 import lwt.dialog.LShell;
@@ -128,6 +129,42 @@ public class LPanel extends Composite implements LContainer {
 		}
 	}
 	
+	public void setMargins(int h, int v) {
+		Layout l = getLayout();
+		if (l instanceof GridLayout) {
+			GridLayout gl = (GridLayout) l;
+			gl.marginWidth = h;
+			gl.marginHeight = v;
+		} else if (l instanceof RowLayout) {
+			RowLayout rl = (RowLayout) l;
+			rl.marginWidth = h;
+			rl.marginHeight = v;
+		} else {
+			FillLayout fl = (FillLayout) l;
+			fl.marginWidth = h;
+			fl.marginHeight = v;
+		}
+	}
+	
+	public void setSpacing(int h, int v) {
+		Layout l = getLayout();
+		if (l instanceof GridLayout) {
+			GridLayout gl = (GridLayout) l;
+			gl.horizontalSpacing = h;
+			gl.verticalSpacing = v;
+		} else if (l instanceof RowLayout) {
+			RowLayout rl = (RowLayout) l;
+			rl.spacing = h;
+		} else {
+			FillLayout fl = (FillLayout) l;
+			fl.spacing = h;
+		}
+	}
+	
+	public void setSpacing(int s) {
+		setSpacing(s, s);
+	}
+	
 	// }}
 	
 	//////////////////////////////////////////////////
@@ -145,7 +182,7 @@ public class LPanel extends Composite implements LContainer {
 	}
 	
 	public void setSpread(int cols, int rows) {
-		GridData gridData = (GridData) initGridData();
+		GridData gridData = initGridData();
 		gridData.horizontalSpan = cols;
 		gridData.verticalSpan = rows;
 	}
@@ -171,7 +208,6 @@ public class LPanel extends Composite implements LContainer {
 	}
 
 	public void setExpand(boolean h, boolean v) {
-		initGridData();
 		GridData gridData = initGridData();
 		gridData.grabExcessHorizontalSpace = h;
 		gridData.grabExcessVerticalSpace = v;
@@ -266,6 +302,11 @@ public class LPanel extends Composite implements LContainer {
 		return getChildren()[i];
 	}
 	
+	@Override
+	public int getChildCount() {
+		return this.getChildren().length;
+	}
+
 	@Override
 	public Object getData() {
 		return super.getData();

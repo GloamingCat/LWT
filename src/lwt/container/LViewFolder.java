@@ -3,6 +3,9 @@ package lwt.container;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.TabFolder;
 import org.eclipse.swt.widgets.TabItem;
+
+import lwt.LMenuInterface;
+
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.FillLayout;
@@ -46,20 +49,8 @@ public class LViewFolder extends LView {
 		tbtm.setControl(child.getComposite());
 	}
 
-	public void undo() {
-		children.get(currentTab).undo();
-	}
-	
-	public void redo() {
-		children.get(currentTab).redo();
-	}
-	
-	public boolean canUndo() {
-		return children.get(currentTab).canUndo();
-	}
-
-	public boolean canRedo() {
-		return children.get(currentTab).canRedo();
+	public LMenuInterface getMenuInterface() {
+		return children.get(currentTab).getMenuInterface();
 	}
 	
 	public Composite getComposite() {

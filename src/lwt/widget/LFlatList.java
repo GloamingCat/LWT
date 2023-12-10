@@ -1,5 +1,7 @@
 package lwt.widget;
 
+import java.lang.reflect.Type;
+
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
@@ -15,7 +17,6 @@ public class LFlatList extends LControlWidget<Integer> {
 	public LFlatList(LContainer parent, boolean optional) {
 		super(parent);
 		this.optional = optional;
-		list = new List(parent.getComposite(), SWT.BORDER | SWT.V_SCROLL);
 		list.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent arg0) {
@@ -30,6 +31,11 @@ public class LFlatList extends LControlWidget<Integer> {
 			currentValue = -1;
 		else
 			currentValue = 0;
+	}
+
+	@Override
+	protected void createContent(int flags) {
+		list = new List(getParent(), SWT.BORDER | SWT.V_SCROLL);
 	}
 	
 	public String getSelectedText() {
@@ -78,6 +84,11 @@ public class LFlatList extends LControlWidget<Integer> {
 			i++;
 		}
 		return -1;
+	}
+
+	@Override
+	protected Type getType() {
+		return Integer.class;
 	}
 
 }

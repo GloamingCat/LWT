@@ -67,6 +67,11 @@ public abstract class GDefaultObjectEditor<T> extends LObjectEditor<T> {
 		return (T) LGlobals.gson.fromJson(str, getType());
 	}
 	
+	@Override
+	public boolean canDecode(String str) {
+		return true;
+	}
+	
 	public abstract Type getType();
 
 }

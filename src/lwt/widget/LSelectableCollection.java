@@ -13,6 +13,10 @@ public abstract class LSelectableCollection<T, ST> extends LCollection<T, ST> {
 		super(parent);
 	}
 	
+	public LSelectableCollection(LContainer parent, int flags) {
+		super(parent, flags);
+	}
+	
 	protected ArrayList<LSelectionListener> selectionListeners = new ArrayList<>();
 	public void addSelectionListener(LSelectionListener listener) {
 		selectionListeners.add(listener);

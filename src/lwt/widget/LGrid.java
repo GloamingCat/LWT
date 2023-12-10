@@ -22,13 +22,14 @@ import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.layout.RowData;
 import org.eclipse.swt.layout.RowLayout;
+import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Layout;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.MenuItem;
 
-public abstract class LGrid<T, ST> extends LSelectableCollection<T, ST> {
+public abstract class LGrid<T, ST> extends LSelectableCollection<T, ST> implements LContainer {
 
 	protected LActionStack actionStack;
 	protected Layout layout;
@@ -54,6 +55,10 @@ public abstract class LGrid<T, ST> extends LSelectableCollection<T, ST> {
 		fillLayout = new FillLayout();
 		setColumns(-1);
 		setLayout(fillLayout);
+	}
+	
+	@Override
+	protected void createContent(int flags) {
 		LImage label = new LImage(this);
 		Menu menu = new Menu(label);
 		label.setMenu(menu);
@@ -375,15 +380,30 @@ public abstract class LGrid<T, ST> extends LSelectableCollection<T, ST> {
 	}
 	
 	@Override
-	protected void onCopyButton(Menu menu) {
+	public void onCopyButton(Menu menu) {
 		// TODO Auto-generated method stub
 		
 	}
 
 	@Override
-	protected void onPasteButton(Menu menu) {
+	public void onPasteButton(Menu menu) {
 		// TODO Auto-generated method stub
 		
 	}
 	
+	@Override
+	public Composite getComposite() {
+		return this;
+	}
+	
+	@Override
+	public Object getChild(int i) {
+		return getChildren()[i];
+	}
+	
+	@Override
+	public int getChildCount() {
+		return this.getChildren().length;
+	}
+
 }

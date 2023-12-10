@@ -14,7 +14,7 @@ public abstract class GDefaultTreeEditor<T> extends LDefaultTreeEditor<T> {
 	
 	@SuppressWarnings("unchecked")
 	@Override
-	public T createNewData() {
+	public T createNewElement() {
 		if (getType() == String.class) {
 			return (T) "";
 		} else if (getType() == Integer.class) {
@@ -26,7 +26,7 @@ public abstract class GDefaultTreeEditor<T> extends LDefaultTreeEditor<T> {
 	
 	@SuppressWarnings("unchecked")
 	@Override
-	public T duplicateData(T original) {
+	public T duplicateElement(T original) {
 		if (getType() != original.getClass())
 			throw new ClassCastException("Object cannot be cast to " + getType().getTypeName());
 		String json = LGlobals.gson.toJson(original, getType());
@@ -34,14 +34,19 @@ public abstract class GDefaultTreeEditor<T> extends LDefaultTreeEditor<T> {
 	}
 	
 	@Override
-	protected String encodeData(Object data) {
+	protected String encodeElement(Object data) {
 		return LGlobals.gson.toJson(data, getType());
 	}
 	
 	@SuppressWarnings("unchecked")
 	@Override
-	protected T decodeData(String str) {
+	protected T decodeElement(String str) {
 		return (T) LGlobals.gson.fromJson(str, getType());
+	}
+
+	@Override
+	public boolean canDecode(String str) {
+		return true;
 	}
 	
 	public abstract Type getType();

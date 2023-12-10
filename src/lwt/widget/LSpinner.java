@@ -1,7 +1,9 @@
 package lwt.widget;
 
-import lwt.container.LContainer;
+import lwt.container.*;
 import lwt.graphics.LTexture;
+
+import java.lang.reflect.Type;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Spinner;
@@ -14,18 +16,21 @@ public class LSpinner extends LControlWidget<Integer> {
 
 	private Spinner spinner;
 
+	/**
+	 * @wbp.parser.constructor
+	 * @wbp.eval.method.parameter parent new LPanel(new lwt.dialog.LShell(400, 200), 2, true)
+	 */
 	public LSpinner(LContainer parent) {
 		this(parent, 1);
 	}
 	
-	/**
-	 * Create the composite.
-	 * @param parent
-	 * @param style
-	 */
 	public LSpinner(LContainer parent, int columns) {
 		super(parent);
 		setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, columns, 1));
+	}
+	
+	@Override
+	protected void createContent(int flags) {
 		GridLayout gridLayout = new GridLayout(1, false);
 		gridLayout.horizontalSpacing = 0;
 		gridLayout.marginHeight = 0;
@@ -48,6 +53,7 @@ public class LSpinner extends LControlWidget<Integer> {
 		});
 	}
 	
+	@Override
 	public void setValue(Object obj) {
 		if (obj != null) {
 			Integer i = (Integer) obj;
@@ -67,6 +73,11 @@ public class LSpinner extends LControlWidget<Integer> {
 	
 	public void setMaximum(int i) {
 		spinner.setMaximum(i);
+	}
+
+	@Override
+	protected Type getType() {
+		return Integer.class;
 	}
 
 }
