@@ -170,6 +170,8 @@ public abstract class LTree<T, ST> extends LTreeBase<T, ST> {
 		if (str == null)
 			return;
 		LDataTree<T> newNode = decodeNode(str);
+		if (newNode == null)
+			return;
 		LPath parentPath = null;
 		int index = -1;
 		if (tree.getSelectionCount() > 0) {
