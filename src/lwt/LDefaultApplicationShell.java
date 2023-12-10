@@ -40,6 +40,12 @@ public abstract class LDefaultApplicationShell extends LShell implements LContai
 	protected Menu menuView;
 	protected Menu menuHelp;
 	protected MenuItem mntmView;
+	protected MenuItem mntmUndo;
+	protected MenuItem mntmRedo;
+	protected MenuItem mntmCopy;
+	protected MenuItem mntmPaste;
+	protected MenuItem mntmDelete;
+	protected MenuItem mntmEdit;
 
 	/**
 	 * Create the shell.
@@ -133,7 +139,7 @@ public abstract class LDefaultApplicationShell extends LShell implements LContai
 		menuEdit = new Menu(mntmEdit);
 		mntmEdit.setMenu(menuEdit);
 
-		MenuItem mntmUndo = new MenuItem(menuEdit, SWT.NONE);
+		mntmUndo = new MenuItem(menuEdit, SWT.NONE);
 		mntmUndo.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent arg0) {
@@ -142,8 +148,9 @@ public abstract class LDefaultApplicationShell extends LShell implements LContai
 		});
 		mntmUndo.setAccelerator(SWT.MOD1 | 'Z');
 		mntmUndo.setText(vocab.UNDO + "\t Ctrl + &Z");
+		mntmUndo.setEnabled(false);
 
-		MenuItem mntmRedo = new MenuItem(menuEdit, SWT.NONE);
+		mntmRedo = new MenuItem(menuEdit, SWT.NONE);
 		mntmRedo.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent arg0) {
@@ -152,19 +159,31 @@ public abstract class LDefaultApplicationShell extends LShell implements LContai
 		});
 		mntmRedo.setAccelerator(SWT.MOD1 | 'Y');
 		mntmRedo.setText(vocab.REDO + "\t Ctrl + &Y");
-
-		menuEdit.addMenuListener(new MenuAdapter() {
+		mntmRedo.setEnabled(false);
+		
+		new MenuItem(menuEdit, SWT.SEPARATOR);
+		
+		mntmCopy = new MenuItem(menuEdit, SWT.NONE);
+		mntmCopy.addSelectionListener(new SelectionAdapter() {
 			@Override
-			public void menuShown(MenuEvent arg0) {
-				if (currentView == null) {
-					mntmUndo.setEnabled(false);
-					mntmRedo.setEnabled(false);
-				} else {
-					mntmUndo.setEnabled(currentView.canUndo());
-					mntmRedo.setEnabled(currentView.canRedo());
-				}
+			public void widgetSelected(SelectionEvent arg0) {
+				//currentView.copy();
 			}
 		});
+		mntmCopy.setAccelerator(SWT.MOD1 | 'C');
+		mntmCopy.setText(vocab.COPY + "\t Ctrl + &C");
+		mntmCopy.setEnabled(false);
+
+		mntmPaste = new MenuItem(menuEdit, SWT.NONE);
+		mntmPaste.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent arg0) {
+				//currentView.paste();
+			}
+		});
+		mntmPaste.setAccelerator(SWT.MOD1 | 'V');
+		mntmPaste.setText(vocab.PASTE + "\t Ctrl + &V");
+		mntmPaste.setEnabled(false);
 
 		mntmView = new MenuItem(menu, SWT.CASCADE);
 		mntmView.setText(vocab.VIEW);
@@ -191,6 +210,7 @@ public abstract class LDefaultApplicationShell extends LShell implements LContai
 				Display.getDefault().sleep();
 			}
 		}
+		LGlobals.clipboard.dispose();
 		System.exit(0);
 	}
 
@@ -205,7 +225,7 @@ public abstract class LDefaultApplicationShell extends LShell implements LContai
 		views.add(view);
 		if (shortcut != null) {
 			item.setText(name + "\t" + shortcut);
-			item.setAccelerator(SWTHelper.accelerators.get(shortcut));
+			item.setAccelerator(LGlobals.accelerators.get(shortcut));
 		} else {
 			item.setText(name);
 		}
@@ -248,7 +268,14 @@ public abstract class LDefaultApplicationShell extends LShell implements LContai
 		setRedraw(false);
 		layout();
 		currentView.onVisible();
+		refreshEditButtons();
 		setRedraw(true);
+	}
+	
+	public void refreshEditButtons() {
+		mntmUndo.setEnabled(currentView.canUndo());
+		mntmRedo.setEnabled(currentView.canRedo());
+		
 	}
 
 	protected abstract LSerializer createProject(String path);

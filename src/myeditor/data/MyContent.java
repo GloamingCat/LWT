@@ -31,4 +31,15 @@ public class MyContent implements LGraphical {
 		return new MyContent(name, value);
 	}
 	
+	public String encode() {
+		return value + "," + name;
+	}
+	
+	public static MyContent decode(String str) {
+		int i = str.indexOf(',');
+		int value = Integer.parseInt(str.substring(0, i));
+		String name = str.substring(i + 1);
+		return new MyContent(name, value);
+	}
+	
 }

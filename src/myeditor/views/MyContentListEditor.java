@@ -42,12 +42,22 @@ public class MyContentListEditor extends LView {
 			public MyContent duplicateData(MyContent original) {
 				return new MyContent(original.name, original.value);
 			}
+			@Override
+			protected String encodeData(MyContent data) {
+				return data.encode();
+			}
+			@Override
+			protected MyContent decodeData(String str) {
+				return MyContent.decode(str);
+			}
 		};
 		listEditor.getCollectionWidget().setInsertNewEnabled(true);
 		listEditor.getCollectionWidget().setEditEnabled(false);
 		listEditor.getCollectionWidget().setDuplicateEnabled(true);
 		listEditor.getCollectionWidget().setDragEnabled(true);
 		listEditor.getCollectionWidget().setDeleteEnabled(true);
+		listEditor.getCollectionWidget().setCopyEnabled(true);
+		listEditor.getCollectionWidget().setPasteEnabled(true);
 		addChild(listEditor);
 		
 		contentEditor = new MyContentEditor(sashForm);

@@ -79,6 +79,8 @@ public abstract class LAbstractTreeEditor<T, ST> extends LCollectionEditor<T, ST
 	public abstract LTree<T, ST> getCollectionWidget();
 	protected abstract T createNewData();
 	protected abstract T duplicateData(T original);
+	protected abstract String encodeData(T data);
+	protected abstract T decodeData(String str);
 	
 	public LDataTree<T> duplicateNode(LDataTree<T> node) {
 		LDataTree<T> copy = new LDataTree<T>(duplicateData(node.data));
@@ -87,6 +89,38 @@ public abstract class LAbstractTreeEditor<T, ST> extends LCollectionEditor<T, ST
 			childCopy.setParent(copy);
 		}
 		return copy;
+	}
+	
+	public String encodeNode(LDataTree<T> node) {
+		String str = node.id + " | " + node.children.size() + " | "
+				+ encodeData(node.data) + " | ";
+		for (LDataTree<T> child : node.children) {
+			str = str + encodeNode(child);
+		}
+		return str;
+	}
+	
+	public LDataTree<T> decodeNode(String str) {
+		// Get ID
+		int i = str.indexOf(" | ");
+		int id = Integer.parseInt(str.substring(0, i));
+		str = str.substring(i + 3);
+		// Get number of children
+		i = str.indexOf(" | ");
+		int children = Integer.parseInt(str.substring(0, i));
+		str = str.substring(i + 3);
+		// Get data
+		i = str.indexOf(" | ");
+		T data = decodeData(str.substring(0, i));
+		str = str.substring(i + 3);
+		// Get children
+		LDataTree<T> node = new LDataTree<T>(data);
+		node.id = id;
+		for (i = 0; i < children; i++) {
+			LDataTree<T> child = decodeNode(str);
+			child.setParent(node);
+		}
+		return node;
 	}
 	
 	public void setObject(Object obj) {

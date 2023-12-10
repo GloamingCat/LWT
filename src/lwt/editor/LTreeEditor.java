@@ -31,16 +31,24 @@ public abstract class LTreeEditor<T, ST> extends LAbstractTreeEditor<T, ST> {
 				return node.data;
 			}
 			@Override
-			public LDataTree<T> emptyNode() {
+			public LDataTree<T> toNode(LPath path) {
+				return self.getDataCollection().getNode(path);
+			}
+			@Override
+			protected LDataTree<T> emptyNode() {
 				return new LDataTree<T>(createNewData());
 			}
 			@Override
-			public LDataTree<T> duplicateNode(LDataTree<T> node) {
+			protected LDataTree<T> duplicateNode(LDataTree<T> node) {
 				return self.duplicateNode(node);
 			}
 			@Override
-			public LDataTree<T> toNode(LPath path) {
-				return self.getDataCollection().getNode(path);
+			protected String encodeNode(LDataTree<T> node) {
+				return self.encodeNode(node);
+			}
+			@Override
+			protected LDataTree<T> decodeNode(String str) {
+				return self.decodeNode(str);
 			}
 		};
 		LTree<T, ST> customTree = createTree();

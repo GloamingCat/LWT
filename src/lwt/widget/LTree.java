@@ -1,5 +1,6 @@
 package lwt.widget;
 
+import lwt.LGlobals;
 import lwt.container.LContainer;
 import lwt.dataestructure.LDataTree;
 import lwt.dataestructure.LPath;
@@ -7,6 +8,8 @@ import lwt.event.LDeleteEvent;
 import lwt.event.LEditEvent;
 import lwt.event.LInsertEvent;
 
+import org.eclipse.swt.dnd.Transfer;
+import org.eclipse.swt.dnd.TextTransfer;
 import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.events.MouseListener;
 import org.eclipse.swt.widgets.Menu;
@@ -73,6 +76,8 @@ public abstract class LTree<T, ST> extends LTreeBase<T, ST> {
 	
 	protected abstract LDataTree<T> emptyNode();
 	protected abstract LDataTree<T> duplicateNode(LDataTree<T> node);
+	protected abstract String encodeNode(LDataTree<T> node);
+	protected abstract LDataTree<T> decodeNode(String node);
 	
 	//-------------------------------------------------------------------------------------
 	// Modify Menu
@@ -153,25 +158,26 @@ public abstract class LTree<T, ST> extends LTreeBase<T, ST> {
 	
 	protected void onCopyButton(Menu menu) {
 		LPath path = getSelectedPath();
-		if (path != null)
-			clipboard = duplicateNode(toNode(path));
+		if (path != null) {
+			LDataTree<T> node = toNode(path);
+			LGlobals.clipboard.setContents(new Object[] { encodeNode(node) },
+					new Transfer[] { TextTransfer.getInstance() });
+		}
 	}
 	
 	protected void onPasteButton(Menu menu) {
-		if (clipboard == null)
+		String str = (String) LGlobals.clipboard.getContents(TextTransfer.getInstance());
+		if (str == null)
 			return;
+		LDataTree<T> newNode = decodeNode(str);
 		LPath parentPath = null;
 		int index = -1;
-		try {
-			@SuppressWarnings("unchecked")
-			LDataTree<T> newNode = duplicateNode((LDataTree<T>) clipboard);
-			if (tree.getSelectionCount() > 0) {
-				TreeItem item = tree.getSelection()[0];
-				parentPath = toPath(item.getParentItem());
-				index = indexOf(item) + 1;
-			}
-			newInsertAction(parentPath, index, newNode);
-		} catch (ClassCastException e) {}
+		if (tree.getSelectionCount() > 0) {
+			TreeItem item = tree.getSelection()[0];
+			parentPath = toPath(item.getParentItem());
+			index = indexOf(item) + 1;
+		}
+		newInsertAction(parentPath, index, newNode);
 	}
 	
 }

@@ -2,6 +2,7 @@ package lwt.action;
 
 import java.util.ArrayList;
 
+import lwt.LDefaultApplicationShell;
 import lwt.container.LView;
 import lwt.editor.LState;
 
@@ -33,6 +34,10 @@ public class LActionStack {
 		}
 		actions.add(new Node(action, rootEditor.getState()));
 		lastAction++;
+		if (rootEditor.getShell() instanceof LDefaultApplicationShell) {
+			LDefaultApplicationShell shell = (LDefaultApplicationShell) rootEditor.getShell();
+			shell.refreshEditButtons();
+		}
 	}
 	
 	public void undo() {
@@ -40,6 +45,10 @@ public class LActionStack {
 			lastAction--;
 			actions.get(lastAction).state.reset();
 			actions.get(lastAction).action.undo();
+			if (rootEditor.getShell() instanceof LDefaultApplicationShell) {
+				LDefaultApplicationShell shell = (LDefaultApplicationShell) rootEditor.getShell();
+				shell.refreshEditButtons();
+			}
 		}
 	}
 	
@@ -48,6 +57,10 @@ public class LActionStack {
 			actions.get(lastAction).state.reset();
 			actions.get(lastAction).action.redo();
 			lastAction++;
+			if (rootEditor.getShell() instanceof LDefaultApplicationShell) {
+				LDefaultApplicationShell shell = (LDefaultApplicationShell) rootEditor.getShell();
+				shell.refreshEditButtons();
+			}
 		}
 	}
 	

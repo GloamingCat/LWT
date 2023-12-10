@@ -2,17 +2,11 @@ package gson.project;
 
 import java.lang.reflect.Type;
 
+import lwt.LGlobals;
 import lwt.dataserialization.LObjectSerializer;
-
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 
 public class GObjectSerializer<T> extends LObjectSerializer<T> {
 	
-	protected static Gson gson = new GsonBuilder().
-			setPrettyPrinting().
-			disableHtmlEscaping().
-			create();
 	protected Type type;
 	
 	public GObjectSerializer(String path, Type type) {
@@ -22,12 +16,12 @@ public class GObjectSerializer<T> extends LObjectSerializer<T> {
 
 	@Override
 	protected byte[] toByteArray(Object data) {
-		return gson.toJson(data, type).getBytes();
+		return LGlobals.prettyGson.toJson(data, type).getBytes();
 	}
 
 	@Override
 	protected T fromByteArray(byte[] bytes) {
-		return gson.fromJson(new String(bytes), type);
+		return LGlobals.prettyGson.fromJson(new String(bytes), type);
 	}
 	
 	public Type getType() {
@@ -36,7 +30,7 @@ public class GObjectSerializer<T> extends LObjectSerializer<T> {
 
 	@Override
 	public void initialize() {
-		data = gson.fromJson("{}", type);
+		data = LGlobals.prettyGson.fromJson("{}", type);
 	}
 	
 }

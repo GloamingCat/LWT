@@ -282,6 +282,11 @@ public class LPanel extends Composite implements LContainer {
 	}
 	
 	@Override
+	public void dispose() {
+		super.dispose();
+	}
+	
+	@Override
 	protected void checkSubclass() { }
 	
 }

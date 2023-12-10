@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
+import lwt.LGlobals;
 import lwt.LVocab;
 import lwt.action.LActionStack;
 import lwt.action.LControlAction;
@@ -19,6 +20,8 @@ import lwt.widget.LControl;
 import lwt.widget.LControlWidget;
 
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.dnd.TextTransfer;
+import org.eclipse.swt.dnd.Transfer;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.RowLayout;
@@ -273,24 +276,27 @@ public abstract class LObjectEditor<T> extends LEditor implements LControl<T> {
 	//-------------------------------------------------------------------------------------
 	
 	public void onCopyButton(Menu menu) {
-		LControlWidget.clipboard = duplicateData(currentObject);
+		//LControlWidget.clipboard = duplicateData(currentObject);
+		LGlobals.clipboard.setContents(new Object[] { encodeData(currentObject) },
+				new Transfer[] { TextTransfer.getInstance() });
 	}
 	
-	@SuppressWarnings("unchecked")
 	public void onPasteButton(Menu menu) {
-		T obj = null;
+		String str = (String) LGlobals.clipboard.getContents(TextTransfer.getInstance());
+		if (str == null)
+			return;
 		try {
-			if (LControlWidget.clipboard != null && !LControlWidget.clipboard.equals(currentObject))
-				obj = (T) LControlWidget.clipboard;	
-			else
-				return;
+			T newValue = decodeData(str);
+			if (!newValue.equals(currentObject))
+				modify(newValue);	
 		} catch (ClassCastException e) {
 			System.err.println(e.getMessage());
 			return;
 		}
-		modify(obj);
 	}
 	
-	public abstract T duplicateData(Object obj);
+	public abstract T duplicateData(T obj);
+	public abstract String encodeData(T obj);
+	public abstract T decodeData(String str);
 
 }

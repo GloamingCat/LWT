@@ -37,12 +37,22 @@ public class MyContentTreeEditor extends LView {
 			public MyContent duplicateData(MyContent original) {
 				return new MyContent(original.name, original.value);
 			}
+			@Override
+			protected String encodeData(MyContent data) {
+				return data.encode();
+			}
+			@Override
+			protected MyContent decodeData(String str) {
+				return MyContent.decode(str);
+			}
 		};
 		treeEditor.getCollectionWidget().setInsertNewEnabled(true);
 		treeEditor.getCollectionWidget().setEditEnabled(false);
 		treeEditor.getCollectionWidget().setDuplicateEnabled(true);
 		treeEditor.getCollectionWidget().setDragEnabled(true);
 		treeEditor.getCollectionWidget().setDeleteEnabled(true);
+		treeEditor.getCollectionWidget().setCopyEnabled(true);
+		treeEditor.getCollectionWidget().setPasteEnabled(true);
 		addChild(treeEditor);
 		
 		contentEditor = new MyContentEditor(sashForm);

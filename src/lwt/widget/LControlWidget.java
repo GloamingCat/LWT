@@ -2,12 +2,17 @@ package lwt.widget;
 
 import java.util.ArrayList;
 
+import lwt.LGlobals;
 import lwt.action.LControlAction;
 import lwt.container.LContainer;
 import lwt.event.LControlEvent;
 import lwt.event.listener.LControlListener;
 
+import org.eclipse.swt.dnd.TextTransfer;
+import org.eclipse.swt.dnd.Transfer;
 import org.eclipse.swt.widgets.Menu;
+
+import com.google.gson.reflect.TypeToken;
 
 public abstract class LControlWidget<T> extends LWidget implements LControl<T> {
 	
@@ -79,14 +84,21 @@ public abstract class LControlWidget<T> extends LWidget implements LControl<T> {
 	//-------------------------------------------------------------------------------------
 	
 	public void onCopyButton(Menu menu) {
-		clipboard = currentValue;
+		//clipboard = currentValue;
+		String json = LGlobals.gson.toJson(currentValue, currentValue.getClass());
+		LGlobals.clipboard.setContents(new Object[] { json },
+				new Transfer[] { TextTransfer.getInstance() });
 	}
 	
 	@SuppressWarnings("unchecked")
 	public void onPasteButton(Menu menu) {
+		String json = (String) LGlobals.clipboard.getContents(TextTransfer.getInstance());
+		if (json == null)
+			return;
 		try {
-			if (clipboard != null && !clipboard.equals(currentValue))
-				modify((T) clipboard);	
+			T newValue = (T) LGlobals.gson.fromJson(json, new TypeToken<T>(){}.getType());
+			if (!newValue.equals(currentValue))
+				modify(newValue);	
 		} catch (ClassCastException e) {
 			System.err.println(e.getMessage());
 			return;

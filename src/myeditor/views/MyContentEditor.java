@@ -35,9 +35,18 @@ public class MyContentEditor extends LObjectEditor<MyContent> {
 	}
 
 	@Override
-	public MyContent duplicateData(Object original) {
-		MyContent data = (MyContent) original;
-		return data.clone();
+	public MyContent duplicateData(MyContent original) {
+		return original.clone();
+	}
+
+	@Override
+	public String encodeData(MyContent obj) {
+		return obj.encode();
+	}
+
+	@Override
+	public MyContent decodeData(String str) {
+		return MyContent.decode(str);
 	}
 	
 }

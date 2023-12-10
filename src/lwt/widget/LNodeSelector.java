@@ -48,6 +48,14 @@ public class LNodeSelector<T> extends LControlWidget<Integer> {
 			public LDataTree<T> toNode(LPath path) {
 				return collection.getNode(path);
 			}
+			@Override
+			protected String encodeNode(LDataTree<T> node) {
+				return null;
+			}
+			@Override
+			protected LDataTree<T> decodeNode(String node) {
+				return null;
+			}
 		};
 		tree.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		tree.addSelectionListener(new LSelectionListener() {

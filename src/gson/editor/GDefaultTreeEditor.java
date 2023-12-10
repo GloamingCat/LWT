@@ -1,15 +1,13 @@
 package gson.editor;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
+import java.lang.reflect.Type;
 
+import lwt.LGlobals;
 import lwt.container.LContainer;
 import lwt.editor.LDefaultTreeEditor;
 
 public abstract class GDefaultTreeEditor<T> extends LDefaultTreeEditor<T> {
 
-	protected static Gson gson = new GsonBuilder().setPrettyPrinting().create();
-	
 	public GDefaultTreeEditor(LContainer parent) {
 		super(parent);
 	}
@@ -22,19 +20,30 @@ public abstract class GDefaultTreeEditor<T> extends LDefaultTreeEditor<T> {
 		} else if (getType() == Integer.class) {
 			return (T) (Integer) 0;
 		} else {
-			return (T) gson.fromJson("{}", getType());
+			return (T) LGlobals.gson.fromJson("{}", getType());
 		}
 	}
 	
 	@SuppressWarnings("unchecked")
 	@Override
 	public T duplicateData(T original) {
-		if (!getType().isInstance(original))
+		if (getType() != original.getClass())
 			throw new ClassCastException("Object cannot be cast to " + getType().getTypeName());
-		String json = gson.toJson(original, getType());
-		return (T) gson.fromJson(json, getType());
+		String json = LGlobals.gson.toJson(original, getType());
+		return (T) LGlobals.gson.fromJson(json, getType());
 	}
 	
-	public abstract Class<?> getType();
+	@Override
+	protected String encodeData(Object data) {
+		return LGlobals.gson.toJson(data, getType());
+	}
+	
+	@SuppressWarnings("unchecked")
+	@Override
+	protected T decodeData(String str) {
+		return (T) LGlobals.gson.fromJson(str, getType());
+	}
+	
+	public abstract Type getType();
 	
 }

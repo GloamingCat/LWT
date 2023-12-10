@@ -1,14 +1,12 @@
 package gson.editor;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
+import java.lang.reflect.Type;
 
+import lwt.LGlobals;
 import lwt.container.LContainer;
 import lwt.editor.LObjectEditor;
 
-public class GDefaultObjectEditor<T> extends LObjectEditor<T> {
-	
-	protected static Gson gson = new GsonBuilder().setPrettyPrinting().create();
+public abstract class GDefaultObjectEditor<T> extends LObjectEditor<T> {
 	
 	/**
 	 * No layout.
@@ -54,8 +52,21 @@ public class GDefaultObjectEditor<T> extends LObjectEditor<T> {
 	@SuppressWarnings("unchecked")
 	public T duplicateData(Object original) {
 		T data = (T) original;
-		String json = gson.toJson(data, data.getClass());
-		return (T) gson.fromJson(json, data.getClass());
+		String json = LGlobals.gson.toJson(data, data.getClass());
+		return (T) LGlobals.gson.fromJson(json, data.getClass());
 	}
+	
+	@Override
+	public String encodeData(T data) {
+		return LGlobals.gson.toJson(data, getType());
+	}
+	
+	@SuppressWarnings("unchecked")
+	@Override
+	public T decodeData(String str) {
+		return (T) LGlobals.gson.fromJson(str, getType());
+	}
+	
+	public abstract Type getType();
 
 }

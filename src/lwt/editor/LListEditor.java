@@ -48,6 +48,14 @@ public abstract class LListEditor<T, ST> extends LAbstractTreeEditor<T, ST> {
 				T data = self.getDataCollection().get(path.index);
 				return new LDataTree<T> (data);
 			}
+			@Override
+			protected String encodeNode(LDataTree<T> node) {
+				return self.encodeNode(node);
+			}
+			@Override
+			protected LDataTree<T> decodeNode(String str) {
+				return self.decodeNode(str);
+			}
 		};
 		LList<T, ST> customList = createList();
 		if (customList != null) {

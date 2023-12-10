@@ -18,7 +18,7 @@ import org.eclipse.swt.widgets.MenuItem;
 
 public abstract class LWidget extends Composite implements LContainer {
 
-	public static Object clipboard = null;
+	//public static Object clipboard = null;
 	protected LActionStack actionStack;
 
 	/**

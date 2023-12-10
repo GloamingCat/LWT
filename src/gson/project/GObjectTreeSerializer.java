@@ -2,22 +2,20 @@ package gson.project;
 
 import java.lang.reflect.Type;
 
+import lwt.LGlobals;
 import lwt.dataestructure.LDataTree;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
-import com.google.gson.reflect.TypeToken;
 
 public class GObjectTreeSerializer extends GObjectSerializer<LDataTree<Object>>
 		implements GTreeSerializer<Object> {
 
-	private JsonParser parser = new JsonParser();
 	private Type dataType;
 	
 	public GObjectTreeSerializer(String path, Class<?> type) {
-		super(path, new TypeToken<LDataTree<Object>>(){}.getType());
+		super(path, LDataTree.class);
 		this.dataType = type;
 	}
 	
@@ -25,47 +23,46 @@ public class GObjectTreeSerializer extends GObjectSerializer<LDataTree<Object>>
 		return data;
 	}
 	
+	public String serialize(LDataTree<?> node) {
+		return LGlobals.gson.toJson(encode());
+	}
+	
+	public LDataTree<Object> deserialize(String str) {
+		JsonArray array = LGlobals.json.parse(str).getAsJsonArray();
+		return decode(array);
+	}
+	
 	@Override
 	public Type getDataType() {
 		return dataType;
 	}
 	
-	protected byte[] serialize() {
+	public JsonElement encode() {
 		JsonArray array = new JsonArray();
 		for (LDataTree<?> child : this.data.children) {
-			JsonElement je = serialize(child);
+			JsonElement je = encode(child);
 			array.add(je);
 		}
-		return gson.toJson(array).getBytes();
+		return array;
 	}
 	
-	protected JsonElement serialize(LDataTree<?> node) {
+	protected JsonElement encode(LDataTree<?> node) {
 		JsonObject obj = new JsonObject();
 		if (node.data != null) {
-			JsonElement je = gson.toJsonTree(node.data, getDataType());
+			JsonElement je = LGlobals.prettyGson.toJsonTree(node.data, getDataType());
 			obj.add("data", je);
 		}
 		obj.addProperty("id", node.id);
 		JsonArray children = new JsonArray();
 		for (LDataTree<?> child : node.children) {
-			JsonElement je = serialize(child);
+			JsonElement je = encode(child);
 			children.add(je);
 		}
 		obj.add("children", children);
 		return obj;
 	}
 	
-	@Override
-	protected void deserialize(byte[] bytes) {
-		data = new LDataTree<>();
-		String string = new String(bytes);
-		JsonArray array = parser.parse(string).getAsJsonArray();
-		for (JsonElement je : array) {
-			deserialize(je).setParent(data);
-		}
-	}
-	
-	protected LDataTree<Object> deserialize(JsonElement je) {
+	protected LDataTree<Object> decode(JsonElement je) {
 		LDataTree<Object> node = new LDataTree<>();
 		JsonObject obj = je.getAsJsonObject();
 		if (obj.has("id")) {
@@ -74,20 +71,40 @@ public class GObjectTreeSerializer extends GObjectSerializer<LDataTree<Object>>
 		}
 		if (obj.has("data")) {
 			JsonObject dat = obj.get("data").getAsJsonObject();
-			node.data = gson.fromJson(dat, getDataType());
+			node.data = LGlobals.prettyGson.fromJson(dat, getDataType());
 		}
 		if (obj.has("children")) {
 			JsonArray arr = obj.get("children").getAsJsonArray();
 			for (JsonElement child : arr) {
-				deserialize(child).setParent(node);
+				decode(child).setParent(node);
 			}
 		}
 		return node;
 	}
 
+	protected LDataTree<Object> decode(JsonArray array) {
+		LDataTree<Object> data = new LDataTree<>();
+		for (JsonElement je : array) {
+			decode(je).setParent(data);
+		}
+		return data;
+	}
+
 	@Override
 	public void initialize() {
 		data = new LDataTree<>();
+	}	
+	
+	@Override
+	protected byte[] serialize() {
+		return LGlobals.prettyGson.toJson(encode()).getBytes();
+	}
+	
+	@Override
+	public void deserialize(byte[] bytes) {
+		String string = new String(bytes);
+		JsonArray array = LGlobals.json.parse(string).getAsJsonArray();
+		data = decode(array);
 	}
 
 }
