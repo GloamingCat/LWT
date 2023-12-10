@@ -2,10 +2,11 @@ package lwt.widget;
 
 import lwt.LVocab;
 import lwt.action.LAction;
-import lwt.action.LActionStack;
 import lwt.container.LContainer;
+import lwt.container.LFrame;
 import lwt.dialog.LShell;
 import lwt.LFlags;
+import lwt.LMenuInterface;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.MouseAdapter;
@@ -16,22 +17,15 @@ import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Menu;
-import org.eclipse.swt.widgets.MenuItem;
 
 public abstract class LWidget extends Composite {
 
-	//public static Object clipboard = null;
-	protected LActionStack actionStack;
+	protected LMenuInterface menuInterface;
 
 	public LWidget(Composite parent, int style) {
 		super(parent, style);
 		setLayout(new FillLayout());
 		parent.setTabList(null);
-		addMouseListener(new MouseAdapter() {
-			public void mouseDown(MouseEvent e) {
-				System.out.println("widget");
-			}
-		});
 		createContent(style);
 	}
 
@@ -45,56 +39,85 @@ public abstract class LWidget extends Composite {
 	
 	protected abstract void createContent(int flags);
 
-	public void setActionStack(LActionStack stack) {
-		this.actionStack = stack;
+	public void setMenuInterface(LMenuInterface mi) {
+		menuInterface = mi;
 	}
 
 	public void newAction(LAction action) {
-		if (actionStack != null) {
-			actionStack.newAction(action);
+		if (menuInterface != null) {
+			menuInterface.actionStack.newAction(action);
 		}
 	}
-
-	protected void setMenuButton(Menu menu, boolean value, String buttonName, String buttonKey, 
-			SelectionAdapter adapter) {
-		setMenuButton(menu, value, buttonName, buttonKey, adapter, (char) 0);
+	
+	//////////////////////////////////////////////////
+	// {{ Menu
+	
+	private Menu addMenu(Composite parent) {
+		Menu menu = new Menu(parent);
+		parent.setMenu(menu);
+		setCopyEnabled(menu, true);
+		setPasteEnabled(menu, true);
+		addFocusOnClick(parent);
+		return menu;
 	}
-
-	protected void setMenuButton(Menu menu, boolean value, String buttonName, String buttonKey, 
-			SelectionAdapter adapter, char acc) {
-		if (value) {
-			if (menu.getData(buttonKey) == null) {
-				MenuItem item = new MenuItem(menu, SWT.NONE);
-				item.addSelectionListener(adapter);
-				menu.setData(buttonKey, item);
-				if (acc != 0) {
-					item.setAccelerator(SWT.MOD1 | acc);
-					buttonName += "\tCtrl + &" + acc;
+	
+	private void addFocusOnClick(Composite c) {
+		LWidget widget = this;
+		c.addMouseListener(new MouseAdapter() {
+			public void mouseUp(MouseEvent e) {
+				if (e.button == 1) { // Left button
+					System.out.println(widget);
+					menuInterface.setFocusWidget(widget);
 				}
-				item.setText(buttonName);
 			}
-		} else {
-			if (menu.getData(buttonKey) != null) {
-				MenuItem item = (MenuItem) menu.getData(buttonKey);
-				item.dispose();
-			}
+		});
+	}
+	
+	public void addMenu() {
+		addMenu(this);
+	}
+	
+	public void addMenu(LFrame frame) {
+		Menu menu = getMenu();
+		if (menu == null) {
+			menu = addMenu(frame.getComposite());
+			setMenu(menu);
+			addFocusOnClick(this);
+		} else if (frame.getMenu() == null) {
+			frame.setMenu(menu);
+			addFocusOnClick(frame);
+		}
+	}
+	
+	public void addMenu(LWidget widget) {
+		Menu menu = getMenu();
+		if (menu == null) {
+			menu = addMenu((Composite) widget);
+			setMenu(menu);
+			addFocusOnClick(this);
+		} else if (widget.getMenu() == null) {
+			widget.setMenu(menu);
+			addFocusOnClick(widget);
 		}
 	}
 
 	public void setCopyEnabled(Menu menu, boolean value) {
-		setMenuButton(menu, value, LVocab.instance.COPY, "copy", new SelectionAdapter() {
+		String str = toString();
+		LMenuInterface.setMenuButton(menu, value, LVocab.instance.COPY, "copy", new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent arg0) {
+				System.out.println("Copied from " + str);
 				onCopyButton(menu);
 			}
 		}, 'C');
-
 	}
 
 	public void setPasteEnabled(Menu menu, boolean value) {
-		setMenuButton(menu, value, LVocab.instance.PASTE, "paste", new SelectionAdapter() {
+		String str = toString();
+		LMenuInterface.setMenuButton(menu, value, LVocab.instance.PASTE, "paste", new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent arg0) {
+				System.out.println("Pasted on " + str);
 				onPasteButton(menu);
 			}
 		}, 'V');
@@ -103,6 +126,8 @@ public abstract class LWidget extends Composite {
 	public abstract void onCopyButton(Menu menu);
 	public abstract void onPasteButton(Menu menu);
 	public abstract boolean canDecode(String str);
+	
+	// }}
 	
 	//////////////////////////////////////////////////
 	// {{ Layout

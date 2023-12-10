@@ -1,8 +1,5 @@
 package myeditor.gui;
 
-import org.eclipse.swt.SWT;
-import org.eclipse.swt.layout.GridData;
-
 import lwt.LFlags;
 import lwt.container.LContainer;
 import lwt.container.LFrame;
@@ -28,25 +25,23 @@ public class MyContentEditor extends LObjectEditor<MyContent> {
 	public MyContentEditor(LContainer parent) {
 		super(parent, 2, false, true);
 		
-		new LLabel(this, MyVocab.instance.NAME);
-		
+		LLabel lblName = new LLabel(this, MyVocab.instance.NAME);
 		LText txtName = new LText(this);
+		txtName.addMenu(lblName);
 		addControl(txtName, "name");
 		
-		new LLabel(this, MyVocab.instance.VALUE);
+		LLabel lblValue = new LLabel(this, MyVocab.instance.VALUE);
+		LSpinner spnValue = new LSpinner(this);
+		spnValue.addMenu(lblValue);
+		addControl(spnValue, "value");
 		
-		LSpinner spinner = new LSpinner(this);
-		spinner.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
-		addControl(spinner, "value");
-		
-		new LLabel(this, MyVocab.instance.IMAGE);
-		
+		LLabel lblImage = new LLabel(this, MyVocab.instance.IMAGE);
 		btnImage = new LImageButton(this, true);
 		btnImage.setAlignment(LFlags.LEFT);
+		btnImage.addMenu(lblImage);
 		addControl(btnImage, "img");
 		
 		new LLabel(this, 1, 1);
-		
 		LImage image = new LImage(this);
 		image.setExpand(true, true);
 		btnImage.setImage(image);
@@ -55,6 +50,7 @@ public class MyContentEditor extends LObjectEditor<MyContent> {
 		subFrame.setSpread(2, 1);
 		subFrame.setExpand(true, true);
 		MySubContentEditor subEditor = new MySubContentEditor(subFrame);
+		subEditor.addMenu(subFrame);
 		addChild(subEditor, "subContent");
 		
 	}

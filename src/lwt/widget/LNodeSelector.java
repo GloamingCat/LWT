@@ -7,14 +7,13 @@ import lwt.dataestructure.LPath;
 import lwt.event.LSelectionEvent;
 import lwt.event.listener.LSelectionListener;
 
-import java.lang.reflect.Type;
-
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.layout.GridData;
 
 public class LNodeSelector<T> extends LControlWidget<Integer> implements LContainer {
@@ -162,10 +161,15 @@ public class LNodeSelector<T> extends LControlWidget<Integer> implements LContai
 	}
 
 	@Override
-	protected Type getType() {
-		return Integer.class;
+	public String encodeData(Integer value) {
+		return value + "";
 	}
 	
+	@Override
+	public Integer decodeData(String str) {
+		return Integer.parseInt(str);
+	}
+
 	@Override
 	public Composite getComposite() {
 		return this;
@@ -179,6 +183,12 @@ public class LNodeSelector<T> extends LControlWidget<Integer> implements LContai
 	@Override
 	public int getChildCount() {
 		return this.getChildren().length;
+	}
+	
+	@Override
+	public void setMenu(Menu menu) {
+		super.setMenu(menu);
+		tree.setMenu(menu);
 	}
 
 }

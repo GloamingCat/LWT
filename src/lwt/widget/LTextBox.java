@@ -1,7 +1,5 @@
 package lwt.widget;
 
-import java.lang.reflect.Type;
-
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.StyledText;
 import org.eclipse.swt.events.FocusAdapter;
@@ -13,6 +11,7 @@ import org.eclipse.swt.events.MouseMoveListener;
 import org.eclipse.swt.events.TraverseEvent;
 import org.eclipse.swt.events.TraverseListener;
 import org.eclipse.swt.layout.GridData;
+import org.eclipse.swt.widgets.Menu;
 
 import lwt.LFlags;
 import lwt.container.LContainer;
@@ -154,10 +153,26 @@ public class LTextBox extends LControlWidget<String> {
 	}
 	
 	// }}
-
+	
 	@Override
-	protected Type getType() {
-		return String.class;
+	public void setMenu(Menu menu) {
+		super.setMenu(menu);
+		text.setMenu(menu);
 	}
 
+	@Override
+	public String encodeData(String value) {
+		return value;
+	}
+	
+	@Override
+	public String decodeData(String str) {
+		return str;
+	}
+	
+	@Override
+	public boolean canDecode(String str) {
+		return true;
+	}
+	
 }

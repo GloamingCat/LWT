@@ -1,6 +1,5 @@
 package lwt.widget;
 
-import java.lang.reflect.Type;
 import java.util.ArrayList;
 
 import lwt.LGlobals;
@@ -87,20 +86,18 @@ public abstract class LControlWidget<T> extends LWidget implements LControl<T> {
 	//-------------------------------------------------------------------------------------
 	
 	public void onCopyButton(Menu menu) {
-		//clipboard = currentValue;
-		String json = LGlobals.gson.toJson(currentValue, currentValue.getClass());
-		LGlobals.clipboard.setContents(new Object[] { json },
+		String str = encodeData(currentValue);
+		LGlobals.clipboard.setContents(new Object[] { str },
 				new Transfer[] { TextTransfer.getInstance() });
 	}
 	
-	@SuppressWarnings("unchecked")
 	public void onPasteButton(Menu menu) {
-		String json = (String) LGlobals.clipboard.getContents(TextTransfer.getInstance());
-		if (json == null)
+		String str = (String) LGlobals.clipboard.getContents(TextTransfer.getInstance());
+		if (str == null)
 			return;
 		try {
-			T newValue = (T) LGlobals.gson.fromJson(json, getType());
-			if (!newValue.equals(currentValue))
+			T newValue = decodeData(str);
+			if (newValue != null && !newValue.equals(currentValue))
 				modify(newValue);	
 		} catch (ClassCastException e) {
 			System.err.println(e.getMessage());
@@ -108,17 +105,16 @@ public abstract class LControlWidget<T> extends LWidget implements LControl<T> {
 		}
 	}
 	
+	protected abstract String encodeData(T value);
+	protected abstract T decodeData(String str);
+	
 	public boolean canDecode(String str) {
 		try {
-			@SuppressWarnings("unchecked")
-			T newValue = (T) LGlobals.gson.fromJson(str, getType());	
-			return newValue != null;
-		} catch (ClassCastException e) {
-			System.err.println(e.getMessage());
+			decodeData(str);
+			return true;
+		} catch(Exception e) {
 			return false;
 		}
 	}
-	
-	protected abstract Type getType();
-	
+
 }

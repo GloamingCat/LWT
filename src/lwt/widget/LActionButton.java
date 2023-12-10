@@ -1,7 +1,5 @@
 package lwt.widget;
 
-import java.lang.reflect.Type;
-
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
@@ -39,7 +37,18 @@ public class LActionButton extends LControlWidget<Object> {
 	public void onPasteButton(Menu menu) {}
 	
 	@Override
-	protected Type getType() {
+	public void setMenu(Menu menu) {
+		super.setMenu(menu);
+		button.setMenu(menu);
+	}
+
+	@Override
+	public String encodeData(Object value) {
+		return null;
+	}
+	
+	@Override
+	public Object decodeData(String str) {
 		return null;
 	}
 

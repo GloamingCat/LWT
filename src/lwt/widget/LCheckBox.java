@@ -1,7 +1,5 @@
 package lwt.widget;
 
-import java.lang.reflect.Type;
-
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.wb.swt.SWTResourceManager;
@@ -68,8 +66,13 @@ public class LCheckBox extends LControlWidget<Boolean> {
 	}
 
 	@Override
-	protected Type getType() {
-		return Boolean.class;
+	public String encodeData(Boolean value) {
+		return value + "";
+	}
+	
+	@Override
+	public Boolean decodeData(String str) {
+		return Boolean.parseBoolean(str);
 	}
 
 }

@@ -170,9 +170,9 @@ public abstract class LTreeBase<T, ST> extends LSelectableCollection<T, ST> {
 						event.detail = DND.DROP_NONE;
 						return;
 					}
-					if (actionStack != null) {
+					if (menuInterface != null) {
 						LMoveAction<T> action = new LMoveAction<T>(self, e.sourceParent, e.sourceIndex, e.destParent, e.destIndex);
-						actionStack.newAction(action);
+						menuInterface.actionStack.newAction(action);
 					}
 					notifyMoveListeners(e);
 					return;
@@ -191,9 +191,9 @@ public abstract class LTreeBase<T, ST> extends LSelectableCollection<T, ST> {
 						event.detail = DND.DROP_NONE;
 						return;
 					}
-					if (actionStack != null) {
+					if (menuInterface != null) {
 						LMoveAction<T> action = new LMoveAction<T>(self, e.sourceParent, e.sourceIndex, e.destParent, e.destIndex);
-						actionStack.newAction(action);
+						menuInterface.actionStack.newAction(action);
 					}
 					notifyMoveListeners(e);
 					return;
@@ -210,9 +210,9 @@ public abstract class LTreeBase<T, ST> extends LSelectableCollection<T, ST> {
 					event.detail = DND.DROP_NONE;
 					return;
 				}
-				if (actionStack != null) {
+				if (menuInterface != null) {
 					LMoveAction<T> action = new LMoveAction<T>(self, e.sourceParent, e.sourceIndex, e.destParent, e.destIndex);
-					actionStack.newAction(action);
+					menuInterface.actionStack.newAction(action);
 				}
 				notifyMoveListeners(e);
 			}

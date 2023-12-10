@@ -7,11 +7,9 @@ import java.util.Map;
 
 import lwt.LGlobals;
 import lwt.LMenuInterface;
-import lwt.LVocab;
 import lwt.action.LControlAction;
 import lwt.container.LContainer;
 import lwt.container.LControlView;
-import lwt.container.LFrame;
 import lwt.container.LView;
 import lwt.dataestructure.LPath;
 import lwt.event.LControlEvent;
@@ -20,18 +18,9 @@ import lwt.event.listener.LControlListener;
 import lwt.event.listener.LSelectionListener;
 import lwt.widget.LControl;
 import lwt.widget.LControlWidget;
-import lwt.widget.LWidget;
 
-import org.eclipse.swt.SWT;
 import org.eclipse.swt.dnd.TextTransfer;
 import org.eclipse.swt.dnd.Transfer;
-import org.eclipse.swt.events.MouseAdapter;
-import org.eclipse.swt.events.MouseEvent;
-import org.eclipse.swt.events.SelectionAdapter;
-import org.eclipse.swt.events.SelectionEvent;
-import org.eclipse.swt.layout.RowLayout;
-import org.eclipse.swt.widgets.Button;
-import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Menu;
 
 /**
@@ -99,86 +88,7 @@ public abstract class LObjectEditor<T> extends LEditor implements LControl<T> {
 	}
 	
 	// }}
-	
-	//////////////////////////////////////////////////
-	// {{ Menu
-	
-	private void addHeaderButtons(Composite parent) {
-		Button copyButton = new Button(parent, SWT.NONE);
-		copyButton.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(SelectionEvent arg0) {
-				onCopyButton(null);
-			}
-		});
-		copyButton.setText(LVocab.instance.COPY);
-		Button pasteButton = new Button(parent, SWT.NONE);
-		pasteButton.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(SelectionEvent arg0) {
-				onPasteButton(null);
-			}
-		});
-		pasteButton.setText(LVocab.instance.PASTE);
-	}
-	
-	private Menu addMenu(Composite parent) {
-		Menu menu = new Menu(parent);
-		parent.setMenu(menu);
-		setCopyEnabled(menu, true);
-		setPasteEnabled(menu, true);
-		addFocusOnClick(parent);
-		return menu;
-	}
-	
-	private void addFocusOnClick(Composite c) {
-		LEditor editor = this;
-		c.addMouseListener(new MouseAdapter() {
-			public void mouseUp(MouseEvent e) {
-				if (e.button == 1) { // Left button
-					getMenuInterface().setFocusEditor(editor);
-				}
-			}
-		});
-	}
-	
-	public void addMenu() {
-		addMenu(getComposite());
-	}
-	
-	public void addMenu(LFrame frame) {
-		Menu menu = getMenu();
-		if (menu == null) {
-			menu = addMenu(frame.getComposite());
-			setMenu(menu);
-			addFocusOnClick(this);
-		} else if (frame.getMenu() == null) {
-			frame.setMenu(menu);
-			addFocusOnClick(frame);
-		}
-	}
-	
-	public void addMenu(LWidget widget) {
-		Menu menu = getMenu();
-		if (menu == null) {
-			menu = addMenu((Composite) widget);
-			setMenu(menu);
-		} else if (widget.getMenu() == null) {
-			widget.setMenu(menu);
-			addFocusOnClick(widget);
-		}
-	}
-	
-	public void addHeader(LContainer parent) {
-		if (parent == null)
-			parent = this;
-		Composite header = new Composite(parent.getComposite(), 0); 
-		header.setLayout(new RowLayout());
-		addHeaderButtons(header);
-	}
-	
-	// }}
-	
+
 	//////////////////////////////////////////////////
 	// {{ Children
 	
@@ -199,7 +109,7 @@ public abstract class LObjectEditor<T> extends LEditor implements LControl<T> {
 	public <CT> void addControl(LControlWidget<CT> control, String key) {
 		controlMap.put(control, key);
 		LObjectEditor<T> self = this;
-		control.setActionStack(getActionStack());
+		control.setMenuInterface(getMenuInterface());
 		control.addModifyListener(new LControlListener<CT>() {
 			@SuppressWarnings("unchecked")
 			@Override
@@ -237,7 +147,7 @@ public abstract class LObjectEditor<T> extends LEditor implements LControl<T> {
 	public void setMenuInterface(LMenuInterface mi) {
 		super.setMenuInterface(mi);
 		for(LControlWidget<?> control : controlMap.keySet()) {
-			control.setActionStack(mi == null ? null : mi.actionStack);
+			control.setMenuInterface(mi);
 		}
 	}
 	
@@ -388,7 +298,6 @@ public abstract class LObjectEditor<T> extends LEditor implements LControl<T> {
 	// {{ Clipboard
 	
 	public void onCopyButton(Menu menu) {
-		//LControlWidget.clipboard = duplicateData(currentObject);
 		LGlobals.clipboard.setContents(new Object[] { encodeData(currentObject) },
 				new Transfer[] { TextTransfer.getInstance() });
 	}
@@ -399,7 +308,7 @@ public abstract class LObjectEditor<T> extends LEditor implements LControl<T> {
 			return;
 		try {
 			T newValue = decodeData(str);
-			if (!newValue.equals(currentObject))
+			if (newValue != null && !newValue.equals(currentObject))
 				modify(newValue);	
 		} catch (ClassCastException e) {
 			System.err.println(e.getMessage());

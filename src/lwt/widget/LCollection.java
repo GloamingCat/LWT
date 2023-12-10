@@ -6,6 +6,7 @@ import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.widgets.Menu;
 
+import lwt.LMenuInterface;
 import lwt.LVocab;
 import lwt.action.collection.LDeleteAction;
 import lwt.action.collection.LEditAction;
@@ -40,9 +41,9 @@ public abstract class LCollection<T, ST> extends LWidget {
 	protected LEditEvent<ST> newEditAction(LPath path) {
 		LEditEvent<ST> event = edit(path);
 		if (event != null) {
-			if (actionStack != null) {
+			if (menuInterface != null) {
 				LEditAction<ST> action = new LEditAction<ST>(this, path, event.oldData, event.newData);
-				actionStack.newAction(action);
+				menuInterface.actionStack.newAction(action);
 			}
 			notifyEditListeners(event);
 		}
@@ -52,9 +53,9 @@ public abstract class LCollection<T, ST> extends LWidget {
 	protected LInsertEvent<T> newInsertAction(LPath parentPath, int i, LDataTree<T> node) {
 		LInsertEvent<T> event = insert(parentPath, i, node);
 		if (event != null) {
-			if (actionStack != null) {
+			if (menuInterface != null) {
 				LInsertAction<T> action = new LInsertAction<T>(this, parentPath, event.index, node);
-				actionStack.newAction(action);
+				menuInterface.actionStack.newAction(action);
 			}
 			notifyInsertListeners(event);
 		}
@@ -64,9 +65,9 @@ public abstract class LCollection<T, ST> extends LWidget {
 	protected LDeleteEvent<T> newDeleteAction(LPath parentPath, int i) {
 		LDeleteEvent<T> event = delete(parentPath, i);
 		if (event != null) {
-			if (actionStack != null) {
+			if (menuInterface != null) {
 				LDeleteAction<T> action = new LDeleteAction<T>(this, parentPath, event.index, event.node);
-				actionStack.newAction(action);
+				menuInterface.actionStack.newAction(action);
 			}
 			notifyDeleteListeners(event);
 		}
@@ -78,40 +79,39 @@ public abstract class LCollection<T, ST> extends LWidget {
 	//-------------------------------------------------------------------------------------
 	
 	protected void setEditEnabled(Menu menu, boolean value) {
-		setMenuButton(menu, value, LVocab.instance.EDIT, "edit", new SelectionAdapter() {
-	    	@Override
-	    	public void widgetSelected(SelectionEvent arg0) {
-	    		onEditButton(menu);
-	    	}
+		LMenuInterface.setMenuButton(menu, value, LVocab.instance.EDIT, "edit", new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent arg0) {
+				onEditButton(menu);
+			}
 		});
 	}
 	
 	protected void setInsertNewEnabled(Menu menu, boolean value) {
-		setMenuButton(menu, value, LVocab.instance.INSERTNEW, "new", new SelectionAdapter() {
-	    	@Override
-	    	public void widgetSelected(SelectionEvent arg0) {
-	    		onInsertNewButton(menu);
-	    	}
+		LMenuInterface.setMenuButton(menu, value, LVocab.instance.INSERTNEW, "new", new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent arg0) {
+				onInsertNewButton(menu);
+			}
 		}, 'N');
 	}
 	
 	protected void setDuplicateEnabled(Menu menu, boolean value) {
-		setMenuButton(menu, value, LVocab.instance.DUPLICATE, "duplicate", new SelectionAdapter() {
-	    	@Override
-	    	public void widgetSelected(SelectionEvent arg0) {
-	    		onDuplicateButton(menu);
-	    	}
+		LMenuInterface.setMenuButton(menu, value, LVocab.instance.DUPLICATE, "duplicate", new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent arg0) {
+				onDuplicateButton(menu);
+			}
 		}, 'D');
 	}
 	
 	protected void setDeleteEnabled(Menu menu, boolean value) {
-		setMenuButton(menu, value, LVocab.instance.DELETE, "delete", new SelectionAdapter() {
-	    	@Override
-	    	public void widgetSelected(SelectionEvent arg0) {
-	    		onDeleteButton(menu);
-	    	}
-		});
-	}
+		LMenuInterface.setMenuButton(menu, value, LVocab.instance.DELETE, "delete", new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent arg0) {
+				onDeleteButton(menu);
+			}
+		});	}
 	
 	//-------------------------------------------------------------------------------------
 	// Menu handlers

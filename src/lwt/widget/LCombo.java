@@ -1,6 +1,5 @@
 package lwt.widget;
 
-import java.lang.reflect.Type;
 import java.util.ArrayList;
 
 import lwt.container.LContainer;
@@ -8,6 +7,7 @@ import lwt.graphics.LTexture;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Combo;
+import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.GridLayout;
@@ -135,10 +135,21 @@ public class LCombo extends LControlWidget<Integer> {
 	public void setOptional(boolean value) {
 		optional = value;
 	}
+	
+	@Override
+	public void setMenu(Menu menu) {
+		super.setMenu(menu);
+		combo.setMenu(menu);
+	}
 
 	@Override
-	protected Type getType() {
-		return Integer.class;
+	public String encodeData(Integer value) {
+		return value + "";
 	}
 	
+	@Override
+	public Integer decodeData(String str) {
+		return Integer.parseInt(str);
+	}
+
 }

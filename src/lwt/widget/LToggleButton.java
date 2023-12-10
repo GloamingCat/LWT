@@ -1,7 +1,5 @@
 package lwt.widget;
 
-import java.lang.reflect.Type;
-
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.MouseAdapter;
 import org.eclipse.swt.events.MouseEvent;
@@ -63,8 +61,13 @@ public class LToggleButton extends LControlWidget<Boolean> {
 	}
 
 	@Override
-	protected Type getType() {
-		return Boolean.class;
+	public String encodeData(Boolean value) {
+		return value + "";
+	}
+	
+	@Override
+	public Boolean decodeData(String str) {
+		return Boolean.parseBoolean(str);
 	}
 
 }

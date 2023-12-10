@@ -34,10 +34,13 @@ public class MySubContent {
 	
 	public static MySubContent decode(String str) {
 		int i = str.indexOf(',');
-		String value = str.substring(0, i);
-		String description = str.substring(i + 1);
-		MySubContent content = new MySubContent(Integer.parseInt(value), description);
-		return content;
+		try {
+			String value = str.substring(0, i);
+			String description = str.substring(i + 1);
+			return new MySubContent(Integer.parseInt(value), description);
+		} catch (StringIndexOutOfBoundsException e) {
+			return null;
+		}
 	}
 	
 	public static boolean canDecode(String str) {

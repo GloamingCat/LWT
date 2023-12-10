@@ -17,7 +17,6 @@ public class LLabel extends LWidget {
 	LLabel (Composite parent, int style) {
 		super(parent, SWT.NONE);
 		label.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
-		setEnabled(false);
 	}
 	
 	LLabel(Composite parent, int style, int hfill, int vfill) {
@@ -85,7 +84,21 @@ public class LLabel extends LWidget {
 
 	public void setText(String text) {
 		label.setText(text);
+		layout();
 	}
+	
+	public String toString() {
+		return getClass().getName() + " " + label.getText();
+	}
+	
+	@Override
+	public void setMenu(Menu menu) {
+		super.setMenu(menu);
+		label.setMenu(menu);
+	}
+
+	//////////////////////////////////////////////////
+	// {{ Menu
 
 	@Override
 	public void onCopyButton(Menu menu) {}
@@ -98,5 +111,6 @@ public class LLabel extends LWidget {
 		return false;
 	}
 
+	// }}
 
 }

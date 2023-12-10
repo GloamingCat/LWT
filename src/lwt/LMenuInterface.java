@@ -1,6 +1,10 @@
 package lwt;
 
+import org.eclipse.swt.SWT;
 import org.eclipse.swt.dnd.TextTransfer;
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.widgets.Menu;
+import org.eclipse.swt.widgets.MenuItem;
 
 import lwt.action.LActionStack;
 import lwt.container.LView;
@@ -11,13 +15,13 @@ public class LMenuInterface {
 
 	private LEditor focusEditor;
 	private LWidget focusWidget;
-	private LDefaultApplicationShell shell;
+	private LApplicationShell shell;
 	public final LActionStack actionStack;
 	
 	public LMenuInterface(LView root) {
 		actionStack = new LActionStack(root);
-		if (root.getShell() instanceof LDefaultApplicationShell)
-			shell = (LDefaultApplicationShell) root.getShell();
+		if (root.getShell() instanceof LApplicationShell)
+			shell = (LApplicationShell) root.getShell();
 	}
 	
 	public void copy() {
@@ -65,5 +69,36 @@ public class LMenuInterface {
 			shell.refreshClipboardButtons();
 		}
 	}
+	
+	//////////////////////////////////////////////////
+	// {{ Menu Buttons
+	
+	public static void setMenuButton(Menu menu, boolean value, String buttonName, String buttonKey, 
+			SelectionAdapter adapter) {
+		setMenuButton(menu, value, buttonName, buttonKey, adapter, (char) 0);
+	}
 
+	public static void setMenuButton(Menu menu, boolean value, String buttonName, String buttonKey, 
+			SelectionAdapter adapter, char acc) {
+		if (value) {
+			if (menu.getData(buttonKey) == null) {
+				MenuItem item = new MenuItem(menu, SWT.NONE);
+				item.addSelectionListener(adapter);
+				menu.setData(buttonKey, item);
+				if (acc != 0) {
+					item.setAccelerator(SWT.MOD1 | acc);
+					buttonName += "\tCtrl + &" + acc;
+				}
+				item.setText(buttonName);
+			}
+		} else {
+			if (menu.getData(buttonKey) != null) {
+				MenuItem item = (MenuItem) menu.getData(buttonKey);
+				item.dispose();
+			}
+		}
+	}
+	
+	// }}
+	
 }

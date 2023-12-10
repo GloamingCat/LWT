@@ -1,13 +1,13 @@
 package lwt.widget;
 
+import java.lang.reflect.Type;
+
 import lwt.container.LContainer;
 import lwt.container.LImage;
 import lwt.dialog.LImageShell;
 import lwt.dialog.LObjectShell;
 import lwt.dialog.LShell;
 import lwt.dialog.LShellFactory;
-
-import java.lang.reflect.Type;
 
 public class LImageButton extends LObjectButton<String> {
 
@@ -53,10 +53,10 @@ public class LImageButton extends LObjectButton<String> {
 			currentValue = null;
 		}
 	}
-
+	
 	@Override
 	protected Type getType() {
 		return String.class;
 	}
-
+	
 }

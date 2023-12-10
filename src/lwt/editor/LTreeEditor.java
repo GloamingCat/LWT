@@ -19,7 +19,7 @@ public abstract class LTreeEditor<T, ST> extends LAbstractTreeEditor<T, ST> {
 		super(parent);
 		tree = createTree();
 		setListeners();
-		tree.setActionStack(getActionStack());
+		tree.setMenuInterface(getMenuInterface());
 	}
 	
 	protected LTree<T, ST> createTree() { 

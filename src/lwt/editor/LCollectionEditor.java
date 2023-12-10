@@ -98,7 +98,7 @@ public abstract class LCollectionEditor<T, ST> extends LObjectEditor<LDataCollec
 	@Override
 	public void setMenuInterface(LMenuInterface mi) {
 		super.setMenuInterface(mi);
-		getCollectionWidget().setActionStack(mi.actionStack);
+		getCollectionWidget().setMenuInterface(mi);
 	}
 
 	@Override
@@ -126,7 +126,7 @@ public abstract class LCollectionEditor<T, ST> extends LObjectEditor<LDataCollec
 		try {
 			LDataCollection<T> newValue = decodeData(str);
 			LDataCollection<T> oldValue = getDataCollection();
-			if (!newValue.equals(oldValue)) {
+			if (newValue != null && !newValue.equals(oldValue)) {
 				getCollectionWidget().setDataCollection(newValue);
 				newModifyAction(oldValue, newValue);
 			}

@@ -1,11 +1,10 @@
 package lwt.widget;
 
-import java.lang.reflect.Type;
-
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.widgets.List;
+import org.eclipse.swt.widgets.Menu;
 
 import lwt.container.LContainer;
 
@@ -87,8 +86,19 @@ public class LFlatList extends LControlWidget<Integer> {
 	}
 
 	@Override
-	protected Type getType() {
-		return Integer.class;
+	public String encodeData(Integer value) {
+		return value + "";
+	}
+	
+	@Override
+	public Integer decodeData(String str) {
+		return Integer.parseInt(str);
+	}
+	
+	@Override
+	public void setMenu(Menu menu) {
+		super.setMenu(menu);
+		list.setMenu(menu);
 	}
 
 }

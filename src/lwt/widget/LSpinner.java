@@ -3,9 +3,8 @@ package lwt.widget;
 import lwt.container.*;
 import lwt.graphics.LTexture;
 
-import java.lang.reflect.Type;
-
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.Spinner;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
@@ -74,10 +73,21 @@ public class LSpinner extends LControlWidget<Integer> {
 	public void setMaximum(int i) {
 		spinner.setMaximum(i);
 	}
+	
+	@Override
+	public void setMenu(Menu menu) {
+		super.setMenu(menu);
+		spinner.setMenu(menu);
+	}
 
 	@Override
-	protected Type getType() {
-		return Integer.class;
+	public String encodeData(Integer value) {
+		return value + "";
+	}
+	
+	@Override
+	public Integer decodeData(String str) {
+		return Integer.parseInt(str);
 	}
 
 }

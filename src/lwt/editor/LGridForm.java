@@ -88,7 +88,7 @@ public abstract class LGridForm<T> extends LObjectEditor<LDataList<T>> {
 					}
 				}
 			});
-			control.setActionStack(getActionStack());
+			control.setMenuInterface(getMenuInterface());
 			controls.add(control);
 		}
 		// Remove exceeding controls

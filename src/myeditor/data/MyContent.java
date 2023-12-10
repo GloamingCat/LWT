@@ -60,18 +60,21 @@ public class MyContent implements LGraphical {
 	}
 	
 	public static MyContent decode(String str) {
-		int i = str.indexOf(',');
-		String value = str.substring(0, i);
-		str = str.substring(i + 1);
-		i = str.indexOf(',');
-		String name = str.substring(0, i);
-		str = str.substring(i + 1);
-		i = str.indexOf(',');
-		String img = str.substring(0, i);
-		String subContent = str.substring(i + 1);
-		MyContent content = new MyContent(name, Integer.parseInt(value), img,
-				MySubContent.decode(subContent));
-		return content;
+		try {
+			int i = str.indexOf(',');
+			String value = str.substring(0, i);
+			str = str.substring(i + 1);
+			i = str.indexOf(',');
+			String name = str.substring(0, i);
+			str = str.substring(i + 1);
+			i = str.indexOf(',');
+			String img = str.substring(0, i);
+			String subContent = str.substring(i + 1);
+			return new MyContent(name, Integer.parseInt(value),
+				img, MySubContent.decode(subContent));
+		} catch (StringIndexOutOfBoundsException e) {
+			return null;
+		}
 	}
 	
 	public static boolean canDecode(String str) {

@@ -25,7 +25,7 @@ import org.eclipse.swt.widgets.MenuItem;
 import org.eclipse.swt.widgets.MessageBox;
 import org.eclipse.wb.swt.SWTResourceManager;
 
-public abstract class LDefaultApplicationShell extends LShell implements LContainer {
+public abstract class LApplicationShell extends LShell implements LContainer {
 
 	protected LSerializer project = null;
 	protected String applicationName;
@@ -52,7 +52,7 @@ public abstract class LDefaultApplicationShell extends LShell implements LContai
 	 * @wbp.eval.method.parameter initialWidth 800
 	 * @wbp.eval.method.parameter initialHeight 600
 	 */
-	public LDefaultApplicationShell(int initialWidth, int initialHeight, String title, String icon) {
+	public LApplicationShell(int initialWidth, int initialHeight, String title, String icon) {
 		super();
 		SWTResourceManager.rootClass = getClass();
 		setSize(new Point(initialWidth, initialHeight));
@@ -61,7 +61,7 @@ public abstract class LDefaultApplicationShell extends LShell implements LContai
 			applicationName = "LTH Editor";
 		}
 		if (icon != null) {
-			setImage(SWTResourceManager.getImage(LDefaultApplicationShell.class, icon));
+			setImage(SWTResourceManager.getImage(LApplicationShell.class, icon));
 		}
 
 		LVocab vocab = LVocab.instance;

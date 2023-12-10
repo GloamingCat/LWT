@@ -67,7 +67,7 @@ public abstract class LListEditor<T, ST> extends LAbstractTreeEditor<T, ST> {
 			list = customList;
 		}
 		setListeners();
-		list.setActionStack(getActionStack());
+		list.setMenuInterface(getMenuInterface());
 	}
 	
 	protected LList<T, ST> createList() { return null; }

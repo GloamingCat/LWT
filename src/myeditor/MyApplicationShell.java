@@ -1,6 +1,6 @@
 package myeditor;
 
-import lwt.LDefaultApplicationShell;
+import lwt.LApplicationShell;
 import lwt.dataserialization.LSerializer;
 import myeditor.gui.MyContentGridEditor;
 import myeditor.gui.MyContentListEditor;
@@ -12,7 +12,7 @@ import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.widgets.MenuItem;
 
-public class MyApplicationShell extends LDefaultApplicationShell {
+public class MyApplicationShell extends LApplicationShell {
 	
 	/**
 	 * Launch the application.
@@ -34,27 +34,9 @@ public class MyApplicationShell extends LDefaultApplicationShell {
 	public MyApplicationShell() {
 		super(450, 300, "My Editor", null);
 		
-		MyContentGridEditor gridEditor = new MyContentGridEditor(this);
 		MyContentTreeEditor treeEditor = new MyContentTreeEditor(this);
 		MyContentListEditor listEditor = new MyContentListEditor(this);
-		
-		MenuItem mntmContentGrid = new MenuItem(menuView, SWT.NONE);
-		mntmContentGrid.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(SelectionEvent arg0) {
-				setCurrentView(gridEditor);
-			}
-		});
-		mntmContentGrid.setText(MyVocab.instance.CONTENTGRID);
-		
-		MenuItem mntmContentList = new MenuItem(menuView, SWT.NONE);
-		mntmContentList.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(SelectionEvent arg0) {
-				setCurrentView(listEditor);
-			}
-		});
-		mntmContentList.setText(MyVocab.instance.CONTENTLIST);
+		MyContentGridEditor gridEditor = new MyContentGridEditor(this);
 		
 		MenuItem mntmContentTree = new MenuItem(menuView, SWT.NONE);
 		mntmContentTree.addSelectionListener(new SelectionAdapter() {
@@ -65,7 +47,25 @@ public class MyApplicationShell extends LDefaultApplicationShell {
 		});
 		mntmContentTree.setText(MyVocab.instance.CONTENTTREE);
 		
-		defaultView = gridEditor;
+		MenuItem mntmContentList = new MenuItem(menuView, SWT.NONE);
+		mntmContentList.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent arg0) {
+				setCurrentView(listEditor);
+			}
+		});
+		mntmContentList.setText(MyVocab.instance.CONTENTLIST);
+
+		MenuItem mntmContentGrid = new MenuItem(menuView, SWT.NONE);
+		mntmContentGrid.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent arg0) {
+				setCurrentView(gridEditor);
+			}
+		});
+		mntmContentGrid.setText(MyVocab.instance.CONTENTGRID);
+		
+		defaultView = treeEditor;
 		
 	}
 	

@@ -2,7 +2,7 @@ package lwt.action;
 
 import java.util.ArrayList;
 
-import lwt.LDefaultApplicationShell;
+import lwt.LApplicationShell;
 import lwt.container.LView;
 import lwt.editor.LState;
 
@@ -21,13 +21,13 @@ public class LActionStack {
 	private int lastAction = 0;
 	private ArrayList<Node> actions = new ArrayList<>();
 	private LView rootEditor;
-	private LDefaultApplicationShell shell;
+	private LApplicationShell shell;
 	
 	public LActionStack(LView rootEditor) {
 		this.rootEditor = rootEditor;
 		LActionManager.getInstance().addStack(this);
-		if (rootEditor.getShell() instanceof LDefaultApplicationShell)
-			shell = (LDefaultApplicationShell) rootEditor.getShell();
+		if (rootEditor.getShell() instanceof LApplicationShell)
+			shell = (LApplicationShell) rootEditor.getShell();
 	}
 	
 	public LView getRootView() {
@@ -63,8 +63,8 @@ public class LActionStack {
 			actions.get(lastAction).state.reset();
 			actions.get(lastAction).action.redo();
 			lastAction++;
-			if (rootEditor.getShell() instanceof LDefaultApplicationShell) {
-				LDefaultApplicationShell shell = (LDefaultApplicationShell) rootEditor.getShell();
+			if (rootEditor.getShell() instanceof LApplicationShell) {
+				LApplicationShell shell = (LApplicationShell) rootEditor.getShell();
 				shell.refreshEditButtons();
 			}
 		}
