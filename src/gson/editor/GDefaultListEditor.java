@@ -26,27 +26,27 @@ public abstract class GDefaultListEditor<T> extends LDefaultListEditor<T> {
 	
 	@SuppressWarnings("unchecked")
 	@Override
-	public T duplicateElement(Object original) {
-		if (getType() != original)
+	public T duplicateElement(T original) {
+		if (getType() != original.getClass())
 			throw new ClassCastException("Object cannot be cast to " + getType().getTypeName());
-		String json = LGlobals.gson.toJson(original, original.getClass());
+		String json = LGlobals.gson.toJson(original, getType());
 		return (T) LGlobals.gson.fromJson(json, getType());
 	}
 	
 	@Override
-	protected String encodeElement(Object data) {
+	protected String encodeElement(T data) {
 		return LGlobals.gson.toJson(data, getType());
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	protected T decodeElement(String str) {
+		return (T) LGlobals.gson.fromJson(str, getType());
 	}
 
 	@Override
 	public boolean canDecode(String str) {
 		return true;
-	}
-	
-	@SuppressWarnings("unchecked")
-	@Override
-	protected T decodeElement(String str) {
-		return (T) LGlobals.gson.fromJson(str, getType());
 	}
 	
 	public abstract Type getType();

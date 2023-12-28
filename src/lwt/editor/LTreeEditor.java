@@ -10,21 +10,20 @@ public abstract class LTreeEditor<T, ST> extends LAbstractTreeEditor<T, ST> {
 	
 	protected LTree<T, ST> tree;
 	
-	/**
-	 * Create the composite.
-	 * @param parent
-	 * @param style
-	 */
 	public LTreeEditor(LContainer parent) {
+		this(parent, false);
+	}
+	
+	public LTreeEditor(LContainer parent, boolean check) {
 		super(parent);
-		tree = createTree();
+		tree = createTree(check);
 		setListeners();
 		tree.setMenuInterface(getMenuInterface());
 	}
 	
-	protected LTree<T, ST> createTree() { 
+	protected LTree<T, ST> createTree(boolean check) { 
 		LTreeEditor<T, ST> self = this;
-		return new LTree<T, ST>(this) {
+		return new LTree<T, ST>(this, check) {
 			@Override
 			public LEditEvent<ST> edit(LPath path) {
 				return onEditItem(path);

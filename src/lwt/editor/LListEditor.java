@@ -15,15 +15,16 @@ public abstract class LListEditor<T, ST> extends LAbstractTreeEditor<T, ST> {
 		this(parent, false);
 	}
 	
-	/**
-	 * Create the composite.
-	 * @param parent
-	 * @param style
-	 */
 	public LListEditor(LContainer parent, boolean check) {
 		super(parent);	
+		list = createList(check);
+		setListeners();
+		list.setMenuInterface(getMenuInterface());
+	}
+	
+	protected LList<T, ST> createList(boolean check) { 
 		LListEditor<T, ST> self = this;
-		list = new LList<T, ST>(this, check) {
+		return new LList<T, ST>(this, check) {
 			@Override
 			public LEditEvent<ST> edit(LPath path) {
 				return onEditItem(path);
@@ -61,16 +62,7 @@ public abstract class LListEditor<T, ST> extends LAbstractTreeEditor<T, ST> {
 				return true;
 			}
 		};
-		LList<T, ST> customList = createList();
-		if (customList != null) {
-			list.dispose();
-			list = customList;
-		}
-		setListeners();
-		list.setMenuInterface(getMenuInterface());
 	}
-	
-	protected LList<T, ST> createList() { return null; }
 	
 	public LList<T, ST> getCollectionWidget() {
 		return list;

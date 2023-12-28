@@ -3,6 +3,7 @@ package lwt.editor;
 import java.util.ArrayList;
 
 import lwt.container.LContainer;
+import lwt.container.LView;
 import lwt.dataestructure.LDataCollection;
 import lwt.dataestructure.LDataTree;
 import lwt.dataestructure.LPath;
@@ -22,6 +23,8 @@ import org.eclipse.swt.layout.FillLayout;
  *
  */
 public abstract class LAbstractTreeEditor<T, ST> extends LCollectionEditor<T, ST> {
+	
+	protected ArrayList<LEditor> contentEditors = new ArrayList<>();
 	
 	/**
 	 * Create the composite.
@@ -74,7 +77,8 @@ public abstract class LAbstractTreeEditor<T, ST> extends LCollectionEditor<T, ST
 			}
 		});
 		editor.collectionEditor = this;
-		addChild((LEditor) editor);
+		contentEditors.add(editor);
+		addChild((LView) editor);
 	}
 	
 	public abstract LTree<T, ST> getCollectionWidget();
@@ -107,26 +111,32 @@ public abstract class LAbstractTreeEditor<T, ST> extends LCollectionEditor<T, ST
 	
 	@Override
 	public LDataTree<T> decodeData(String str) {
-		// Get ID
-		int i = str.indexOf(" | ");
-		int id = Integer.parseInt(str.substring(0, i));
-		str = str.substring(i + 3);
-		// Get number of children
-		i = str.indexOf(" | ");
-		int children = Integer.parseInt(str.substring(0, i));
-		str = str.substring(i + 3);
-		// Get data
-		i = str.indexOf(" | ");
-		T data = decodeElement(str.substring(0, i));
-		str = str.substring(i + 3);
-		// Get children
-		LDataTree<T> node = new LDataTree<T>(data);
-		node.id = id;
-		for (i = 0; i < children; i++) {
-			LDataTree<T> child = decodeData(str);
-			child.setParent(node);
+		try {
+			// Get ID
+			int i = str.indexOf(" | ");
+			int id = Integer.parseInt(str.substring(0, i));
+			str = str.substring(i + 3);
+			// Get number of children
+			i = str.indexOf(" | ");
+			int children = Integer.parseInt(str.substring(0, i));
+			str = str.substring(i + 3);
+			// Get data
+			i = str.indexOf(" | ");
+			T data = decodeElement(str.substring(0, i));
+			str = str.substring(i + 3);
+			// Get children
+			LDataTree<T> node = new LDataTree<T>(data);
+			node.id = id;
+			for (i = 0; i < children; i++) {
+				LDataTree<T> child = decodeData(str);
+				if (child == null)
+					return null;
+				child.setParent(node);
+			}
+			return node;
+		} catch(NumberFormatException | IndexOutOfBoundsException e) {
+			return null;
 		}
-		return node;
 	}
 	
 	public void setObject(Object obj) {
@@ -142,6 +152,7 @@ public abstract class LAbstractTreeEditor<T, ST> extends LCollectionEditor<T, ST
 	public void onVisible() {
 		LPath selectedPath = getCollectionWidget().getSelectedPath();
 		onChildVisible();
+		refreshDataCollection();
 		if (selectedPath != null) {
 			getCollectionWidget().forceSelection(selectedPath);
 		} else {  
@@ -150,8 +161,8 @@ public abstract class LAbstractTreeEditor<T, ST> extends LCollectionEditor<T, ST
 	}
 	
 	public void forceFirstSelection() {
-		if (getDataCollection() != null) {
-			LDataTree<T> tree = getDataCollection().toTree();
+		if (getObject() != null) {
+			LDataTree<T> tree = getObject().toTree();
 			getCollectionWidget().setItems(tree);
 			if (tree.children.size() > 0) {
 				getCollectionWidget().forceSelection(new LPath(0));
@@ -177,5 +188,11 @@ public abstract class LAbstractTreeEditor<T, ST> extends LCollectionEditor<T, ST
 			}
 		};
 	}
+	
+	public void refreshDataCollection() {
+		setObject(getDataCollection());
+	}
+	
+	protected abstract LDataCollection<T> getDataCollection();
 
 }

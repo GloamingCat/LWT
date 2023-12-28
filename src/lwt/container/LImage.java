@@ -13,7 +13,9 @@ import org.eclipse.swt.events.PaintListener;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.ImageData;
 import org.eclipse.swt.graphics.Rectangle;
+import org.eclipse.swt.graphics.Transform;
 import org.eclipse.swt.layout.FillLayout;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.wb.swt.SWTResourceManager;
 
@@ -27,9 +29,11 @@ public class LImage extends LCanvas {
 	private float h = 0, s = 1, v = 1;
 	private int a = 255;
 	
+	private float ox = 0, oy = 0;
 	private float sx = 1, sy = 1;
+	private float rz = 0;
 	
-	public float ox = 0, oy = 0;
+	private float dx = 0, dy = 0;
 
 	/**
 	 * Create the composite.
@@ -65,12 +69,21 @@ public class LImage extends LCanvas {
 					}
 					try {
 						e.gc.setAlpha(a);
+						if (rz != 0) {
+							Transform t = new Transform(Display.getCurrent());
+							t.translate(ox * sx, oy * sy);
+							t.rotate(rz);
+							t.translate(-ox * sx, -oy * sy);
+							e.gc.setTransform(t);
+						}
 						e.gc.drawImage(buffer, rect.x, rect.y, rect.width, rect.height, 
 								x, y, w, h);
+						if (rz != 0)
+							e.gc.setTransform(null);
 					} catch (IllegalArgumentException ex) { System.out.println("Problem printing quad."); }
 				}
-				ox = x;
-				oy = y;
+				dx = x;
+				dy = y;
 				for (LPainter p : painters) {
 					p.setGC(e.gc);
 					p.paint();
@@ -78,6 +91,14 @@ public class LImage extends LCanvas {
 			}
 		});
 		addListener(SWT.Paint, oldListeter);
+	}
+	
+	public float getImageX() {
+		return dx;
+	}
+	
+	public float getImageY() {
+		return dy;
 	}
 	
 	public void setBackground(LColor color) {
@@ -156,6 +177,10 @@ public class LImage extends LCanvas {
 		redraw();
 	}
 	
+	public void setOffset(float _ox, float _oy) {
+		ox = _ox; oy = _oy;
+	}
+	
 	public void setRGBA(float _r, float _g, float _b, float _a) {
 		r = _r; g = _g; b = _b; a = Math.round(_a * 255);
 	}
@@ -166,6 +191,10 @@ public class LImage extends LCanvas {
 	
 	public void setScale(float _sx, float _sy) {
 		sx = _sx; sy = _sy;
+	}
+	
+	public void setRotation(float _r) {
+		rz = _r;
 	}
 	
 }

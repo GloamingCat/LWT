@@ -43,17 +43,17 @@ public abstract class LCollectionEditor<T, ST> extends LObjectEditor<LDataCollec
 	protected void setListeners() {
 		getCollectionWidget().addInsertListener(new LCollectionListener<T>() {
 			public void onInsert(LInsertEvent<T> event) {
-				getDataCollection().insert(event.parentPath, event.index, event.node);
+				getObject().insert(event.parentPath, event.index, event.node);
 			}
 		});
 		getCollectionWidget().addDeleteListener(new LCollectionListener<T>() {
 			public void onDelete(LDeleteEvent<T> event) {
-				getDataCollection().delete(event.parentPath, event.index);
+				getObject().delete(event.parentPath, event.index);
 			}
 		});
 		getCollectionWidget().addMoveListener(new LCollectionListener<T>() {
 			public void onMove(LMoveEvent<T> event) {
-				getDataCollection().move(event.sourceParent, event.sourceIndex, 
+				getObject().move(event.sourceParent, event.sourceIndex, 
 						event.destParent, event.destIndex);
 			}
 		});
@@ -65,12 +65,9 @@ public abstract class LCollectionEditor<T, ST> extends LObjectEditor<LDataCollec
 	}
 	
 	public void setObject(Object obj) {
+		super.setObject(obj);
 		@SuppressWarnings("unchecked")
 		LDataCollection<T> db = (LDataCollection<T>) obj;
-		setDataCollection(db);
-	}
-	
-	public void setDataCollection(LDataCollection<T> db) {
 		getCollectionWidget().setDataCollection(db);
 	}
 	
@@ -103,18 +100,19 @@ public abstract class LCollectionEditor<T, ST> extends LObjectEditor<LDataCollec
 
 	@Override
 	public void restart() {
-		getCollectionWidget().setDataCollection(getDataCollection());
+		getCollectionWidget().setDataCollection(getObject());
 	}
 
 	@Override
 	public void saveObjectValues() {
-		getDataCollection().set(getCollectionWidget().getDataCollection());
+		LDataCollection<T> obj = getObject();
+		if (obj != null)
+			obj.set(getCollectionWidget().getDataCollection());
 	}
 	
 	@Override
 	public void onCopyButton(Menu menu) {
-		//LControlWidget.clipboard = duplicateData(currentObject);
-		LGlobals.clipboard.setContents(new Object[] { encodeData(getDataCollection()) },
+		LGlobals.clipboard.setContents(new Object[] { encodeData(getObject()) },
 				new Transfer[] { TextTransfer.getInstance() });
 	}
 	
@@ -125,8 +123,9 @@ public abstract class LCollectionEditor<T, ST> extends LObjectEditor<LDataCollec
 			return;
 		try {
 			LDataCollection<T> newValue = decodeData(str);
-			LDataCollection<T> oldValue = getDataCollection();
+			LDataCollection<T> oldValue = getObject();
 			if (newValue != null && !newValue.equals(oldValue)) {
+				oldValue = oldValue.clone();
 				getCollectionWidget().setDataCollection(newValue);
 				newModifyAction(oldValue, newValue);
 			}
@@ -138,13 +137,9 @@ public abstract class LCollectionEditor<T, ST> extends LObjectEditor<LDataCollec
 	
 	// Widget
 	public abstract LCollection<T, ST> getCollectionWidget();
-	
-	// Data Collection
-	protected abstract LDataCollection<T> getDataCollection(); 
-	
+
 	// Editable Data
 	protected abstract ST getEditableData(LPath path);
 	protected abstract void setEditableData(LPath path, ST newData);
-
 	
 }

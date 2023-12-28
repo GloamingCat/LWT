@@ -208,6 +208,8 @@ public abstract class LObjectEditor<T> extends LEditor implements LControl<T> {
 	}
 	
 	public void saveObjectValues() {
+		if (getObject() == null)
+			return;
 		for(Map.Entry<LControlWidget<?>, String> entry : controlMap.entrySet()) {
 			LControlWidget<?> control = entry.getKey();
 			control.notifyEmpty();

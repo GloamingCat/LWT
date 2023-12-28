@@ -25,7 +25,16 @@ public class LDataList<T> extends ArrayList<T> implements LDataCollection<T> {
 		for (LDataTree<T> node : tree.children)
 			add(node.data);
 	}
-
+	
+	@Override
+	public LDataList<T> clone() {
+		LDataList<T> list = new LDataList<T>();
+		for (T element : this) {
+			list.add(element);
+		}
+		return list;
+	}
+	
 	@Override
 	public void insert(LPath parentPath, int index, LDataTree<T> node) {
 		if (index == -1)  {
@@ -75,5 +84,5 @@ public class LDataList<T> extends ArrayList<T> implements LDataCollection<T> {
 		}
 		return root;
 	}
-	
+
 }

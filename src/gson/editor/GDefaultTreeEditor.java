@@ -34,7 +34,7 @@ public abstract class GDefaultTreeEditor<T> extends LDefaultTreeEditor<T> {
 	}
 	
 	@Override
-	protected String encodeElement(Object data) {
+	protected String encodeElement(T data) {
 		return LGlobals.gson.toJson(data, getType());
 	}
 	

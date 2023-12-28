@@ -1,6 +1,8 @@
 package lwt.editor;
 
 import lwt.container.LContainer;
+import lwt.dataestructure.LDataCollection;
+import lwt.dataestructure.LDataTree;
 import lwt.dataestructure.LPath;
 
 public abstract class LDefaultListEditor<T> extends LListEditor<T, T> {
@@ -20,6 +22,22 @@ public abstract class LDefaultListEditor<T> extends LListEditor<T, T> {
 	
 	public void setEditableData(LPath path, T data) {
 		getDataCollection().set(path.index, data);
+	}
+	
+	@Override
+	public String encodeData(LDataCollection<T> collection) {
+		return super.encodeData(collection.toTree());
+	}
+	
+	@Override
+	public LDataTree<T> decodeData(String str) {
+		LDataTree<T> node = super.decodeData(str);
+		if (node == null)
+			return null;
+		for (var child : node.children) {
+			child.children.clear();
+		}
+		return node;
 	}
 
 }

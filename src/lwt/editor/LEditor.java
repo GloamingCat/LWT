@@ -13,7 +13,6 @@ import org.eclipse.swt.widgets.Menu;
 import lwt.LMenuInterface;
 import lwt.LVocab;
 import lwt.container.LContainer;
-import lwt.container.LFrame;
 import lwt.container.LView;
 import lwt.widget.LWidget;
 
@@ -120,15 +119,16 @@ public abstract class LEditor extends LView {
 		addMenu(getComposite());
 	}
 	
-	public void addMenu(LFrame frame) {
+	public void addMenu(LContainer frame) {
+		Composite c = frame.getComposite();
 		Menu menu = getMenu();
 		if (menu == null) {
-			menu = addMenu(frame.getComposite());
+			menu = addMenu(c);
 			setMenu(menu);
 			addFocusOnClick(this);
-		} else if (frame.getMenu() == null) {
-			frame.setMenu(menu);
-			addFocusOnClick(frame);
+		} else if (c.getMenu() == null) {
+			c.setMenu(menu);
+			addFocusOnClick(c);
 		}
 	}
 	

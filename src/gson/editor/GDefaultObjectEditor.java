@@ -2,6 +2,8 @@ package gson.editor;
 
 import java.lang.reflect.Type;
 
+import com.google.gson.JsonParseException;
+
 import lwt.LGlobals;
 import lwt.container.LContainer;
 import lwt.editor.LObjectEditor;
@@ -64,7 +66,11 @@ public abstract class GDefaultObjectEditor<T> extends LObjectEditor<T> {
 	@SuppressWarnings("unchecked")
 	@Override
 	public T decodeData(String str) {
-		return (T) LGlobals.gson.fromJson(str, getType());
+		try {
+			return (T) LGlobals.gson.fromJson(str, getType());
+		} catch(JsonParseException e) {
+			return null;
+		}
 	}
 	
 	@Override

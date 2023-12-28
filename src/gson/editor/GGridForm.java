@@ -40,7 +40,7 @@ public abstract class GGridForm<T> extends LGridForm<T> {
 		for (JsonElement je : array) {
 			list.add((T) LGlobals.gson.fromJson(je, getType()));
 		}
-		return (LDataList<T>) LGlobals.gson.fromJson(str, getType());
+		return list;
 	}
 
 	@Override

@@ -6,6 +6,7 @@ public interface LDataCollection<T> {
 	void delete(LPath parentPath, int index);
 	void move(LPath sourceParent, int sourceIndex, LPath destParent, int destIndex);
 	void set(LDataCollection<T> data);
+	LDataCollection<T> clone();
 	LDataTree<T> toTree();
 	
 }

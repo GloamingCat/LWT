@@ -3,7 +3,6 @@ package lwt.widget;
 import lwt.LVocab;
 import lwt.action.LAction;
 import lwt.container.LContainer;
-import lwt.container.LFrame;
 import lwt.dialog.LShell;
 import lwt.LFlags;
 import lwt.LMenuInterface;
@@ -77,15 +76,16 @@ public abstract class LWidget extends Composite {
 		addMenu(this);
 	}
 	
-	public void addMenu(LFrame frame) {
+	public void addMenu(LContainer frame) {
+		Composite c = frame.getComposite();
 		Menu menu = getMenu();
 		if (menu == null) {
-			menu = addMenu(frame.getComposite());
+			menu = addMenu(c);
 			setMenu(menu);
 			addFocusOnClick(this);
-		} else if (frame.getMenu() == null) {
-			frame.setMenu(menu);
-			addFocusOnClick(frame);
+		} else if (c.getMenu() == null) {
+			c.setMenu(menu);
+			addFocusOnClick(c);
 		}
 	}
 	

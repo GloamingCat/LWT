@@ -211,6 +211,10 @@ public class LPanel extends Composite implements LContainer {
 		GridData gridData = initGridData();
 		gridData.grabExcessHorizontalSpace = h;
 		gridData.grabExcessVerticalSpace = v;
+		if (h)
+			gridData.horizontalAlignment = SWT.FILL;
+		if (v)
+			gridData.verticalAlignment = SWT.FILL;
 	}
 	
 	public void setMinimumWidth(int w) {
