@@ -184,6 +184,14 @@ public class LDataTree<T> implements Serializable, LDataCollection<T> {
 	public LDataTree<T> toTree() {
 		return this;
 	}
+	
+	public LDataTree<Object> toObjectTree() {
+		LDataTree<Object> tree = new LDataTree<Object>(data);
+		for (LDataTree<T> node : children) {
+			tree.addChild(node.toObjectTree());
+		}
+		return tree;
+	}
 
 	public T get(int id) {
 		T obj = dataMap.get(id);

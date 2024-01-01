@@ -63,6 +63,11 @@ public class LLabel extends LWidget {
 	public LLabel(LContainer parent, String text) {
 		this(parent, 0, text, 1);
 	}
+	
+	public LLabel(LContainer parent, String text, String tooltip) {
+		this(parent, 0, text, 1);
+		setHoverText(tooltip);
+	}
 
 	public LLabel(LContainer parent, int hfill, int vfill) {
 		this(parent.getComposite(), SWT.NONE, hfill, vfill);
@@ -75,6 +80,11 @@ public class LLabel extends LWidget {
 		this(parent, "Text");
 	}
 	
+	public LLabel(LContainer parent, int style, String text, String tooltip) {
+		this(parent, style, text);
+		setHoverText(tooltip);
+	}
+
 	@Override
 	protected void createContent(int flags) {
 		if (flags != SWT.NONE)
@@ -87,6 +97,12 @@ public class LLabel extends LWidget {
 		layout();
 	}
 	
+	@Override
+	public void setHoverText(String text) {
+		label.setToolTipText(text);
+	}
+	
+	@Override
 	public String toString() {
 		return getClass().getName() + " " + label.getText();
 	}

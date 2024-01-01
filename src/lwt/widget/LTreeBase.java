@@ -72,6 +72,11 @@ public abstract class LTreeBase<T, ST> extends LSelectableCollection<T, ST> {
 		tree = new Tree(this, SWT.BORDER | SWT.VIRTUAL | flags);
 		tree.setLinesVisible(true);
 	}
+	
+	@Override
+	public void setHoverText(String text) {
+		tree.setToolTipText(text);
+	}
 
 	private DragSource createDragSource(Transfer[] types, int operations) {
 		final DragSource source = new DragSource(tree, operations);

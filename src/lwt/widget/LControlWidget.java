@@ -10,6 +10,7 @@ import lwt.event.listener.LControlListener;
 
 import org.eclipse.swt.dnd.TextTransfer;
 import org.eclipse.swt.dnd.Transfer;
+import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Menu;
 
 public abstract class LControlWidget<T> extends LWidget implements LControl<T> {
@@ -45,6 +46,22 @@ public abstract class LControlWidget<T> extends LWidget implements LControl<T> {
 	}
 	
 	public void setEnabled(boolean value) {}
+	
+	protected Control getControl() {
+		return this;
+	}
+	
+	@Override
+	public void setHoverText(String text) {
+		getControl().setToolTipText(text);
+	}
+	
+	@Override
+	public void setMenu(Menu menu) {
+		super.setMenu(menu);
+		getControl().setMenu(menu);
+	}
+
 	
 	//-------------------------------------------------------------------------------------
 	// Modify Events

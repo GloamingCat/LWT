@@ -3,8 +3,8 @@ package lwt.widget;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.List;
-import org.eclipse.swt.widgets.Menu;
 
 import lwt.container.LContainer;
 
@@ -96,9 +96,8 @@ public class LFlatList extends LControlWidget<Integer> {
 	}
 	
 	@Override
-	public void setMenu(Menu menu) {
-		super.setMenu(menu);
-		list.setMenu(menu);
+	protected Control getControl() {
+		return list;
 	}
 
 }

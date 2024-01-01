@@ -174,6 +174,14 @@ public class LFrame extends Group implements LContainer {
 	
 	// }}
 	
+	public void setTitle(String text) {
+		setText(text);
+	}
+	
+	public void setHoverText(String text) {
+		setToolTipText(text);
+	}
+	
 	@Override
 	public Composite getComposite() {
 		return this;

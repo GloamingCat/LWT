@@ -7,7 +7,7 @@ import lwt.graphics.LTexture;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Combo;
-import org.eclipse.swt.widgets.Menu;
+import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.GridLayout;
@@ -137,9 +137,8 @@ public class LCombo extends LControlWidget<Integer> {
 	}
 	
 	@Override
-	public void setMenu(Menu menu) {
-		super.setMenu(menu);
-		combo.setMenu(menu);
+	protected Control getControl() {
+		return combo;
 	}
 
 	@Override

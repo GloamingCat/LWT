@@ -65,7 +65,7 @@ public abstract class LGrid<T, ST> extends LSelectableCollection<T, ST> implemen
 		MenuItem mntmNewItem = new MenuItem(menu, SWT.NONE);
 		mntmNewItem.setText("New Item");
 	}
-	
+
 	public void setColumns(int columns) {
 		if (columns <= 0) {
 			RowLayout rowLayout = new RowLayout(SWT.HORIZONTAL);

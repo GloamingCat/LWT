@@ -192,6 +192,10 @@ public abstract class LWidget extends Composite {
 		gridData.heightHint = h;
 	}
 	
+	public void setHoverText(String text) {
+		super.setToolTipText(text);
+	}
+	
 	// }}
 	
 	@Override

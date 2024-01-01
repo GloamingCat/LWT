@@ -102,6 +102,10 @@ public class LCommandButton extends LWidget {
 			execute(command);
 	}
 	
+	public void setHoverText(String text) {
+		button.setToolTipText(text);
+	}
+	
 	private static class StreamGobbler implements Runnable {
 	    private InputStream inputStream;
 	    private Consumer<String> consumer;

@@ -4,6 +4,7 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.MouseAdapter;
 import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.graphics.Image;
+import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.wb.swt.SWTResourceManager;
 
@@ -58,6 +59,11 @@ public class LToggleButton extends LControlWidget<Boolean> {
 			icon.setImage(imgFalse);
 			currentValue = null;
 		}
+	}
+	
+	@Override
+	protected Control getControl() {
+		return icon;
 	}
 
 	@Override

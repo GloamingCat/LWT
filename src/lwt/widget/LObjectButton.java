@@ -11,7 +11,7 @@ import java.lang.reflect.Type;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.widgets.Button;
-import org.eclipse.swt.widgets.Menu;
+import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.GridData;
 
@@ -71,9 +71,8 @@ public abstract class LObjectButton<T> extends LControlWidget<T> {
 	}
 	
 	@Override
-	public void setMenu(Menu menu) {
-		super.setMenu(menu);
-		button.setMenu(menu);
+	protected Control getControl() {
+		return button;
 	}
 
 	@Override

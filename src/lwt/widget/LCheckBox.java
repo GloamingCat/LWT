@@ -2,6 +2,7 @@ package lwt.widget;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Button;
+import org.eclipse.swt.widgets.Control;
 import org.eclipse.wb.swt.SWTResourceManager;
 
 import lwt.container.LContainer;
@@ -63,6 +64,11 @@ public class LCheckBox extends LControlWidget<Boolean> {
 	public void setEnabled(boolean enabled) {
 		super.setEnabled(enabled);
 		button.setForeground(SWTResourceManager.getColor(enabled ? SWT.COLOR_BLACK : SWT.COLOR_DARK_GRAY));
+	}
+	
+	@Override
+	protected Control getControl() {
+		return button;
 	}
 
 	@Override

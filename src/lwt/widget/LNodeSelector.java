@@ -13,7 +13,7 @@ import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Menu;
+import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.layout.GridData;
 
 public class LNodeSelector<T> extends LControlWidget<Integer> implements LContainer {
@@ -176,6 +176,11 @@ public class LNodeSelector<T> extends LControlWidget<Integer> implements LContai
 	}
 	
 	@Override
+	protected Control getControl() {
+		return tree;
+	}
+
+	@Override
 	public Object getChild(int i) {
 		return getChildren()[i];
 	}
@@ -183,12 +188,6 @@ public class LNodeSelector<T> extends LControlWidget<Integer> implements LContai
 	@Override
 	public int getChildCount() {
 		return this.getChildren().length;
-	}
-	
-	@Override
-	public void setMenu(Menu menu) {
-		super.setMenu(menu);
-		tree.setMenu(menu);
 	}
 
 }
