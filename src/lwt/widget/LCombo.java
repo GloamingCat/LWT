@@ -78,12 +78,6 @@ public class LCombo extends LControlWidget<Integer> {
 			combo.select(i);
 	}
 	
-	public void setItem(int i, Object obj) {
-		if (optional)
-			i++;
-		combo.setItem(i, obj.toString());
-	}
-	
 	public void setValue(Object obj) {
 		if (obj != null) {
 			Integer i = (Integer) obj;

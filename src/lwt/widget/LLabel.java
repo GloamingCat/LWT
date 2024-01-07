@@ -3,7 +3,6 @@ package lwt.widget;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
-import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Menu;
 
@@ -14,22 +13,13 @@ public class LLabel extends LWidget {
 
 	private Label label;
 	
-	LLabel (Composite parent, int style) {
+	LLabel (LContainer parent, int style) {
 		super(parent, SWT.NONE);
 		label.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 	}
-	
-	LLabel(Composite parent, int style, int hfill, int vfill) {
-		super(parent, SWT.FILL);
-		GridData gridData = new GridData(SWT.FILL, SWT.FILL, false, false, hfill, vfill);
-		gridData.widthHint = 0;
-		gridData.heightHint = 0;
-		setLayoutData(gridData);
-		setEnabled(false);
-	}
 
 	public LLabel(LContainer parent, int style, String text, int columns) {
-		this(parent.getComposite(), SWT.NONE);
+		this(parent, SWT.NONE);
 		label.setText(text);
 		GridLayout gridLayout = new GridLayout(1, false);
 		gridLayout.horizontalSpacing = 0;
@@ -70,7 +60,12 @@ public class LLabel extends LWidget {
 	}
 
 	public LLabel(LContainer parent, int hfill, int vfill) {
-		this(parent.getComposite(), SWT.NONE, hfill, vfill);
+		this(parent, "");
+		GridData gridData = new GridData(SWT.FILL, SWT.FILL, false, false, hfill, vfill);
+		gridData.widthHint = 0;
+		gridData.heightHint = 0;
+		setLayoutData(gridData);
+		setEnabled(false);
 	}
 
 	/**

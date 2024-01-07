@@ -7,6 +7,7 @@ import java.io.IOException;
 import javax.imageio.ImageIO;
 
 import lwt.LFlags;
+import lwt.LVocab;
 import lwt.container.LImage;
 import lwt.container.LPanel;
 import lwt.container.LSashPanel;
@@ -28,7 +29,7 @@ public class LImageShell extends LObjectShell<String> {
 	 * @wbp.eval.method.parameter rootPath ""
 	 */
 	public LImageShell(LShell parent, boolean optional, String rootPath) {
-		super(parent);
+		super(parent, LVocab.instance.IMAGESHELL);
 		setMinimumSize(600, 400);
 
 		LSashPanel form = new LSashPanel(content, true);
@@ -36,7 +37,8 @@ public class LImageShell extends LObjectShell<String> {
 		selFile.addFileRestriction( (f) -> { return isImage(f); } );
 		selFile.setFolder(rootPath);
 
-		LPanel quad = new LPanel(form, 1);
+		LPanel quad = new LPanel(form);
+		quad.setGridLayout(1);
 
 		scroll = new LScrollPanel(quad);
 		scroll.setExpand(true, true);

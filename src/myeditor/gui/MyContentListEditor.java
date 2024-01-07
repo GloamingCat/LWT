@@ -19,7 +19,8 @@ public class MyContentListEditor extends LView {
 	 * @wbp.eval.method.parameter parent new lwt.dialog.LShell()
 	 */
 	public MyContentListEditor(LContainer parent) {
-		super(parent, true, false);
+		super(parent, false);
+		setFillLayout(true);
 		
 		createMenuInterface();
 		

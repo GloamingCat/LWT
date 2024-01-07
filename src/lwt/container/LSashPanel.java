@@ -81,12 +81,16 @@ public class LSashPanel extends SashForm implements LContainer {
 	public void setMinimumWidth(int w) {
 		GridData gridData = initGridData();
 		gridData.minimumWidth = w;
+		if (w == 0)
+			w = -1;
 		gridData.widthHint = w;
 	}
 	
 	public void setMinimumHeight(int h) {
 		GridData gridData = initGridData();
 		gridData.minimumHeight = h;
+		if (h == 0)
+			h = -1;
 		gridData.heightHint = h;
 	}
 	
@@ -95,7 +99,7 @@ public class LSashPanel extends SashForm implements LContainer {
 	public void setWeights(int... w) {
 		super.setWeights(w);
 	}
-	
+
 	@Override
 	public Composite getComposite() {
 		return this;

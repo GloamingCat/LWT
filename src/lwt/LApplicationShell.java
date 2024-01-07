@@ -5,6 +5,9 @@ import lwt.container.LContainer;
 import lwt.container.LView;
 import lwt.dataserialization.LFileManager;
 import lwt.dataserialization.LSerializer;
+import lwt.dialog.LErrorDialog;
+import lwt.dialog.LFileDialog;
+import lwt.dialog.LConfirmDialog;
 import lwt.dialog.LShell;
 import java.util.ArrayList;
 
@@ -18,11 +21,9 @@ import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Event;
-import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.MenuItem;
-import org.eclipse.swt.widgets.MessageBox;
 import org.eclipse.wb.swt.SWTResourceManager;
 
 public abstract class LApplicationShell extends LShell implements LContainer {
@@ -244,9 +245,9 @@ public abstract class LApplicationShell extends LShell implements LContainer {
 		LVocab vocab = LVocab.instance;
 		LSerializer project = createProject(path);
 		if (!project.load()) {
-			MessageBox msg = new MessageBox(getShell(), SWT.ICON_ERROR | SWT.OK);
-			msg.setText(vocab.LOADERROR);
-			msg.setMessage(vocab.LOADERRORMSG + "\n" + path);
+			LErrorDialog msg = new LErrorDialog(this,
+					vocab.LOADERROR,
+					vocab.LOADERRORMSG + "\n" + path);
 			msg.open();
 			return false;
 		} else {
@@ -289,20 +290,18 @@ public abstract class LApplicationShell extends LShell implements LContainer {
 			return project;
 		}
 		LVocab vocab = LVocab.instance;
-		FileDialog dialog = new FileDialog(this);
-		dialog.setText(vocab.NEWPROJECT);
-		dialog.setFilterExtensions(new String[] {"*.json"});
-		dialog.setFilterPath(LFileManager.applicationPath());
+		LFileDialog dialog = new LFileDialog(this, vocab.NEWPROJECT, false);
 		String resultPath = dialog.open();
 		if (resultPath == null)
 			return project;
 		LSerializer newProject = createProject(resultPath);
 		if (newProject.isDataFolder(resultPath)) {
-			MessageBox msg = new MessageBox(this, SWT.ICON_QUESTION | SWT.YES | SWT.NO | SWT.CANCEL);
-			msg.setText(vocab.EXISTINGPROJECT);
-			msg.setMessage(vocab.EXISTINGMSG);
+			LConfirmDialog msg = new LConfirmDialog(this, 
+					vocab.EXISTINGPROJECT,
+					vocab.EXISTINGMSG,
+					LConfirmDialog.OK_CANCEL);
 			int result = msg.open();
-			if (result != SWT.YES) {
+			if (result != LConfirmDialog.YES) {
 				return project;
 			}
 		}
@@ -322,10 +321,7 @@ public abstract class LApplicationShell extends LShell implements LContainer {
 			return project;
 		}
 		LVocab vocab = LVocab.instance;
-		FileDialog dialog = new FileDialog(this);
-		dialog.setText(vocab.OPENPROJECT);
-		dialog.setFilterExtensions(new String[] {"*.json"});
-		dialog.setFilterPath(LFileManager.applicationPath());
+		LFileDialog dialog = new LFileDialog(this, vocab.OPENPROJECT, true);
 		String resultFile = dialog.open();
 		if (resultFile == null)
 			return project;
@@ -342,9 +338,9 @@ public abstract class LApplicationShell extends LShell implements LContainer {
 			if (defaultView != null)
 				setCurrentView(defaultView);
 		} else {
-			MessageBox msg = new MessageBox(this, SWT.ICON_ERROR | SWT.OK);
-			msg.setText(vocab.LOADERROR);
-			msg.setMessage(vocab.LOADERRORMSG + ":" + resultFile);
+			LErrorDialog msg = new LErrorDialog(this,
+					vocab.LOADERROR,
+					vocab.LOADERRORMSG + ":" + resultFile);
 			msg.open();
 			project = previous;
 		}
@@ -356,9 +352,9 @@ public abstract class LApplicationShell extends LShell implements LContainer {
 			return;
 		if (!project.save()) {
 			LVocab vocab = LVocab.instance;
-			MessageBox msg = new MessageBox(this, SWT.APPLICATION_MODAL | SWT.ICON_ERROR | SWT.OK);
-			msg.setText(vocab.SAVEERROR);
-			msg.setMessage(vocab.SAVEERRORMSG);
+			LErrorDialog msg = new LErrorDialog(this,
+					vocab.SAVEERROR,
+					vocab.SAVEERRORMSG);
 			msg.open();
 		} else {
 			LActionManager.getInstance().onSave();
@@ -368,14 +364,15 @@ public abstract class LApplicationShell extends LShell implements LContainer {
 	protected boolean askSave() {
 		if (project != null && LActionManager.getInstance().hasChanges()) {
 			LVocab vocab = LVocab.instance;
-			MessageBox msg = new MessageBox(this, SWT.APPLICATION_MODAL | SWT.YES | SWT.NO | SWT.CANCEL);
-			msg.setText(vocab.UNSAVEDPROJECT);
-			msg.setMessage(vocab.UNSAVEDMSG);
+			LConfirmDialog msg = new LConfirmDialog(this, 
+					vocab.UNSAVEDPROJECT,
+					vocab.UNSAVEDMSG,
+					LConfirmDialog.YES_NO_CANCEL);
 			int result = msg.open();
-			if (result == SWT.YES) {
+			if (result == LConfirmDialog.YES) {
 				saveProject();
 				return true;
-			} else if (result == SWT.NO) {
+			} else if (result == LConfirmDialog.NO) {
 				return true;
 			} else {
 				return false;
@@ -384,9 +381,6 @@ public abstract class LApplicationShell extends LShell implements LContainer {
 			return true;
 		}
 	}
-
-	@Override
-	protected void checkSubclass() { }
 
 	public Composite getComposite() {
 		return this;

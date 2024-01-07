@@ -11,6 +11,7 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.layout.RowLayout;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Layout;
 
 import lwt.LFlags;
@@ -22,75 +23,21 @@ import lwt.graphics.LPoint;
 public class LPanel extends Composite implements LContainer {
 
 	private ArrayList<LMouseListener> mouseListeners = null;
-	
+	private boolean equalRows = false;
+
 	//////////////////////////////////////////////////
-	// {{ Internal Constructors
+	// {{ Constructors
 	
-	/**
+	/** 
 	 * Internal, no layout.
 	 */
 	LPanel(Composite parent, int style) {
 		super(parent, style);
 	}
-	
-	/**
-	 * Internal, with fill layout.
-	 */
-	LPanel(Composite parent, boolean horizontal, int style) {
-		super(parent, style);
-		setFillLayout(horizontal);
-	}
 
-	/**
-	 * Internal, with grid layout.
-	 */
-	LPanel(Composite parent, int columns, boolean equalCols, int style) {
-		super(parent, style);
-		setGridLayout(columns, equalCols);
-	}
-
-	/**
-	 * Internal, with fill or row layout.
-	 */
-	LPanel(Composite parent, boolean horizontal, boolean equalCells, int style) {
-		super(parent, style);
-		setLinearLayout(horizontal, equalCells);
-	}
-
-	// }}
-	
-	//////////////////////////////////////////////////
-	// {{ Public Constructors
-	
-	/** Grid layout.
-	 */
-	public LPanel(LContainer parent, int columns, boolean equalCols) {
-		this(parent.getComposite(), columns, equalCols, SWT.NONE);
-	}
-	
-	/** Grid layout with unequal columns.
-	 */
-	public LPanel(LContainer parent, int columns) {
-		this(parent, columns, false);
-	}
-	
-	/** Fill/row layout.
-	 */
-	public LPanel(LContainer parent, boolean horizontal, boolean equalCells) {
-		this(parent.getComposite(), horizontal, equalCells, SWT.NONE);
-	}
-	
-	/** Fill layout with no margin.
+	/** 
 	 * @wbp.parser.constructor
 	 * @wbp.eval.method.parameter parent new LShell(800, 600)
-	 * @wbp.eval.method.parameter horizontal true
-	 */
-	public LPanel(LContainer parent, boolean horizontal) {
-		this(parent.getComposite(), horizontal, SWT.NONE);
-	}
-
-	/** No layout.
-	 * @param parent
 	 */
 	public LPanel(LContainer parent) {
 		this(parent.getComposite(), SWT.NONE);
@@ -101,6 +48,9 @@ public class LPanel extends Composite implements LContainer {
 	//////////////////////////////////////////////////
 	// {{ Inner Layout
 	
+	/**
+	 * Fill layout (spacing = 0).
+	 */
 	public void setFillLayout(boolean horizontal) {
 		if (horizontal) {
 			setLayout(new FillLayout(SWT.HORIZONTAL));
@@ -109,26 +59,27 @@ public class LPanel extends Composite implements LContainer {
 		}
 	}
 	
-	public void setGridLayout(int columns, boolean equalCols) {
-		GridLayout gl = new GridLayout(columns, equalCols);
+	/**
+	 * Grid layout (spacing = 5).
+	 */
+	public void setGridLayout(int columns) {
+		GridLayout gl = new GridLayout(columns, false);
 		gl.marginWidth = 0;
 		gl.marginHeight = 0;
 		setLayout(gl);
 	}
-	
-	public void setLinearLayout(boolean horizontal, boolean equalCells) {
-		int dir = horizontal ? SWT.HORIZONTAL : SWT.VERTICAL;
-		if (equalCells) {
-			FillLayout layout = new FillLayout(dir);
-			layout.spacing = 5;
-			setLayout(layout);
-		} else {
-			RowLayout layout = new RowLayout(dir);
-			layout.spacing = 5;
-			setLayout(layout);
-		}
+
+	/*
+	 * Column/row layout (spacing = 5).
+	 */
+	public void setSequentialLayout(boolean horizontal) {
+		RowLayout layout = new RowLayout(horizontal ? SWT.HORIZONTAL : SWT.VERTICAL);
+		layout.spacing = 5;
+		layout.marginWidth = 0;
+		layout.marginHeight = 0;
+		setLayout(layout);
 	}
-	
+
 	public void setMargins(int h, int v) {
 		Layout l = getLayout();
 		if (l instanceof GridLayout) {
@@ -163,6 +114,39 @@ public class LPanel extends Composite implements LContainer {
 	
 	public void setSpacing(int s) {
 		setSpacing(s, s);
+	}
+	
+	public void setEqualCells(boolean horizontal, boolean vertical) {
+		equalRows = vertical;
+		Layout l = getLayout();
+		if (l instanceof GridLayout) {
+			GridLayout gl = (GridLayout) l;
+			gl.makeColumnsEqualWidth = horizontal;
+		} else if (l instanceof RowLayout) {
+			RowLayout rl = (RowLayout) l;
+			rl.pack = horizontal;
+		}
+	}
+	
+	public void setEqualCells(boolean value) {
+		setEqualCells(value, value);
+	}
+	
+	@Override
+	public void layout() {
+		if (equalRows && getLayout() instanceof GridLayout) {
+			int height = computeSize(SWT.DEFAULT, SWT.DEFAULT).y
+					/ getChildCount();
+			for (Control child : getChildren()) {
+				GridData gd = (GridData) child.getLayoutData();
+				if (gd == null) {
+					gd = new GridData();
+					child.setLayoutData(gd);
+				}
+				gd.heightHint = height;
+			}
+		}
+		super.layout();
 	}
 	
 	// }}
@@ -220,12 +204,16 @@ public class LPanel extends Composite implements LContainer {
 	public void setMinimumWidth(int w) {
 		GridData gridData = initGridData();
 		gridData.minimumWidth = w;
+		if (w == 0)
+			w = -1;
 		gridData.widthHint = w;
 	}
 	
 	public void setMinimumHeight(int h) {
 		GridData gridData = initGridData();
 		gridData.minimumHeight = h;
+		if (h == 0)
+			h = -1;
 		gridData.heightHint = h;
 	}
 	
@@ -325,7 +313,7 @@ public class LPanel extends Composite implements LContainer {
 	public LShell getShell() {
 		return (LShell) super.getShell();
 	}
-	
+
 	@Override
 	public void dispose() {
 		super.dispose();

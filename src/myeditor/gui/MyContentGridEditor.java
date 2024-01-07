@@ -19,7 +19,8 @@ public class MyContentGridEditor extends LView {
 	 * @param style
 	 */
 	public MyContentGridEditor(LContainer parent) {
-		super(parent, true, false);
+		super(parent, false);
+		setFillLayout(true);
 		
 		createMenuInterface();
 		

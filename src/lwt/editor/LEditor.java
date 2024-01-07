@@ -30,38 +30,6 @@ public abstract class LEditor extends LView {
 		super(parent, doubleBuffered);
 	}
 
-	/**
-	 * Fill/row layout.
-	 * @param parent
-	 * @param horizontal
-	 * @param equalCells
-	 * @param doubleBuffered
-	 */
-	public LEditor(LContainer parent, boolean horizontal, boolean equalCells, boolean doubleBuffered) {
-		super(parent, horizontal, equalCells, doubleBuffered);
-	}
-	
-	/**
-	 * Fill layout with no margin.
-	 * @param parent
-	 * @param horizontal
-	 * @param doubleBuffered
-	 */
-	public LEditor(LContainer parent, boolean horizontal, boolean doubleBuffered) {
-		super(parent, horizontal, doubleBuffered);
-	}
-	
-	/**
-	 * Grid layout.
-	 * @param parent
-	 * @param columns
-	 * @param equalCols
-	 * @param doubleBuffered
-	 */
-	public LEditor(LContainer parent, int columns, boolean equalCols, boolean doubleBuffered) {
-		super(parent, columns, equalCols, doubleBuffered);
-	}
-
 	// }}
 	
 	//////////////////////////////////////////////////

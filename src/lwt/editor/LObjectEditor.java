@@ -52,41 +52,6 @@ public abstract class LObjectEditor<T> extends LEditor implements LControl<T> {
 		addMenu();
 	}
 
-	/**
-	 * Fill/row layout.
-	 * @param parent
-	 * @param horizontal
-	 * @param equalCells
-	 * @param doubleBuffered
-	 */
-	public LObjectEditor(LContainer parent, boolean horizontal, boolean equalCells, boolean doubleBuffered) {
-		super(parent, horizontal, equalCells, doubleBuffered);
-		addMenu();
-	}
-	
-	/**
-	 * Fill layout with no margin.
-	 * @param parent
-	 * @param horizontal
-	 * @param doubleBuffered
-	 */
-	public LObjectEditor(LContainer parent, boolean horizontal, boolean doubleBuffered) {
-		super(parent, horizontal, doubleBuffered);
-		addMenu();
-	}
-	
-	/**
-	 * Grid layout.
-	 * @param parent
-	 * @param columns
-	 * @param equalCols
-	 * @param doubleBuffered
-	 */
-	public LObjectEditor(LContainer parent, int columns, boolean equalCols, boolean doubleBuffered) {
-		super(parent, columns, equalCols, doubleBuffered);
-		addMenu();
-	}
-	
 	// }}
 
 	//////////////////////////////////////////////////

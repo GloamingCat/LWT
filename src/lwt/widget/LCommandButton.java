@@ -8,41 +8,29 @@ import java.io.InputStreamReader;
 import java.util.concurrent.Executors;
 import java.util.function.Consumer;
 
-import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.SelectionAdapter;
-import org.eclipse.swt.events.SelectionEvent;
-import org.eclipse.swt.layout.FillLayout;
-import org.eclipse.swt.widgets.Button;
-import org.eclipse.swt.widgets.Menu;
-import org.eclipse.swt.widgets.MessageBox;
-
 import lwt.LVocab;
 import lwt.action.LActionManager;
 import lwt.container.LContainer;
 import lwt.dataserialization.LSerializer;
+import lwt.dialog.LErrorDialog;
+import lwt.dialog.LConfirmDialog;
+import lwt.event.LSelectionEvent;
+import lwt.event.listener.LSelectionListener;
 
-public class LCommandButton extends LWidget {
+public class LCommandButton extends LButton {
 
 	public LSerializer projectSerializer = null;
 	public String command = null;
-	protected Button button;
 	
 	public LCommandButton(LContainer parent, String text) {
-		super(parent);
-		setLayout(new FillLayout());
-		button.addSelectionListener(new SelectionAdapter() {
+		super(parent, text);
+		onClick = new LSelectionListener() {
 			@Override
-			public void widgetSelected(SelectionEvent e) {
+			public void onSelect(LSelectionEvent event) {
 				if (askSave())
-					execute();
+					execute(command);
 			}
-		});
-		button.setText(text);
-	}
-
-	@Override
-	protected void createContent(int flags) {
-		button = new Button(this, SWT.NONE);
+		};
 	}
 
 	protected boolean execute(String command) {
@@ -72,22 +60,23 @@ public class LCommandButton extends LWidget {
 			return true;
 		if (LActionManager.getInstance().hasChanges()) {
 			LVocab vocab = LVocab.instance;
-			MessageBox msg = new MessageBox(getShell(), SWT.APPLICATION_MODAL | SWT.YES | SWT.NO | SWT.CANCEL);
-			msg.setText(vocab.UNSAVEDPROJECT);
-			msg.setMessage(vocab.UNSAVEDMSG);
+			LConfirmDialog msg = new LConfirmDialog(getShell(), 
+					vocab.UNSAVEDPROJECT,
+					vocab.UNSAVEDMSG,
+					LConfirmDialog.YES_NO_CANCEL);
 			int result = msg.open();
-			if (result == SWT.YES) {
+			if (result == LConfirmDialog.YES) {
 				if (!projectSerializer.save()) {
-					msg = new MessageBox(getShell(), SWT.APPLICATION_MODAL | SWT.ICON_ERROR | SWT.OK);
-					msg.setText(vocab.SAVEERROR);
-					msg.setMessage(vocab.SAVEERRORMSG);
-					msg.open();
+					LErrorDialog error = new LErrorDialog(getShell(),
+							vocab.SAVEERROR,
+							vocab.SAVEERRORMSG);
+					error.open();
 					return false;
 				} else {
 					LActionManager.getInstance().onSave();
 					return true;
 				}
-			} else if (result == SWT.NO) {
+			} else if (result == LConfirmDialog.NO) {
 				return true;
 			} else {
 				return false;
@@ -96,44 +85,21 @@ public class LCommandButton extends LWidget {
 			return true;
 		}
 	}
-	
-	protected void execute() {
-		if (command != null)
-			execute(command);
-	}
-	
-	public void setHoverText(String text) {
-		button.setToolTipText(text);
-	}
-	
+
 	private static class StreamGobbler implements Runnable {
-	    private InputStream inputStream;
-	    private Consumer<String> consumer;
+		private InputStream inputStream;
+		private Consumer<String> consumer;
 
-	    public StreamGobbler(InputStream inputStream, Consumer<String> consumer) {
-	        this.inputStream = inputStream;
-	        this.consumer = consumer;
-	    }
+		public StreamGobbler(InputStream inputStream, Consumer<String> consumer) {
+			this.inputStream = inputStream;
+			this.consumer = consumer;
+		}
 
-	    @Override
-	    public void run() {
-	        new BufferedReader(new InputStreamReader(inputStream)).lines()
-	          .forEach(consumer);
-	    }
+		@Override
+		public void run() {
+			new BufferedReader(new InputStreamReader(inputStream)).lines()
+				.forEach(consumer);
+		}
 	}	
-	
-	@Override
-	public void onCopyButton(Menu menu) {}
-	
-	@Override
-	public void onPasteButton(Menu menu) {}
-
-	@Override
-	public boolean canDecode(String str) {
-		return false;
-	}
-
-	@Override
-	protected void checkSubclass() { }
 
 }

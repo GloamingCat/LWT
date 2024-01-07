@@ -16,6 +16,9 @@ public class LScrollPanel extends ScrolledComposite implements LContainer {
 	
 	private Control content;
 
+	//////////////////////////////////////////////////
+	// {{ Constructors
+
 	/**
 	 * Internal, no layout.
 	 */
@@ -37,13 +40,6 @@ public class LScrollPanel extends ScrolledComposite implements LContainer {
 			}
 		});
 	}
-	
-	/**
-	 * Internal, with fill layout.
-	 */
-	LScrollPanel(Composite parent, boolean horizontal, int style) {
-		super(parent, style);
-	}
 
 	/** Fill layout with no margin.
 	 * @param parent
@@ -63,6 +59,8 @@ public class LScrollPanel extends ScrolledComposite implements LContainer {
 	public LScrollPanel(LContainer parent) {
 		this(parent, false);
 	}
+	
+	// }}
 
 	//////////////////////////////////////////////////
 	// {{ Layout
@@ -114,12 +112,16 @@ public class LScrollPanel extends ScrolledComposite implements LContainer {
 	public void setMinimumWidth(int w) {
 		GridData gridData = initGridData();
 		gridData.minimumWidth = w;
+		if (w == 0)
+			w = -1;
 		gridData.widthHint = w;
 	}
 	
 	public void setMinimumHeight(int h) {
 		GridData gridData = initGridData();
 		gridData.minimumHeight = h;
+		if (h == 0)
+			h = -1;
 		gridData.heightHint = h;
 	}
 	
@@ -151,6 +153,5 @@ public class LScrollPanel extends ScrolledComposite implements LContainer {
 
 	@Override
 	protected void checkSubclass() { }
-
 	
 }

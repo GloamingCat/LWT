@@ -28,41 +28,6 @@ public class LView extends LPanel {
 		this.doubleBuffered = doubleBuffered;
 	}
 
-	/**
-	 * Fill/row layout.
-	 * @param parent
-	 * @param horizontal
-	 * @param equalCells
-	 * @param doubleBuffered
-	 */
-	public LView(LContainer parent, boolean horizontal, boolean equalCells, boolean doubleBuffered) {
-		super(parent.getComposite(), horizontal, equalCells, SWT.NONE);
-		this.doubleBuffered = doubleBuffered;
-	}
-	
-	/**
-	 * Fill layout with no margin.
-	 * @param parent
-	 * @param horizontal
-	 * @param doubleBuffered
-	 */
-	public LView(LContainer parent, boolean horizontal, boolean doubleBuffered) {
-		super(parent.getComposite(), horizontal, SWT.NONE);
-		this.doubleBuffered = doubleBuffered;
-	}
-	
-	/**
-	 * Grid layout.
-	 * @param parent
-	 * @param columns
-	 * @param equalCols
-	 * @param doubleBuffered
-	 */
-	public LView(LContainer parent, int columns, boolean equalCols, boolean doubleBuffered) {
-		super(parent.getComposite(), columns, equalCols,  SWT.NONE);
-		this.doubleBuffered = doubleBuffered;
-	}
-
 	public void addChild(LView child) {
 		if (child.parent != null) {
 			parent.children.remove(child);

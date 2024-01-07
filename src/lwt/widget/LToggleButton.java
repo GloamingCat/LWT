@@ -3,18 +3,17 @@ package lwt.widget;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.MouseAdapter;
 import org.eclipse.swt.events.MouseEvent;
-import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
-import org.eclipse.wb.swt.SWTResourceManager;
 
 import lwt.container.LContainer;
+import lwt.graphics.LTexture;
 
 public class LToggleButton extends LControlWidget<Boolean> {
 
 	private Label icon;
-	private Image imgTrue;
-	private Image imgFalse;
+	private LTexture imgTrue;
+	private LTexture imgFalse;
 	private boolean enabled = true;
 	
 	public LToggleButton(LContainer parent) {
@@ -33,9 +32,9 @@ public class LToggleButton extends LControlWidget<Boolean> {
 	
 	public LToggleButton(LContainer parent, String imgTrue, String imgFalse) {
 		this(parent);
-		this.imgFalse = SWTResourceManager.getImage(LToggleButton.class, imgFalse);
-		this.imgTrue = SWTResourceManager.getImage(LToggleButton.class, imgTrue);
-		icon.setImage(this.imgFalse);
+		this.imgFalse = new LTexture(imgFalse);
+		this.imgTrue = new LTexture(imgTrue);
+		icon.setImage(this.imgFalse.convert());
 	}
 
 	@Override
@@ -43,7 +42,7 @@ public class LToggleButton extends LControlWidget<Boolean> {
 		icon = new Label(this, SWT.NONE);
 	}
 	
-	public void setImages(Image imgTrue, Image imgFalse) {
+	public void setImages(LTexture imgTrue, LTexture imgFalse) {
 		this.imgFalse = imgFalse;
 		this.imgTrue = imgTrue;
 	}
@@ -52,11 +51,11 @@ public class LToggleButton extends LControlWidget<Boolean> {
 		if (obj != null) {
 			enabled = true;
 			Boolean i = (Boolean) obj;
-			icon.setImage(i ? imgTrue : imgFalse);
+			icon.setImage(i ? imgTrue.convert() : imgFalse.convert());
 			currentValue = i;
 		} else {
 			enabled = false;
-			icon.setImage(imgFalse);
+			icon.setImage(imgFalse.convert());
 			currentValue = null;
 		}
 	}

@@ -3,8 +3,7 @@ package lwt.widget;
 import lwt.LVocab;
 import lwt.action.LAction;
 import lwt.container.LContainer;
-import lwt.dialog.LShell;
-import lwt.LFlags;
+import lwt.container.LPanel;
 import lwt.LMenuInterface;
 
 import org.eclipse.swt.SWT;
@@ -12,19 +11,17 @@ import org.eclipse.swt.events.MouseAdapter;
 import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
-import org.eclipse.swt.layout.FillLayout;
-import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Menu;
 
-public abstract class LWidget extends Composite {
+public abstract class LWidget extends LPanel {
 
 	protected LMenuInterface menuInterface;
 
-	public LWidget(Composite parent, int style) {
-		super(parent, style);
-		setLayout(new FillLayout());
-		parent.setTabList(null);
+	public LWidget(LContainer parent, int style) {
+		super(parent);
+		setFillLayout(true);
+		parent.getComposite().setTabList(null);
 		createContent(style);
 	}
 
@@ -33,7 +30,7 @@ public abstract class LWidget extends Composite {
 	 * @wbp.eval.method.parameter parent new lwt.container.LPanel(new LShell(800, 600), true)
 	 */
 	public LWidget(LContainer parent) {
-		this(parent.getComposite(), SWT.NONE);
+		this(parent, SWT.NONE);
 	}
 	
 	protected abstract void createContent(int flags);
@@ -46,6 +43,10 @@ public abstract class LWidget extends Composite {
 		if (menuInterface != null) {
 			menuInterface.actionStack.newAction(action);
 		}
+	}
+	
+	public void setHoverText(String text) {
+		super.setToolTipText(text);
 	}
 	
 	//////////////////////////////////////////////////
@@ -128,93 +129,5 @@ public abstract class LWidget extends Composite {
 	public abstract boolean canDecode(String str);
 	
 	// }}
-	
-	//////////////////////////////////////////////////
-	// {{ Layout
-	
-	public GridData initGridData() {
-		Object ld = getLayoutData();
-		if (ld != null) {
-			return (GridData) ld;
-		} else {
-			GridData gd = new GridData(SWT.FILL, SWT.FILL, false, false, 1, 1);
-			setLayoutData(gd);
-			return gd;
-		}
-	}
-	
-	public void setGridData(int ax, int ay, boolean grabx, boolean graby, int cols, int rows) {
-		setLayoutData(new GridData(ax, ay, grabx, graby, cols, rows));
-	}
-	
-	public void setSpread(int cols, int rows) {
-		GridData gridData = (GridData) initGridData();
-		gridData.horizontalSpan = cols;
-		gridData.verticalSpan = rows;
-	}
-	
-	public void setAlignment(int a) {
-		int h = SWT.FILL;
-		int v = SWT.FILL;
-		if ((a & LFlags.LEFT) > 0)
-			h = SWT.LEFT;
-		if ((a & LFlags.RIGHT) > 0)
-			h = SWT.RIGHT;
-		if ((a & LFlags.MIDDLE) > 0)
-			h = SWT.CENTER;
-		if ((a & LFlags.TOP) > 0)
-			v = SWT.TOP;
-		if ((a & LFlags.BOTTOM) > 0)
-			v = SWT.BOTTOM;
-		if ((a & LFlags.CENTER) > 0)
-			v = SWT.CENTER;
-		GridData gridData = initGridData();
-		gridData.horizontalAlignment = h;
-		gridData.verticalAlignment = v;
-	}
 
-	public void setExpand(boolean h, boolean v) {
-		initGridData();
-		GridData gridData = initGridData();
-		gridData.grabExcessHorizontalSpace = h;
-		gridData.grabExcessVerticalSpace = v;
-	}
-	
-	public void setMinimumWidth(int w) {
-		GridData gridData = initGridData();
-		gridData.minimumWidth = w;
-		gridData.widthHint = w;
-	}
-	
-	public void setMinimumHeight(int h) {
-		GridData gridData = initGridData();
-		gridData.minimumHeight = h;
-		gridData.heightHint = h;
-	}
-	
-	public void setHoverText(String text) {
-		super.setToolTipText(text);
-	}
-	
-	// }}
-	
-	@Override
-	protected void checkSubclass() { }
-
-	@Override
-	public LShell getShell() {
-		return (LShell) super.getShell();
-	}
-	
-	@Override
-	public Object getData() {
-		return super.getData();
-	}
-	
-	@Override
-	public Object getData(String key) {
-		return super.getData(key);
-	}
-	
-	
 }

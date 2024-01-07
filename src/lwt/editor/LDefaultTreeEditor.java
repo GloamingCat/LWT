@@ -15,11 +15,13 @@ public abstract class LDefaultTreeEditor<T> extends LTreeEditor<T, T> {
 		super(parent);
 	}
 
+	@Override
 	public T getEditableData(LPath path) {
 		LDataTree<T> node = getDataCollection().getNode(path);
 		return node.data;
 	}
 	
+	@Override
 	public void setEditableData(LPath path, T data) {
 		LDataTree<T> node = getDataCollection().getNode(path);
 		node.data = data;

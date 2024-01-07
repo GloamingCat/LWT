@@ -1,43 +1,33 @@
 package lwt.dialog;
 
-import org.eclipse.swt.widgets.Text;
-
 import lwt.LVocab;
-
-import org.eclipse.swt.widgets.Label;
-import org.eclipse.swt.SWT;
-import org.eclipse.swt.layout.GridData;
-import org.eclipse.swt.layout.GridLayout;
+import lwt.widget.LLabel;
+import lwt.widget.LText;
 
 public class LStringShell extends LObjectShell<String> {
 	
-	private Text txtName;
+	private LText txtName;
 
-	public LStringShell(LShell parent) {
-		super(parent);
-		
-		content.setLayout(new GridLayout(2, false));
-		
-		Label lblName = new Label(content, SWT.NONE);
-		lblName.setText(LVocab.instance.TEXT);
-		
-		txtName = new Text(content, SWT.BORDER);
-		txtName.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
-		
+	public LStringShell(LShell parent, String title) {
+		super(parent, title);
+		content.setGridLayout(2);
+		new LLabel(content, LVocab.instance.TEXT);
+		txtName = new LText(content);
+		txtName.setExpand(true, false);
 		pack();
 	}
 	
 	public void open(String initial) {
 		super.open(initial);
-		txtName.setText(initial);
+		txtName.setValue(initial);
 	}
 
 	@Override
 	protected String createResult(String initial) {
-		if (txtName.getText().equals(initial)) {
+		if (txtName.getValue().equals(initial)) {
 			return null;
 		} else {
-			return txtName.getText();
+			return txtName.getValue();
 		}
 	}
 

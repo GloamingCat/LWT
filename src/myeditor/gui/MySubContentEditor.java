@@ -19,7 +19,8 @@ public class MySubContentEditor extends LObjectEditor<MySubContent> {
 	 * @wbp.eval.method.parameter parent new lwt.dialog.LShell()
 	 */
 	public MySubContentEditor(LContainer parent) {
-		super(parent, 2, false, true);
+		super(parent, true);
+		setGridLayout(2);
 		
 		new LLabel(this, MyVocab.instance.TYPE);
 		

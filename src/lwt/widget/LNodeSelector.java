@@ -42,7 +42,7 @@ public class LNodeSelector<T> extends LControlWidget<Integer> implements LContai
 				newModifyAction(currentValue, id);
 			}
 		});
-		tree.dragEnabled = false;
+		tree.setDragEnabled(false);
 		
 		if (!optional)
 			return;

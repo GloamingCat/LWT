@@ -1,9 +1,9 @@
 package lwt.datainterface;
 
-import org.eclipse.swt.graphics.Image;
+import lwt.graphics.LTexture;
 
 public interface LGraphical {
 
-	public Image toImage();
+	public LTexture toImage();
 	
 }

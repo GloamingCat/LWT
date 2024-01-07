@@ -98,8 +98,17 @@ public class LTexture {
 	}
 	
 	public LPoint getSize() {
+		if (image == null)
+			return null;
 		Rectangle rect = image.getBounds();
 		return new LPoint(rect.width, rect.height);
+	}
+	
+	public LRect getBounds() {
+		if (image == null)
+			return null;
+		Rectangle rect = image.getBounds();
+		return new LRect(rect);
 	}
 	
 	public ByteBuffer toBuffer() {

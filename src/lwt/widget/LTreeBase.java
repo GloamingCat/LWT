@@ -41,7 +41,7 @@ public abstract class LTreeBase<T, ST> extends LSelectableCollection<T, ST> {
 	private LDataTree<T> dragNode;
 	private TreeItem dragParent;
 	private int dragIndex;
-	public boolean dragEnabled = true;
+	private boolean dragEnabled = true;
 	
 	public LTreeBase(LContainer parent) {
 		this(parent, false);
@@ -78,11 +78,15 @@ public abstract class LTreeBase<T, ST> extends LSelectableCollection<T, ST> {
 		tree.setToolTipText(text);
 	}
 
+	//-------------------------------------------------------------------------------------
+	// Drag
+	//-------------------------------------------------------------------------------------
+
 	private DragSource createDragSource(Transfer[] types, int operations) {
 		final DragSource source = new DragSource(tree, operations);
 		source.setTransfer(types);
 		source.addDragListener(new DragSourceListener() {
-
+			@Override
 			public void dragStart(DragSourceEvent event) {
 				if (!dragEnabled)
 					return;
@@ -134,9 +138,8 @@ public abstract class LTreeBase<T, ST> extends LSelectableCollection<T, ST> {
 		final Display display = Display.getCurrent();
 		DropTarget target = new DropTarget(tree, operations);
 		target.setTransfer(types);
-
 		target.addDropListener(new DropTargetAdapter() {
-
+			@Override
 			public void dragOver(DropTargetEvent event) {
 				if (!dragEnabled)
 					return;
@@ -160,7 +163,7 @@ public abstract class LTreeBase<T, ST> extends LSelectableCollection<T, ST> {
 					}
 				}
 			}
-
+			@Override
 			public void drop(DropTargetEvent event) {
 				if (!dragEnabled)
 					return;
@@ -225,6 +228,23 @@ public abstract class LTreeBase<T, ST> extends LSelectableCollection<T, ST> {
 		return target;
 	}
 
+	public void setDragEnabled(boolean value) {
+		dragEnabled = value;
+		for(TreeItem item : tree.getItems()) {
+			setDraggable(item, value);
+		}
+	}
+
+	protected void setDraggable(TreeItem item, boolean value) {
+		if (value)
+			item.setData(BLOCK, null);
+		else
+			item.setData(BLOCK, BLOCK);
+		for(TreeItem child : item.getItems()) {
+			setDraggable(child, value);
+		}
+	}
+	
 	//-------------------------------------------------------------------------------------
 	// Auxiliary
 	//-------------------------------------------------------------------------------------
@@ -452,7 +472,9 @@ public abstract class LTreeBase<T, ST> extends LSelectableCollection<T, ST> {
 		if (collection == null) {
 			setItems(null);
 		} else {
-			setItems(collection.toTree());
+			LDataTree<T> tree = collection.toTree();
+			tree.restoreParents();
+			setItems(tree);
 		}
 	}
 	
@@ -502,26 +524,6 @@ public abstract class LTreeBase<T, ST> extends LSelectableCollection<T, ST> {
 
 	protected String dataToString(T data) {
 		return data.toString();
-	}
-
-	//-------------------------------------------------------------------------------------
-	// Drag enable
-	//-------------------------------------------------------------------------------------
-
-	public void setDragEnabled(boolean value) {
-		for(TreeItem item : tree.getItems()) {
-			setDraggable(item, value);
-		}
-	}
-
-	protected void setDraggable(TreeItem item, boolean value) {
-		if (value)
-			item.setData(BLOCK, null);
-		else
-			item.setData(BLOCK, BLOCK);
-		for(TreeItem child : item.getItems()) {
-			setDraggable(child, value);
-		}
 	}
 
 	//-------------------------------------------------------------------------------------

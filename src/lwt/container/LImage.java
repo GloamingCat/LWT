@@ -21,7 +21,7 @@ import org.eclipse.wb.swt.SWTResourceManager;
 
 public class LImage extends LCanvas {
 
-	private Image original = null;
+	private LTexture original = null;
 	private LRect rectangle;
 	private int align = LFlags.MIDDLE | LFlags.CENTER;
 	
@@ -107,31 +107,31 @@ public class LImage extends LCanvas {
 	
 	public void setImage(String path) {
 		if (path == null) {
-			setImage((Image) null, null);
+			setImage((LTexture) null, null);
 			return;
 		}
-		Image img = SWTResourceManager.getImage(path);
+		LTexture img = new LTexture(path);
 		setImage(img);
 	}
 	
 	public void setImage(String path, LRect r) {
 		if (path == null) {
-			setImage((Image) null, null);
+			setImage((LTexture) null, null);
 			return;
 		}
-		Image img = SWTResourceManager.getImage(path);
+		LTexture img = new LTexture(path);
 		setImage(img, r);
 	}
 	
-	public void setImage(Image img) {
+	public void setImage(LTexture img) {
 		if (img == null) {
-			setImage((Image) null, null);
+			setImage((LTexture) null, null);
 		} else {
-			setImage(img, new LRect(img.getBounds()));
+			setImage(img, img.getBounds());
 		}
 	}
 	
-	public void setImage(Image img, LRect rect) {
+	public void setImage(LTexture img, LRect rect) {
 		rectangle = rect;
 		original = img;
 		disposeBuffer();
@@ -141,10 +141,10 @@ public class LImage extends LCanvas {
 	}
 	
 	public void refreshImage() {
-		if (original == null)
+		if (original == null || original.convert() == null)
 			return;
 		disposeBuffer();
-		ImageData imgData = original.getImageData();
+		ImageData imgData = original.convert().getImageData();
 		LTexture.correctTransparency(imgData);
 		LTexture.colorTransform(imgData, r, g, b, h, s, v);
 		buffer = new Image(getDisplay(), imgData);
@@ -154,7 +154,7 @@ public class LImage extends LCanvas {
 		return buffer != null;
 	}
 	
-	public Image getOriginalImage() {
+	public LTexture getOriginalImage() {
 		return original;
 	}
 	

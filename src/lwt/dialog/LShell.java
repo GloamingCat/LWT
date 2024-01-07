@@ -44,7 +44,7 @@ public class LShell extends Shell implements LContainer {
 	public LShell getParent() {
 		return (LShell) super.getParent();
 	}
-	
+
 	@Override
 	public void pack() {
 		super.pack();

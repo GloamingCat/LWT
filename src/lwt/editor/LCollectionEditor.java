@@ -5,7 +5,6 @@ import lwt.LMenuInterface;
 import lwt.container.LContainer;
 import lwt.dataestructure.LDataCollection;
 import lwt.dataestructure.LPath;
-import lwt.dialog.LObjectDialog;
 import lwt.dialog.LShellFactory;
 import lwt.event.LDeleteEvent;
 import lwt.event.LEditEvent;
@@ -26,9 +25,8 @@ import org.eclipse.swt.widgets.Menu;
 
 public abstract class LCollectionEditor<T, ST> extends LObjectEditor<LDataCollection<T>> {
 
-	public String name = "";
 	public String fieldName = "";
-	protected LObjectDialog<ST> editDialog = null;
+	protected LShellFactory<ST> shellFactory;
 	
 	/**
 	 * Create the composite.
@@ -72,16 +70,14 @@ public abstract class LCollectionEditor<T, ST> extends LObjectEditor<LDataCollec
 	}
 	
 	public void setShellFactory(LShellFactory<ST> factory) {
-		editDialog = new LObjectDialog<ST>(getShell());
-		editDialog.setFactory(factory);
+		shellFactory = factory;
 	}
 	
 	public LEditEvent<ST> onEditItem(LPath path) {
-		if (editDialog == null)
+		if (shellFactory == null)
 			return null;
-		editDialog.setText(name);
 		ST oldData = getEditableData(path);
-		ST newData = editDialog.open(oldData);
+		ST newData = shellFactory.openShell(getShell(), oldData);
 		if (newData != null) {
 			return new LEditEvent<ST>(path, oldData, newData);
 		}

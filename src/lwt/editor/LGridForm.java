@@ -3,6 +3,7 @@ package lwt.editor;
 import java.util.ArrayList;
 
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.widgets.Control;
 
 import lwt.container.LContainer;
@@ -22,10 +23,12 @@ public abstract class LGridForm<T> extends LObjectEditor<LDataList<T>> {
 	protected LPanel content;
 	
 	public LGridForm(LContainer parent, int columns) {
-		super(parent, true, false);
+		super(parent, false);
+		setFillLayout(true);
 		controls = new ArrayList<>();
 		scroll = new LScrollPanel(this, true);
-		content = new LPanel(scroll, columns * 2, false);
+		content = new LPanel(scroll);
+		content.setGridLayout(columns * 2);
 		scroll.setContent(content);
 	}
 	
@@ -95,9 +98,8 @@ public abstract class LGridForm<T> extends LObjectEditor<LDataList<T>> {
 		for (int i = data.size() * 2; i < children.length; i++) {
 			children[i].dispose();
 		}
-		layout();
-		scroll.setContent(content);
-		scroll.setMinSize(content.computeSize(SWT.DEFAULT, SWT.DEFAULT));
+		Point size = content.computeSize(SWT.DEFAULT, SWT.DEFAULT);
+		scroll.refreshSize(size.x, size.y);
 	}
 	
 	protected abstract T getDefaultValue();

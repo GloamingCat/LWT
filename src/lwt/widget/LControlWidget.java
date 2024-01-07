@@ -23,7 +23,7 @@ public abstract class LControlWidget<T> extends LWidget implements LControl<T> {
 	}
 	
 	public LControlWidget(LContainer parent, int flags) {
-		super(parent.getComposite(), flags);
+		super(parent, flags);
 	}
 	
 	public void modify(T newValue) {

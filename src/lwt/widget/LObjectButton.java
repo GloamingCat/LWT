@@ -3,7 +3,6 @@ package lwt.widget;
 import lwt.LGlobals;
 import lwt.LVocab;
 import lwt.container.LContainer;
-import lwt.dialog.LObjectDialog;
 import lwt.dialog.LShellFactory;
 
 import java.lang.reflect.Type;
@@ -17,8 +16,7 @@ import org.eclipse.swt.layout.GridData;
 
 public abstract class LObjectButton<T> extends LControlWidget<T> {
 	
-	public String name = "";
-	protected LObjectDialog<T> dialog;
+	protected LShellFactory<T> shellFactory;
 	private Button button;
 
 	/**
@@ -29,12 +27,10 @@ public abstract class LObjectButton<T> extends LControlWidget<T> {
 	public LObjectButton(LContainer parent) {
 		super(parent);
 		setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false, 1, 1));
-		dialog = new LObjectDialog<T>(getShell(), getShell().getStyle());
 		button.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent arg0) {
-				dialog.setText(name);
-				T newValue = dialog.open(currentValue);
+				T newValue = shellFactory.openShell(getShell(), currentValue);
 				if (newValue != null) {
 					newModifyAction(currentValue, newValue);
 					setValue(newValue);
@@ -50,7 +46,7 @@ public abstract class LObjectButton<T> extends LControlWidget<T> {
 	}
 
 	public void setShellFactory(LShellFactory<T> factory) {
-		dialog.setFactory(factory);
+		shellFactory = factory;
 	}
 	
 	public void setText(String text) {

@@ -2,16 +2,14 @@ package lwt.dialog;
 
 import java.util.ArrayList;
 
+import lwt.LFlags;
 import lwt.LVocab;
 import lwt.container.LPanel;
+import lwt.event.LSelectionEvent;
+import lwt.event.listener.LSelectionListener;
+import lwt.widget.LButton;
 
-import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.SelectionAdapter;
-import org.eclipse.swt.events.SelectionEvent;
-import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
-import org.eclipse.swt.widgets.Button;
-import org.eclipse.swt.widgets.Composite;
 
 public abstract class LObjectShell<T> extends LShell {
 
@@ -19,42 +17,44 @@ public abstract class LObjectShell<T> extends LShell {
 	protected T result = null;
 	protected T initial = null;
 	
-	public LObjectShell(LShell parent) {
+	public LObjectShell(LShell parent, String title, int style) {
 		super(parent);
-		
 		setText(getText());
 		setLayout(new GridLayout(1, false));
-		
-		content = new LPanel(this, true);
+		content = new LPanel(this);
+		content.setFillLayout(true);
 		content.setExpand(true, true);
-		
-		Composite buttons = new Composite(this, SWT.NONE);
-		buttons.setLayout(new GridLayout(2, true));
-		buttons.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, true, false, 1, 1));
-		
-		Button btnOk = new Button(buttons, SWT.NONE);
-		btnOk.addSelectionListener(new SelectionAdapter() {
+		createContent(style);
+		layout();
+	}
+	
+	public LObjectShell(LShell parent, String title) {
+		this(parent, title, 0);
+	}
+	
+	protected void createContent(int style) {
+		LPanel buttons = new LPanel(this);
+		buttons.setGridLayout(2);
+		buttons.setExpand(true, false);
+		buttons.setAlignment(LFlags.RIGHT);
+		LButton btnOk = new LButton(buttons, LVocab.instance.OK);
+		btnOk.onClick = new LSelectionListener() {
 			@Override
-			public void widgetSelected(SelectionEvent arg0) {
+			public void onSelect(LSelectionEvent event) {
 				result = createResult(initial);
 				if (initial.equals(result))
 					result = null;
 				close();
 			}
-		});
-		btnOk.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false, 1, 1));
-		btnOk.setText(LVocab.instance.OK);
-		
-		Button btnCancel = new Button(buttons, SWT.NONE);
-		btnCancel.addSelectionListener(new SelectionAdapter() {
+		};
+		LButton btnCancel = new LButton(buttons, LVocab.instance.CANCEL);
+		btnCancel.onClick = new LSelectionListener() {
 			@Override
-			public void widgetSelected(SelectionEvent arg0) {
+			public void onSelect(LSelectionEvent event) {
 				result = null;
 				close();
 			}
-		});
-		btnCancel.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false, 1, 1));
-		btnCancel.setText(LVocab.instance.CANCEL);
+		};
 	}
 
 	public void open(T initial) {
