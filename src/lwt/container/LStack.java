@@ -15,7 +15,7 @@ public class LStack extends LPanel {
 	}
 	
 	public void setTop(LContainer container) {
-		stack.topControl = container.getComposite();
+		stack.topControl = container.getTopComposite();
 		layout();
 	}
 	

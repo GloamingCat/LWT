@@ -1,6 +1,6 @@
 package myeditor.gui;
 
-import lwt.LFlags;
+import lbase.LFlags;
 import lwt.container.LContainer;
 import lwt.container.LFrame;
 import lwt.container.LImage;

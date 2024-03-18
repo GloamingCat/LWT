@@ -4,19 +4,21 @@ import java.util.ArrayList;
 
 import lwt.container.LContainer;
 import lwt.container.LView;
-import lwt.dataestructure.LDataCollection;
-import lwt.dataestructure.LDataTree;
-import lwt.dataestructure.LPath;
-import lwt.event.LDeleteEvent;
-import lwt.event.LEditEvent;
-import lwt.event.LInsertEvent;
-import lwt.event.LMoveEvent;
-import lwt.event.LSelectionEvent;
-import lwt.event.listener.LCollectionListener;
-import lwt.event.listener.LSelectionListener;
 import lwt.widget.LTree;
 
 import org.eclipse.swt.layout.FillLayout;
+
+import lbase.action.LState;
+import lbase.data.LDataCollection;
+import lbase.data.LDataTree;
+import lbase.data.LPath;
+import lbase.event.LDeleteEvent;
+import lbase.event.LEditEvent;
+import lbase.event.LInsertEvent;
+import lbase.event.LMoveEvent;
+import lbase.event.LSelectionEvent;
+import lbase.event.listener.LCollectionListener;
+import lbase.event.listener.LSelectionListener;
 
 /**
  * Holds common functionalities for LTreeEditor and LListEditor.
@@ -101,42 +103,12 @@ public abstract class LAbstractTreeEditor<T, ST> extends LCollectionEditor<T, ST
 	@Override
 	public String encodeData(LDataCollection<T> collection) {
 		LDataTree<T> node = (LDataTree<T>) collection;
-		String str = node.id + " | " + node.children.size() + " | "
-				+ encodeElement(node.data) + " | ";
-		for (LDataTree<T> child : node.children) {
-			str = str + encodeData(child);
-		}
-		return str;
+		return node.encode((e) -> encodeElement(e));
 	}
 	
 	@Override
 	public LDataTree<T> decodeData(String str) {
-		try {
-			// Get ID
-			int i = str.indexOf(" | ");
-			int id = Integer.parseInt(str.substring(0, i));
-			str = str.substring(i + 3);
-			// Get number of children
-			i = str.indexOf(" | ");
-			int children = Integer.parseInt(str.substring(0, i));
-			str = str.substring(i + 3);
-			// Get data
-			i = str.indexOf(" | ");
-			T data = decodeElement(str.substring(0, i));
-			str = str.substring(i + 3);
-			// Get children
-			LDataTree<T> node = new LDataTree<T>(data);
-			node.id = id;
-			for (i = 0; i < children; i++) {
-				LDataTree<T> child = decodeData(str);
-				if (child == null)
-					return null;
-				child.setParent(node);
-			}
-			return node;
-		} catch(NumberFormatException | IndexOutOfBoundsException e) {
-			return null;
-		}
+		return LDataTree.decode(str, (s) -> decodeElement(s));
 	}
 	
 	public void setObject(Object obj) {

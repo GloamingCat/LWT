@@ -1,9 +1,9 @@
 package myeditor.gui;
 
+import lbase.data.LDataTree;
 import lwt.container.LContainer;
-import lwt.container.LSashPanel;
+import lwt.container.LFlexPanel;
 import lwt.container.LView;
-import lwt.dataestructure.LDataTree;
 import lwt.editor.LDefaultTreeEditor;
 import myeditor.data.MyContent;
 import myeditor.project.MyProject;
@@ -19,7 +19,7 @@ public class MyContentTreeEditor extends LView {
 		
 		createMenuInterface();
 		
-		LSashPanel sashForm = new LSashPanel(this, true);
+		LFlexPanel sashForm = new LFlexPanel(this, true);
 		
 		treeEditor = new MyContentTree(sashForm);
 		treeEditor.getCollectionWidget().setInsertNewEnabled(true);
@@ -35,7 +35,7 @@ public class MyContentTreeEditor extends LView {
 		contentEditor.setMargins(5, 5);
 		treeEditor.addChild(contentEditor);
 		
-		sashForm.setWeights(new int[] {1, 2});
+		sashForm.setWeights(1, 2);
 		
 	}
 	

@@ -2,22 +2,24 @@ package lwt.widget;
 
 import lwt.LGlobals;
 import lwt.container.LContainer;
-import lwt.dataestructure.LDataTree;
-import lwt.dataestructure.LPath;
-import lwt.event.LDeleteEvent;
-import lwt.event.LEditEvent;
-import lwt.event.LInsertEvent;
+import lwt.editor.LPopupMenu;
 
 import org.eclipse.swt.dnd.Transfer;
 import org.eclipse.swt.dnd.TextTransfer;
 import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.events.MouseListener;
-import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.TreeItem;
+
+import lbase.data.LDataTree;
+import lbase.data.LPath;
+import lbase.event.LDeleteEvent;
+import lbase.event.LEditEvent;
+import lbase.event.LInsertEvent;
+import lbase.gui.LMenu;
 
 public abstract class LTree<T, ST> extends LTreeBase<T, ST> {
 	
-	protected Menu menu;
+	protected LMenu menu;
 	protected boolean includeID = false;
 	protected boolean editEnabled = false;
 	
@@ -32,8 +34,7 @@ public abstract class LTree<T, ST> extends LTreeBase<T, ST> {
 	 */
 	public LTree(LContainer parent, boolean check) {
 		super(parent, check);
-		menu = new Menu(tree);
-		tree.setMenu(menu);
+		menu = new LPopupMenu(tree);
 		tree.addMouseListener(new MouseListener() {
 			public void mouseUp(MouseEvent arg0) {}
 			public void mouseDown(MouseEvent arg0) {}
@@ -112,7 +113,8 @@ public abstract class LTree<T, ST> extends LTreeBase<T, ST> {
 	// Menu Handlers
 	//-------------------------------------------------------------------------------------
 	
-	protected void onEditButton(Menu menu) {
+	@Override
+	protected void onEditButton(LMenu menu) {
 		if (tree.getSelectionCount() > 0) {
 			TreeItem item = tree.getSelection()[0];
 			LPath path = toPath(item);
@@ -123,7 +125,8 @@ public abstract class LTree<T, ST> extends LTreeBase<T, ST> {
 		}
 	}
 	
-	protected void onInsertNewButton(Menu menu) {
+	@Override
+	protected void onInsertNewButton(LMenu menu) {
 		LPath parentPath = null;
 		int index = -1;
 		LDataTree<T> newNode = emptyNode();
@@ -135,7 +138,8 @@ public abstract class LTree<T, ST> extends LTreeBase<T, ST> {
 		newInsertAction(parentPath, index, newNode);
 	}
 	
-	protected void onDuplicateButton(Menu menu) {
+	@Override
+	protected void onDuplicateButton(LMenu menu) {
 		if (tree.getSelectionCount() > 0) {
 			TreeItem item = tree.getSelection()[0];
 			LPath itemPath = toPath(item);
@@ -146,7 +150,8 @@ public abstract class LTree<T, ST> extends LTreeBase<T, ST> {
 		}
 	}
 	
-	protected void onDeleteButton(Menu menu) {
+	@Override
+	protected void onDeleteButton(LMenu menu) {
 		if (tree.getSelectionCount() > 0) {
 			TreeItem item = tree.getSelection()[0];
 			TreeItem parentItem = item.getParentItem();
@@ -156,7 +161,8 @@ public abstract class LTree<T, ST> extends LTreeBase<T, ST> {
 		}
 	}
 	
-	public void onCopyButton(Menu menu) {
+	@Override
+	public void onCopyButton(LMenu menu) {
 		LPath path = getSelectedPath();
 		if (path != null) {
 			LDataTree<T> node = toNode(path);
@@ -165,7 +171,8 @@ public abstract class LTree<T, ST> extends LTreeBase<T, ST> {
 		}
 	}
 	
-	public void onPasteButton(Menu menu) {
+	@Override
+	public void onPasteButton(LMenu menu) {
 		String str = (String) LGlobals.clipboard.getContents(TextTransfer.getInstance());
 		if (str == null)
 			return;

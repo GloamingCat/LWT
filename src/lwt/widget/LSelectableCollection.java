@@ -2,10 +2,10 @@ package lwt.widget;
 
 import java.util.ArrayList;
 
+import lbase.data.LPath;
+import lbase.event.LSelectionEvent;
+import lbase.event.listener.LSelectionListener;
 import lwt.container.LContainer;
-import lwt.dataestructure.LPath;
-import lwt.event.LSelectionEvent;
-import lwt.event.listener.LSelectionListener;
 
 public abstract class LSelectableCollection<T, ST> extends LCollection<T, ST> {
 

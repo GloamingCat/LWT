@@ -1,12 +1,12 @@
 package lwt.editor;
 
+import lbase.data.LDataCollection;
+import lbase.data.LDataList;
+import lbase.data.LDataTree;
+import lbase.data.LPath;
+import lbase.event.LEditEvent;
 import lwt.container.LContainer;
 import lwt.container.LImage;
-import lwt.dataestructure.LDataCollection;
-import lwt.dataestructure.LDataList;
-import lwt.dataestructure.LDataTree;
-import lwt.dataestructure.LPath;
-import lwt.event.LEditEvent;
 import lwt.widget.LGrid;
 
 public abstract class LGridEditor<T, ST> extends LCollectionEditor<T, ST> {

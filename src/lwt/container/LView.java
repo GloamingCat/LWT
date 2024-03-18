@@ -3,13 +3,15 @@ package lwt.container;
 import java.util.ArrayList;
 
 import lwt.LMenuInterface;
-import lwt.action.LActionStack;
+import lwt.dialog.LWindow;
 import lwt.editor.LEditor;
-import lwt.editor.LState;
 
 import org.eclipse.swt.SWT;
 
-public class LView extends LPanel {
+import lbase.action.LActionStack;
+import lbase.action.LState;
+
+public class LView extends LPanel implements lbase.gui.LView {
 
 	protected LView parent;
 	protected LMenuInterface menuInterface;
@@ -24,7 +26,7 @@ public class LView extends LPanel {
 	 * @param doubleBuffered
 	 */
 	public LView(LContainer parent, boolean doubleBuffered) {
-		super(parent.getComposite(),  SWT.NONE);
+		super(parent.getContentComposite(), SWT.NONE);
 		this.doubleBuffered = doubleBuffered;
 	}
 
@@ -140,6 +142,10 @@ public class LView extends LPanel {
 		for(LView child : children) {
 			child.restart();
 		}
+	}
+	
+	public LWindow getWindow() {
+		return super.getWindow();
 	}
 
 }

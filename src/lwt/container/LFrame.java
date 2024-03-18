@@ -10,8 +10,8 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Layout;
 
-import lwt.LFlags;
-import lwt.dialog.LShell;
+import lbase.LFlags;
+import lwt.dialog.LWindow;
 import lwt.graphics.LPoint;
 
 public class LFrame extends Group implements LContainer {
@@ -32,7 +32,7 @@ public class LFrame extends Group implements LContainer {
 	 * @param parent
 	 */
 	public LFrame(LContainer parent, String title) {
-		this(parent.getComposite(), SWT.NONE);
+		this(parent.getContentComposite(), SWT.NONE);
 		setText(title);
 	}
 
@@ -240,7 +240,12 @@ public class LFrame extends Group implements LContainer {
 	}
 	
 	@Override
-	public Composite getComposite() {
+	public Composite getContentComposite() {
+		return this;
+	}
+	
+	@Override
+	public Composite getTopComposite() {
 		return this;
 	}
 	
@@ -265,8 +270,8 @@ public class LFrame extends Group implements LContainer {
 	}
 	
 	@Override
-	public LShell getShell() {
-		return (LShell) super.getShell();
+	public LWindow getWindow() {
+		return (LWindow) super.getShell();
 	}
 	
 	@Override

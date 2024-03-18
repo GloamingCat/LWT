@@ -6,8 +6,8 @@ import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Control;
-import org.eclipse.swt.widgets.Menu;
 
+import lbase.gui.LMenu;
 import lwt.container.LContainer;
 
 public class LActionButton extends LControlWidget<Object> {
@@ -32,10 +32,10 @@ public class LActionButton extends LControlWidget<Object> {
 	}
 
 	@Override
-	public void onCopyButton(Menu menu) {}
+	public void onCopyButton(LMenu menu) {}
 	
 	@Override
-	public void onPasteButton(Menu menu) {}
+	public void onPasteButton(LMenu menu) {}
 	
 	@Override
 	protected Control getControl() {

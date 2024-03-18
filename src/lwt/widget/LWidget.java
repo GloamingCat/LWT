@@ -1,27 +1,27 @@
 package lwt.widget;
 
-import lwt.LVocab;
-import lwt.action.LAction;
 import lwt.container.LContainer;
 import lwt.container.LPanel;
+import lwt.editor.LPopupMenu;
 import lwt.LMenuInterface;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.MouseAdapter;
 import org.eclipse.swt.events.MouseEvent;
-import org.eclipse.swt.events.SelectionAdapter;
-import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Menu;
 
-public abstract class LWidget extends LPanel {
+import lbase.LVocab;
+import lbase.action.LAction;
+import lbase.gui.LPastable;
+
+public abstract class LWidget extends LPanel implements LPastable {
 
 	protected LMenuInterface menuInterface;
 
 	public LWidget(LContainer parent, int style) {
 		super(parent);
 		setFillLayout(true);
-		parent.getComposite().setTabList(null);
+		parent.getContentComposite().setTabList(null);
 		createContent(style);
 	}
 
@@ -52,9 +52,8 @@ public abstract class LWidget extends LPanel {
 	//////////////////////////////////////////////////
 	// {{ Menu
 	
-	private Menu addMenu(Composite parent) {
-		Menu menu = new Menu(parent);
-		parent.setMenu(menu);
+	private LPopupMenu addMenu(Composite parent) {
+		LPopupMenu menu = new LPopupMenu(parent);
 		setCopyEnabled(menu, true);
 		setPasteEnabled(menu, true);
 		addFocusOnClick(parent);
@@ -78,8 +77,8 @@ public abstract class LWidget extends LPanel {
 	}
 	
 	public void addMenu(LContainer frame) {
-		Composite c = frame.getComposite();
-		Menu menu = getMenu();
+		Composite c = frame.getContentComposite();
+		LPopupMenu menu = (LPopupMenu) getMenu();
 		if (menu == null) {
 			menu = addMenu(c);
 			setMenu(menu);
@@ -91,7 +90,7 @@ public abstract class LWidget extends LPanel {
 	}
 	
 	public void addMenu(LWidget widget) {
-		Menu menu = getMenu();
+		LPopupMenu menu = (LPopupMenu) getMenu();
 		if (menu == null) {
 			menu = addMenu((Composite) widget);
 			setMenu(menu);
@@ -102,31 +101,13 @@ public abstract class LWidget extends LPanel {
 		}
 	}
 
-	public void setCopyEnabled(Menu menu, boolean value) {
-		String str = toString();
-		LMenuInterface.setMenuButton(menu, value, LVocab.instance.COPY, "copy", new SelectionAdapter() {
-			@Override
-			public void widgetSelected(SelectionEvent arg0) {
-				System.out.println("Copied from " + str);
-				onCopyButton(menu);
-			}
-		}, 'C');
+	public void setCopyEnabled(lbase.gui.LMenu menu, boolean value) {
+		menu.setMenuButton(value, LVocab.instance.COPY, "copy", (d) -> onCopyButton(menu), "Ctrl+&C");
 	}
 
-	public void setPasteEnabled(Menu menu, boolean value) {
-		String str = toString();
-		LMenuInterface.setMenuButton(menu, value, LVocab.instance.PASTE, "paste", new SelectionAdapter() {
-			@Override
-			public void widgetSelected(SelectionEvent arg0) {
-				System.out.println("Pasted on " + str);
-				onPasteButton(menu);
-			}
-		}, 'V');
+	public void setPasteEnabled(lbase.gui.LMenu menu, boolean value) {
+		menu.setMenuButton(value, LVocab.instance.PASTE, "paste", (d) -> onPasteButton(menu), "Ctrl+&V");
 	}
-
-	public abstract void onCopyButton(Menu menu);
-	public abstract void onPasteButton(Menu menu);
-	public abstract boolean canDecode(String str);
 	
 	// }}
 

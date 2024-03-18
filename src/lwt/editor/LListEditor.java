@@ -1,10 +1,10 @@
 package lwt.editor;
 
+import lbase.data.LDataList;
+import lbase.data.LDataTree;
+import lbase.data.LPath;
+import lbase.event.LEditEvent;
 import lwt.container.LContainer;
-import lwt.dataestructure.LDataList;
-import lwt.dataestructure.LDataTree;
-import lwt.dataestructure.LPath;
-import lwt.event.LEditEvent;
 import lwt.widget.LList;
 
 public abstract class LListEditor<T, ST> extends LAbstractTreeEditor<T, ST> {
@@ -46,8 +46,7 @@ public abstract class LListEditor<T, ST> extends LAbstractTreeEditor<T, ST> {
 			}
 			@Override
 			public LDataTree<T> toNode(LPath path) {
-				T data = self.getDataCollection().get(path.index);
-				return new LDataTree<T> (data);
+				return self.getDataCollection().toTree().getNode(path);
 			}
 			@Override
 			protected String encodeNode(LDataTree<T> node) {

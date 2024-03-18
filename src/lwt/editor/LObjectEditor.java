@@ -7,21 +7,21 @@ import java.util.Map;
 
 import lwt.LGlobals;
 import lwt.LMenuInterface;
-import lwt.action.LControlAction;
 import lwt.container.LContainer;
 import lwt.container.LControlView;
 import lwt.container.LView;
-import lwt.dataestructure.LPath;
-import lwt.event.LControlEvent;
-import lwt.event.LSelectionEvent;
-import lwt.event.listener.LControlListener;
-import lwt.event.listener.LSelectionListener;
-import lwt.widget.LControl;
 import lwt.widget.LControlWidget;
 
 import org.eclipse.swt.dnd.TextTransfer;
 import org.eclipse.swt.dnd.Transfer;
-import org.eclipse.swt.widgets.Menu;
+
+import lbase.action.LControlAction;
+import lbase.data.LPath;
+import lbase.event.LControlEvent;
+import lbase.event.LSelectionEvent;
+import lbase.event.listener.LControlListener;
+import lbase.event.listener.LSelectionListener;
+import lbase.gui.LMenu;
 
 /**
  * A specific type of Editor that edits a single object.
@@ -29,7 +29,7 @@ import org.eclipse.swt.widgets.Menu;
  * object's fields.
  *
  */
-public abstract class LObjectEditor<T> extends LEditor implements LControl<T> {
+public abstract class LObjectEditor<T> extends LEditor implements lbase.gui.LControl<T> {
 
 	protected HashMap<LControlWidget<?>, String> controlMap = new HashMap<>();
 	protected HashMap<LEditor, String> editorMap = new HashMap<>();
@@ -264,12 +264,12 @@ public abstract class LObjectEditor<T> extends LEditor implements LControl<T> {
 	//////////////////////////////////////////////////
 	// {{ Clipboard
 	
-	public void onCopyButton(Menu menu) {
+	public void onCopyButton(LMenu menu) {
 		LGlobals.clipboard.setContents(new Object[] { encodeData(currentObject) },
 				new Transfer[] { TextTransfer.getInstance() });
 	}
 	
-	public void onPasteButton(Menu menu) {
+	public void onPasteButton(LMenu menu) {
 		String str = (String) LGlobals.clipboard.getContents(TextTransfer.getInstance());
 		if (str == null)
 			return;

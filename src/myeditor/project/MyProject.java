@@ -1,24 +1,28 @@
 package myeditor.project;
 
-import lwt.dataestructure.LDataList;
-import lwt.dataestructure.LDataTree;
-import lwt.dataserialization.LFileManager;
-import lwt.dataserialization.LSerializer;
+import java.util.Scanner;
+
+import lbase.data.LDataList;
+import lbase.data.LDataTree;
+import lbase.serialization.LDefaultSerializer;
+import lbase.serialization.LFileManager;
 import myeditor.MyVocab;
 import myeditor.data.MyContent;
 
-public class MyProject implements LSerializer {
+public class MyProject extends LDefaultSerializer {
 
 	public static MyProject current = null;
-	public String path;
 	
 	public LDataList<MyContent> contentList; 
 	public LDataList<MyContent> contentGrid; 
 	public LDataTree<MyContent> contentTree; 
-	public LDataList<String> subContentTypes; 
+	public LDataList<String> subContentTypes;
+	
+	private String folder;
 	
 	public MyProject(String path) {
-		this.path = LFileManager.getDirectory(path);
+		super(path);
+		folder = LFileManager.getDirectory(path);
 		current = this;
 	}
 	
@@ -35,11 +39,11 @@ public class MyProject implements LSerializer {
 		for (int i = 0; i < n; i++) {
 			MyContent data = new MyContent(i, i);
 			data.name = "item " + i;
-			LDataTree<MyContent> node = new LDataTree<MyContent>(data, root);
+			LDataTree<MyContent> node = new LDataTree<>(data, root);
 			for (int j = 0; j < m; j++) {
 				data = new MyContent(j, i);
 				data.name = "item " + i + " " + j;
-				LDataTree<MyContent> subnode = new LDataTree<MyContent>(data, node);
+				LDataTree<MyContent> subnode = new LDataTree<>(data, node);
 				for (int k = 0; k < l; k++) {
 					data = new MyContent(k, j);
 					data.name = "item " + i + " " + j + " " + k;
@@ -56,19 +60,11 @@ public class MyProject implements LSerializer {
 			types.add(MyVocab.instance.TYPE + i);
 		return types;
 	}
-	
-	public String dataPath() {
-		return path + "data/";
-	}
-	
+
 	public String imagePath() {
-		return path + "images/";
+		return folder + "images/";
 	}
-	
-	public String scriptPath() {
-		return path + "scripts/custom/";
-	}
-	
+
 	@Override
 	public void initialize() {
 		subContentTypes = defaultTypes(10);
@@ -76,20 +72,38 @@ public class MyProject implements LSerializer {
 		contentGrid = defaultContentList(9);
 		contentTree = defaultContentTree(3, 3, 3);
 	}
-
-	@Override
-	public boolean save() {
-		return true;
+	
+	protected byte[] serialize() {
+		String content = subContentTypes.size() + ","
+				+ contentList.size() + ","
+				+ contentGrid.size() + "\n";
+		for (String t : subContentTypes)
+			content += t + "\n";
+		for (MyContent c : contentList)
+			content += c.encode() + "\n";
+		for (MyContent c : contentGrid)
+			content += c.encode() + "\n";
+		content += contentTree.encode((e) -> e == null ? "null" : e.encode());
+		return content.getBytes();
 	}
-
-	@Override
-	public boolean load() {
-		return true;
-	}
-
-	@Override
-	public boolean isDataFolder(String path) {
-		return false;
+	
+	protected void deserialize(byte[] bytes) {
+		Scanner scanner = new Scanner(new String(bytes));
+		String[] sizes = scanner.nextLine().split(",");
+		subContentTypes = new LDataList<String>();
+		for (int i = Integer.parseInt(sizes[0]); i > 0; i--) {
+			subContentTypes.add(scanner.nextLine());
+		}
+		contentList = new LDataList<MyContent>();
+		for (int i = Integer.parseInt(sizes[1]); i > 0; i--) {
+			contentList.add(MyContent.decode(scanner.nextLine()));
+		}
+		contentGrid = new LDataList<MyContent>();
+		for (int i = Integer.parseInt(sizes[2]); i > 0; i--) {
+			contentGrid.add(MyContent.decode(scanner.nextLine()));
+		}
+		scanner.useDelimiter("\\A");
+		contentTree = LDataTree.decode(scanner.next(), (s) -> MyContent.decode(s));
 	}
 	
 }

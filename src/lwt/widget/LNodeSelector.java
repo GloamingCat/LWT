@@ -1,11 +1,6 @@
 package lwt.widget;
 
-import lwt.LVocab;
 import lwt.container.LContainer;
-import lwt.dataestructure.LDataTree;
-import lwt.dataestructure.LPath;
-import lwt.event.LSelectionEvent;
-import lwt.event.listener.LSelectionListener;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
@@ -14,6 +9,13 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+
+import lbase.LVocab;
+import lbase.data.LDataTree;
+import lbase.data.LPath;
+import lbase.event.LSelectionEvent;
+import lbase.event.listener.LSelectionListener;
+
 import org.eclipse.swt.layout.GridData;
 
 public class LNodeSelector<T> extends LControlWidget<Integer> implements LContainer {
@@ -171,7 +173,7 @@ public class LNodeSelector<T> extends LControlWidget<Integer> implements LContai
 	}
 
 	@Override
-	public Composite getComposite() {
+	public Composite getContentComposite() {
 		return this;
 	}
 	

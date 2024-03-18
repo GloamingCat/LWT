@@ -1,67 +1,32 @@
 package lwt.container;
 
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.custom.ScrolledComposite;
-import org.eclipse.swt.events.ControlEvent;
-import org.eclipse.swt.events.ControlListener;
-import org.eclipse.swt.layout.FillLayout;
+import org.eclipse.swt.custom.SashForm;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Control;
 
 import lbase.LFlags;
-import lwt.graphics.LPoint;
 
-public class LScrollPanel extends ScrolledComposite implements LContainer {
-	
-	private Control content;
+public class LFlexPanel extends SashForm implements LContainer {
 
-	//////////////////////////////////////////////////
-	// {{ Constructors
+	LFlexPanel(Composite parent, int style) {
+		super(parent, style);
+	}
 
 	/**
-	 * Internal, no layout.
+	 * Fill layout.
 	 */
-	LScrollPanel(Composite parent, int style) {
-		super(parent, style);
-		setLayout(new FillLayout());
-		addControlListener(new ControlListener() {
-			@Override
-			public void controlResized(ControlEvent e) {
-				if (content == null) {
-					content = getChildren()[0];
-					setContent(content);
-				}
-				layout();
-			}
-			@Override
-			public void controlMoved(ControlEvent e) {
-				
-			}
-		});
+	public LFlexPanel(LContainer parent, boolean horizontal) {
+		super(parent.getContentComposite(), horizontal ? SWT.HORIZONTAL : SWT.VERTICAL);
 	}
 
-	/** Fill layout with no margin.
-	 * @param parent
-	 * @param horizontal
+	/**
+	 * Fill horizontal layout.
 	 */
-	public LScrollPanel(LContainer parent, boolean large) {
-		this(parent.getContentComposite(), SWT.V_SCROLL | SWT.H_SCROLL);
-		if (large) {
-			setExpandVertical(true);
-			setExpandHorizontal(true);
-		}
-	}
-
-	/** No layout.
-	 * @param parent
-	 */
-	public LScrollPanel(LContainer parent) {
-		this(parent, false);
+	public LFlexPanel(LContainer parent) {
+		this(parent, true);
 	}
 	
-	// }}
-
 	//////////////////////////////////////////////////
 	// {{ Layout
 
@@ -76,6 +41,10 @@ public class LScrollPanel extends ScrolledComposite implements LContainer {
 		}
 	}
 	
+	public void setGridData(int ax, int ay, boolean grabx, boolean graby, int cols, int rows) {
+		setLayoutData(new GridData(ax, ay, grabx, graby, cols, rows));
+	}
+	
 	public void setSpread(int cols, int rows) {
 		GridData gridData = (GridData) initGridData();
 		gridData.horizontalSpan = cols;
@@ -83,22 +52,22 @@ public class LScrollPanel extends ScrolledComposite implements LContainer {
 	}
 	
 	public void setAlignment(int a) {
-		GridData gridData = initGridData();
 		int h = SWT.FILL;
+		int v = SWT.FILL;
 		if ((a & LFlags.LEFT) > 0)
 			h = SWT.LEFT;
 		if ((a & LFlags.RIGHT) > 0)
 			h = SWT.RIGHT;
 		if ((a & LFlags.MIDDLE) > 0)
 			h = SWT.CENTER;
-		gridData.horizontalAlignment = h;
-		int v = SWT.FILL;
 		if ((a & LFlags.TOP) > 0)
 			v = SWT.TOP;
 		if ((a & LFlags.BOTTOM) > 0)
 			v = SWT.BOTTOM;
 		if ((a & LFlags.CENTER) > 0)
-			v = SWT.CENTER;		
+			v = SWT.CENTER;
+		GridData gridData = initGridData();
+		gridData.horizontalAlignment = h;
 		gridData.verticalAlignment = v;
 	}
 
@@ -127,13 +96,8 @@ public class LScrollPanel extends ScrolledComposite implements LContainer {
 	
 	// }}
 	
-	public void refreshSize(LPoint size) {
-		setMinSize(size.x, size.y);
-	}
-	
-	public void refreshSize(int width, int height) {
-		setMinSize(width, height);
-		layout();
+	public void setWeights(int first, int second) {
+		super.setWeights(first, second);
 	}
 
 	@Override

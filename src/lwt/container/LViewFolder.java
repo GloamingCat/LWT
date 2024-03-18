@@ -13,7 +13,7 @@ import org.eclipse.swt.SWT;
 
 public class LViewFolder extends LView {
 	
-	protected TabFolder tabFolder;
+	public TabFolder tabFolder;
 	protected int currentTab = 0;
 	
 	/**
@@ -22,8 +22,9 @@ public class LViewFolder extends LView {
 	 */
 	public LViewFolder(LContainer parent, boolean doubleBuffered) {
 		super(parent, doubleBuffered);
-		setLayout(new FillLayout(SWT.HORIZONTAL));
+		setFillLayout(true);
 		tabFolder = new TabFolder(this, SWT.NONE);
+		tabFolder.setLayout(new FillLayout());
 		tabFolder.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent arg0) {
@@ -41,20 +42,27 @@ public class LViewFolder extends LView {
 		TabItem tbtm = new TabItem(tabFolder, SWT.NONE);
 		tbtm.setText(name);
 		tbtm.setControl(child);
+		//tabFolder.layout();
 	}
 	
 	public void addTab(String name, LContainer child) {
 		TabItem tbtm = new TabItem(tabFolder, SWT.NONE);
 		tbtm.setText(name);
-		tbtm.setControl(child.getComposite());
+		//tbtm.setControl(child.getComposite());
+		//tabFolder.layout();
 	}
 
 	public LMenuInterface getMenuInterface() {
 		return children.get(currentTab).getMenuInterface();
 	}
 	
-	public Composite getComposite() {
+	public Composite getContentComposite() {
 		return tabFolder;
+	}
+
+	@Override
+	public Composite getTopComposite() {
+		return this;
 	}
 
 }

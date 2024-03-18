@@ -6,7 +6,8 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Menu;
 
-import lwt.LFlags;
+import lbase.LFlags;
+import lbase.gui.LMenu;
 import lwt.container.LContainer;
 
 public class LLabel extends LWidget {
@@ -112,10 +113,10 @@ public class LLabel extends LWidget {
 	// {{ Menu
 
 	@Override
-	public void onCopyButton(Menu menu) {}
+	public void onCopyButton(LMenu menu) {}
 
 	@Override
-	public void onPasteButton(Menu menu) {}
+	public void onPasteButton(LMenu menu) {}
 
 	@Override
 	public boolean canDecode(String str) {

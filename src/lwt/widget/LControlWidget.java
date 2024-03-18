@@ -3,17 +3,19 @@ package lwt.widget;
 import java.util.ArrayList;
 
 import lwt.LGlobals;
-import lwt.action.LControlAction;
 import lwt.container.LContainer;
-import lwt.event.LControlEvent;
-import lwt.event.listener.LControlListener;
 
 import org.eclipse.swt.dnd.TextTransfer;
 import org.eclipse.swt.dnd.Transfer;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Menu;
 
-public abstract class LControlWidget<T> extends LWidget implements LControl<T> {
+import lbase.action.LControlAction;
+import lbase.event.LControlEvent;
+import lbase.event.listener.LControlListener;
+import lbase.gui.LMenu;
+
+public abstract class LControlWidget<T> extends LWidget implements lbase.gui.LControl<T> {
 	
 	protected ArrayList<LControlListener<T>> modifyListeners = new ArrayList<>();
 	protected T currentValue;
@@ -102,13 +104,15 @@ public abstract class LControlWidget<T> extends LWidget implements LControl<T> {
 	// Copy / Paste
 	//-------------------------------------------------------------------------------------
 	
-	public void onCopyButton(Menu menu) {
+	@Override
+	public void onCopyButton(LMenu menu) {
 		String str = encodeData(currentValue);
 		LGlobals.clipboard.setContents(new Object[] { str },
 				new Transfer[] { TextTransfer.getInstance() });
 	}
 	
-	public void onPasteButton(Menu menu) {
+	@Override
+	public void onPasteButton(LMenu menu) {
 		String str = (String) LGlobals.clipboard.getContents(TextTransfer.getInstance());
 		if (str == null)
 			return;

@@ -1,12 +1,13 @@
 package lwt.widget;
 
 import lwt.container.LContainer;
-import lwt.dataestructure.LDataTree;
-import lwt.dataestructure.LPath;
 
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.widgets.TreeItem;
+
+import lbase.data.LDataTree;
+import lbase.data.LPath;
 
 public abstract class LList<T, ST> extends LTree<T, ST> {
 	

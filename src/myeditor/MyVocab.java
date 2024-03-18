@@ -7,6 +7,7 @@ public class MyVocab {
 	public String CONTENTLIST = "Content List";
 	public String CONTENTTREE = "Content Tree";
 	public String CONTENTGRID = "Content Grid";
+	public String CONTENTTYPES = "Type Names";
 	
 	public String NAME = "Name";
 	public String VALUE = "Value";

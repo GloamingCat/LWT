@@ -8,14 +8,14 @@ import java.io.InputStreamReader;
 import java.util.concurrent.Executors;
 import java.util.function.Consumer;
 
-import lwt.LVocab;
-import lwt.action.LActionManager;
+import lbase.LVocab;
+import lbase.action.LActionManager;
+import lbase.event.LSelectionEvent;
+import lbase.event.listener.LSelectionListener;
+import lbase.serialization.LSerializer;
 import lwt.container.LContainer;
-import lwt.dataserialization.LSerializer;
 import lwt.dialog.LErrorDialog;
 import lwt.dialog.LConfirmDialog;
-import lwt.event.LSelectionEvent;
-import lwt.event.listener.LSelectionListener;
 
 public class LCommandButton extends LButton {
 
@@ -60,14 +60,14 @@ public class LCommandButton extends LButton {
 			return true;
 		if (LActionManager.getInstance().hasChanges()) {
 			LVocab vocab = LVocab.instance;
-			LConfirmDialog msg = new LConfirmDialog(getShell(), 
+			LConfirmDialog msg = new LConfirmDialog(getWindow(), 
 					vocab.UNSAVEDPROJECT,
 					vocab.UNSAVEDMSG,
 					LConfirmDialog.YES_NO_CANCEL);
 			int result = msg.open();
 			if (result == LConfirmDialog.YES) {
 				if (!projectSerializer.save()) {
-					LErrorDialog error = new LErrorDialog(getShell(),
+					LErrorDialog error = new LErrorDialog(getWindow(),
 							vocab.SAVEERROR,
 							vocab.SAVEERRORMSG);
 					error.open();

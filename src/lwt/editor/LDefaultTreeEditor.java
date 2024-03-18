@@ -1,8 +1,8 @@
 package lwt.editor;
 
+import lbase.data.LDataTree;
+import lbase.data.LPath;
 import lwt.container.LContainer;
-import lwt.dataestructure.LDataTree;
-import lwt.dataestructure.LPath;
 
 public abstract class LDefaultTreeEditor<T> extends LTreeEditor<T, T> {
 

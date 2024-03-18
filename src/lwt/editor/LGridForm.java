@@ -6,12 +6,12 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.widgets.Control;
 
+import lbase.data.LDataList;
+import lbase.event.LControlEvent;
+import lbase.event.listener.LControlListener;
 import lwt.container.LContainer;
 import lwt.container.LPanel;
 import lwt.container.LScrollPanel;
-import lwt.dataestructure.LDataList;
-import lwt.event.LControlEvent;
-import lwt.event.listener.LControlListener;
 import lwt.widget.LControlWidget;
 import lwt.widget.LLabel;
 

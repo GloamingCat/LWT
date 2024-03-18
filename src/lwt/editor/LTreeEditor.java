@@ -1,9 +1,9 @@
 package lwt.editor;
 
+import lbase.data.LDataTree;
+import lbase.data.LPath;
+import lbase.event.LEditEvent;
 import lwt.container.LContainer;
-import lwt.dataestructure.LDataTree;
-import lwt.dataestructure.LPath;
-import lwt.event.LEditEvent;
 import lwt.widget.LTree;
 
 public abstract class LTreeEditor<T, ST> extends LAbstractTreeEditor<T, ST> {

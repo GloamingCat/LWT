@@ -7,8 +7,8 @@ public class LErrorDialog {
 	
 	protected MessageBox msg;
 
-	public LErrorDialog(LShell parent, String title, String message) {
-		msg = new MessageBox(parent.getShell(), SWT.APPLICATION_MODAL | SWT.ICON_ERROR | SWT.OK);
+	public LErrorDialog(LWindow parent, String title, String message) {
+		msg = new MessageBox(parent.getWindow(), SWT.APPLICATION_MODAL | SWT.ICON_ERROR | SWT.OK);
 		msg.setText(title);
 		msg.setMessage(message);
 	}

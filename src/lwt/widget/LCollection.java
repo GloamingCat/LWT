@@ -2,26 +2,22 @@ package lwt.widget;
 
 import java.util.ArrayList;
 
-import org.eclipse.swt.events.SelectionAdapter;
-import org.eclipse.swt.events.SelectionEvent;
-import org.eclipse.swt.widgets.Menu;
-
-import lwt.LMenuInterface;
-import lwt.LVocab;
-import lwt.action.collection.LDeleteAction;
-import lwt.action.collection.LEditAction;
-import lwt.action.collection.LInsertAction;
+import lbase.LVocab;
+import lbase.action.collection.LDeleteAction;
+import lbase.action.collection.LEditAction;
+import lbase.action.collection.LInsertAction;
+import lbase.data.LDataCollection;
+import lbase.data.LDataTree;
+import lbase.data.LPath;
+import lbase.event.LDeleteEvent;
+import lbase.event.LEditEvent;
+import lbase.event.LInsertEvent;
+import lbase.event.LMoveEvent;
+import lbase.event.listener.LCollectionListener;
+import lbase.gui.LMenu;
 import lwt.container.LContainer;
-import lwt.dataestructure.LDataCollection;
-import lwt.dataestructure.LDataTree;
-import lwt.dataestructure.LPath;
-import lwt.event.LDeleteEvent;
-import lwt.event.LEditEvent;
-import lwt.event.LInsertEvent;
-import lwt.event.LMoveEvent;
-import lwt.event.listener.LCollectionListener;
 
-public abstract class LCollection<T, ST> extends LWidget {
+public abstract class LCollection<T, ST> extends LWidget implements lbase.gui.LCollection<T, ST> {
 	
 	public LCollection(LContainer parent) {
 		super(parent);
@@ -78,49 +74,29 @@ public abstract class LCollection<T, ST> extends LWidget {
 	// Menu buttons
 	//-------------------------------------------------------------------------------------
 	
-	protected void setEditEnabled(Menu menu, boolean value) {
-		LMenuInterface.setMenuButton(menu, value, LVocab.instance.EDIT, "edit", new SelectionAdapter() {
-			@Override
-			public void widgetSelected(SelectionEvent arg0) {
-				onEditButton(menu);
-			}
-		});
+	protected void setEditEnabled(LMenu menu, boolean value) {
+		menu.setMenuButton(value, LVocab.instance.EDIT, "edit", (d) -> onEditButton(menu), "Space");
 	}
 	
-	protected void setInsertNewEnabled(Menu menu, boolean value) {
-		LMenuInterface.setMenuButton(menu, value, LVocab.instance.INSERTNEW, "new", new SelectionAdapter() {
-			@Override
-			public void widgetSelected(SelectionEvent arg0) {
-				onInsertNewButton(menu);
-			}
-		}, 'N');
+	protected void setInsertNewEnabled(LMenu menu, boolean value) {
+		menu.setMenuButton(value, LVocab.instance.INSERTNEW, "new", (d) -> onInsertNewButton(menu), "Ctrl+&N");
 	}
 	
-	protected void setDuplicateEnabled(Menu menu, boolean value) {
-		LMenuInterface.setMenuButton(menu, value, LVocab.instance.DUPLICATE, "duplicate", new SelectionAdapter() {
-			@Override
-			public void widgetSelected(SelectionEvent arg0) {
-				onDuplicateButton(menu);
-			}
-		}, 'D');
+	protected void setDuplicateEnabled(LMenu menu, boolean value) {
+		menu.setMenuButton(value, LVocab.instance.DUPLICATE, "duplicate", (d) -> onDuplicateButton(menu), "Ctrl+&D");
 	}
 	
-	protected void setDeleteEnabled(Menu menu, boolean value) {
-		LMenuInterface.setMenuButton(menu, value, LVocab.instance.DELETE, "delete", new SelectionAdapter() {
-			@Override
-			public void widgetSelected(SelectionEvent arg0) {
-				onDeleteButton(menu);
-			}
-		});	}
+	protected void setDeleteEnabled(LMenu menu, boolean value) {
+		menu.setMenuButton(value, LVocab.instance.DELETE, "delete", (d) -> onDeleteButton(menu), "Del");	}
 	
 	//-------------------------------------------------------------------------------------
 	// Menu handlers
 	//-------------------------------------------------------------------------------------
 	
-	protected abstract void onEditButton(Menu menu);
-	protected abstract void onInsertNewButton(Menu menu);
-	protected abstract void onDuplicateButton(Menu menu);
-	protected abstract void onDeleteButton(Menu menu);
+	protected abstract void onEditButton(LMenu menu);
+	protected abstract void onInsertNewButton(LMenu menu);
+	protected abstract void onDuplicateButton(LMenu menu);
+	protected abstract void onDeleteButton(LMenu menu);
 	
 	//-------------------------------------------------------------------------------------
 	// Modify

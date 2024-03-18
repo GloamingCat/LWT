@@ -14,10 +14,9 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Layout;
 
-import lwt.LFlags;
-import lwt.dialog.LShell;
-import lwt.event.LMouseEvent;
-import lwt.event.listener.LMouseListener;
+import lbase.LFlags;
+import lbase.event.LMouseEvent;
+import lbase.event.listener.LMouseListener;
 import lwt.graphics.LPoint;
 
 public class LPanel extends Composite implements LContainer {
@@ -40,7 +39,7 @@ public class LPanel extends Composite implements LContainer {
 	 * @wbp.eval.method.parameter parent new LShell(800, 600)
 	 */
 	public LPanel(LContainer parent) {
-		this(parent.getComposite(), SWT.NONE);
+		this(parent.getContentComposite(), SWT.NONE);
 	}
 
 	// }}
@@ -238,19 +237,19 @@ public class LPanel extends Composite implements LContainer {
 		addMouseListener(new MouseListener() {
 			@Override
 			public void mouseUp(MouseEvent e0) {
-				LMouseEvent e = new LMouseEvent(e0, true, false);
+				LMouseEvent e = createMouseEvent(e0, true, false);
 				for (LMouseListener l : mouseListeners)
 					l.onMouseChange(e);
 			}
 			@Override
 			public void mouseDown(MouseEvent e0) {
-				LMouseEvent e = new LMouseEvent(e0, false, false);
+				LMouseEvent e = createMouseEvent(e0, false, false);
 				for (LMouseListener l : mouseListeners)
 					l.onMouseChange(e);
 			}
 			@Override
 			public void mouseDoubleClick(MouseEvent e0) {
-				LMouseEvent e = new LMouseEvent(e0, true, true);
+				LMouseEvent e = createMouseEvent(e0, true, true);
 				for (LMouseListener l : mouseListeners)
 					l.onMouseChange(e);
 			}
@@ -258,11 +257,36 @@ public class LPanel extends Composite implements LContainer {
 		addMouseMoveListener(new MouseMoveListener() {
 			@Override
 			public void mouseMove(MouseEvent e0) {
-				LMouseEvent e = new LMouseEvent(e0, false, false);
+				LMouseEvent e = createMouseEvent(e0, false, false);
 				for (LMouseListener l : mouseListeners)
 					l.onMouseChange(e);
 			}
 		});
+	}
+	
+	private LMouseEvent createMouseEvent(MouseEvent e, boolean release, boolean repeat) {
+		int x = e.x;
+		int y = e.y;
+		int button = 0;
+		if (e.button == 1)
+			button = LFlags.LEFT;
+		else if (e.button == 2)
+			button = LFlags.RIGHT;
+		else if (e.button == 3)
+			button = LFlags.MIDDLE;
+		int type;
+		if (release) {
+			if (repeat)
+				type = LFlags.DOUBLEPRESS;
+			else
+				type = LFlags.RELEASE;
+		} else {
+			if (repeat)
+				type = LFlags.REPEATPRESS;
+			else
+				type = LFlags.PRESS;
+		}
+		return new LMouseEvent(button, x, y, type);
 	}
 		
 	// }}
@@ -285,18 +309,8 @@ public class LPanel extends Composite implements LContainer {
 	// }}
 	
 	@Override
-	public Composite getComposite() {
+	public Composite getContentComposite() {
 		return this;
-	}
-	
-	@Override
-	public Object getChild(int i) {
-		return getChildren()[i];
-	}
-	
-	@Override
-	public int getChildCount() {
-		return this.getChildren().length;
 	}
 
 	@Override
@@ -308,17 +322,7 @@ public class LPanel extends Composite implements LContainer {
 	public Object getData(String key) {
 		return super.getData(key);
 	}
-	
-	@Override
-	public LShell getShell() {
-		return (LShell) super.getShell();
-	}
 
-	@Override
-	public void dispose() {
-		super.dispose();
-	}
-	
 	@Override
 	protected void checkSubclass() { }
 	

@@ -3,20 +3,21 @@ package lwt.editor;
 import lwt.LGlobals;
 import lwt.LMenuInterface;
 import lwt.container.LContainer;
-import lwt.dataestructure.LDataCollection;
-import lwt.dataestructure.LPath;
-import lwt.dialog.LShellFactory;
-import lwt.event.LDeleteEvent;
-import lwt.event.LEditEvent;
-import lwt.event.LInsertEvent;
-import lwt.event.LMoveEvent;
-import lwt.event.listener.LCollectionListener;
+import lwt.dialog.LWindowFactory;
 import lwt.widget.LCollection;
 
 import org.eclipse.swt.dnd.TextTransfer;
 import org.eclipse.swt.dnd.Transfer;
 import org.eclipse.swt.layout.FillLayout;
-import org.eclipse.swt.widgets.Menu;
+
+import lbase.data.LDataCollection;
+import lbase.data.LPath;
+import lbase.gui.LMenu;
+import lbase.event.LDeleteEvent;
+import lbase.event.LEditEvent;
+import lbase.event.LInsertEvent;
+import lbase.event.LMoveEvent;
+import lbase.event.listener.LCollectionListener;
 
 /**
  * Edits the items in a list.
@@ -26,7 +27,7 @@ import org.eclipse.swt.widgets.Menu;
 public abstract class LCollectionEditor<T, ST> extends LObjectEditor<LDataCollection<T>> {
 
 	public String fieldName = "";
-	protected LShellFactory<ST> shellFactory;
+	protected LWindowFactory<ST> shellFactory;
 	
 	/**
 	 * Create the composite.
@@ -69,7 +70,7 @@ public abstract class LCollectionEditor<T, ST> extends LObjectEditor<LDataCollec
 		getCollectionWidget().setDataCollection(db);
 	}
 	
-	public void setShellFactory(LShellFactory<ST> factory) {
+	public void setShellFactory(LWindowFactory<ST> factory) {
 		shellFactory = factory;
 	}
 	
@@ -77,7 +78,7 @@ public abstract class LCollectionEditor<T, ST> extends LObjectEditor<LDataCollec
 		if (shellFactory == null)
 			return null;
 		ST oldData = getEditableData(path);
-		ST newData = shellFactory.openShell(getShell(), oldData);
+		ST newData = shellFactory.openWindow(getWindow(), oldData);
 		if (newData != null) {
 			return new LEditEvent<ST>(path, oldData, newData);
 		}
@@ -107,13 +108,13 @@ public abstract class LCollectionEditor<T, ST> extends LObjectEditor<LDataCollec
 	}
 	
 	@Override
-	public void onCopyButton(Menu menu) {
+	public void onCopyButton(LMenu menu) {
 		LGlobals.clipboard.setContents(new Object[] { encodeData(getObject()) },
 				new Transfer[] { TextTransfer.getInstance() });
 	}
 	
 	@Override
-	public void onPasteButton(Menu menu) {
+	public void onPasteButton(LMenu menu) {
 		String str = (String) LGlobals.clipboard.getContents(TextTransfer.getInstance());
 		if (str == null)
 			return;

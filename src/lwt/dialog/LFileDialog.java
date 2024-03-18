@@ -2,21 +2,34 @@ package lwt.dialog;
 
 import org.eclipse.swt.widgets.FileDialog;
 
-import lwt.dataserialization.LFileManager;
+import lbase.serialization.LFileManager;
+
+import org.eclipse.swt.widgets.DirectoryDialog;
 
 public class LFileDialog {
 	
-	protected FileDialog dialog;
+	private FileDialog fileDialog = null;
+	private DirectoryDialog folderDialog = null;
 
-	public LFileDialog(LShell parent, String title, boolean open) {
-		dialog = new FileDialog(parent);
-		dialog.setText(title);
-		dialog.setFilterExtensions(new String[] {"*.json"});
-		dialog.setFilterPath(LFileManager.applicationPath());
+	public LFileDialog(LWindow parent, String title, String extension, boolean create) {
+		if (extension != null) {
+			fileDialog = new FileDialog(parent);
+			fileDialog.setText(title);
+			if (create)
+				fileDialog.setFileName("New Project." + extension);
+			fileDialog.setFilterExtensions(new String[] {"*." + extension});
+			fileDialog.setFilterNames(new String[] {"Project file (*." + extension + ")"});
+			fileDialog.setFilterPath(LFileManager.applicationPath());
+		} else {
+			folderDialog = new DirectoryDialog(parent);
+			folderDialog.setText(title);
+			folderDialog.setFilterPath(LFileManager.applicationPath());
+		}
 	}
 	
 	public String open() {
-		return dialog.open();
+		return fileDialog == null ? folderDialog.open() :
+			fileDialog.open();
 	}
 	
 }

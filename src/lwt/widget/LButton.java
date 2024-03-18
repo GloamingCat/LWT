@@ -5,10 +5,10 @@ import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.widgets.Button;
-import org.eclipse.swt.widgets.Menu;
 
+import lbase.event.listener.LSelectionListener;
+import lbase.gui.LMenu;
 import lwt.container.LContainer;
-import lwt.event.listener.LSelectionListener;
 
 public class LButton extends LWidget {
 
@@ -43,10 +43,10 @@ public class LButton extends LWidget {
 	}
 	
 	@Override
-	public void onCopyButton(Menu menu) {}
+	public void onCopyButton(LMenu menu) {}
 	
 	@Override
-	public void onPasteButton(Menu menu) {}
+	public void onPasteButton(LMenu menu) {}
 
 	@Override
 	public boolean canDecode(String str) {

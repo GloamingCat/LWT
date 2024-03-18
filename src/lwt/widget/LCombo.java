@@ -43,7 +43,7 @@ public class LCombo extends LControlWidget<Integer> {
 		combo.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent arg0) {
-				int current = currentValue == null ? -1 : currentValue;
+				int current = currentValue == null ? (optional ? -1 : 0) : currentValue;
 				if (getSelectionIndex() == current)
 					return;
 				newModifyAction(currentValue, getSelectionIndex());

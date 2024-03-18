@@ -19,13 +19,13 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Tree;
 import org.eclipse.swt.widgets.TreeItem;
 
-import lwt.action.collection.LMoveAction;
+import lbase.action.collection.LMoveAction;
+import lbase.data.LDataCollection;
+import lbase.data.LDataTree;
+import lbase.data.LPath;
+import lbase.event.LMoveEvent;
+import lbase.event.LSelectionEvent;
 import lwt.container.LContainer;
-import lwt.dataestructure.LDataCollection;
-import lwt.dataestructure.LDataTree;
-import lwt.dataestructure.LPath;
-import lwt.event.LMoveEvent;
-import lwt.event.LSelectionEvent;
 
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;

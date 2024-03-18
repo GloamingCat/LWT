@@ -1,6 +1,5 @@
 package lwt.container;
 
-import lwt.LFlags;
 import lwt.graphics.LColor;
 import lwt.graphics.LPainter;
 import lwt.graphics.LPoint;
@@ -18,6 +17,8 @@ import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.wb.swt.SWTResourceManager;
+
+import lbase.LFlags;
 
 public class LImage extends LCanvas {
 

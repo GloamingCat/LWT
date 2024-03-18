@@ -4,10 +4,10 @@ import java.lang.reflect.Type;
 
 import lwt.container.LContainer;
 import lwt.container.LImage;
-import lwt.dialog.LImageShell;
-import lwt.dialog.LObjectShell;
-import lwt.dialog.LShell;
-import lwt.dialog.LShellFactory;
+import lwt.dialog.LImageWindow;
+import lwt.dialog.LObjectWindow;
+import lwt.dialog.LWindow;
+import lwt.dialog.LWindowFactory;
 
 public class LImageButton extends LObjectButton<String> {
 
@@ -16,10 +16,10 @@ public class LImageButton extends LObjectButton<String> {
 
 	public LImageButton(LContainer parent, boolean optional) {
 		super(parent);
-		setShellFactory(new LShellFactory<String>() {
+		setShellFactory(new LWindowFactory<String>() {
 			@Override
-			public LObjectShell<String> createShell(LShell parent) {
-				return new LImageShell(parent, optional, folder);
+			public LObjectWindow<String> createWindow(LWindow parent) {
+				return new LImageWindow(parent, optional, folder);
 			}
 		});
 	}

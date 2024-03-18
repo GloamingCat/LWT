@@ -1,17 +1,8 @@
 package lwt.widget;
 
-import lwt.action.LActionStack;
 import lwt.container.LContainer;
 import lwt.container.LImage;
-import lwt.dataestructure.LDataCollection;
-import lwt.dataestructure.LDataList;
-import lwt.dataestructure.LDataTree;
-import lwt.dataestructure.LPath;
-import lwt.event.LDeleteEvent;
-import lwt.event.LEditEvent;
-import lwt.event.LInsertEvent;
-import lwt.event.LMoveEvent;
-import lwt.event.LSelectionEvent;
+import lwt.editor.LPopupMenu;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.MouseAdapter;
@@ -28,6 +19,17 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Layout;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.MenuItem;
+
+import lbase.action.LActionStack;
+import lbase.data.LDataCollection;
+import lbase.data.LDataList;
+import lbase.data.LDataTree;
+import lbase.data.LPath;
+import lbase.event.LDeleteEvent;
+import lbase.event.LEditEvent;
+import lbase.event.LInsertEvent;
+import lbase.event.LMoveEvent;
+import lbase.event.LSelectionEvent;
 
 public abstract class LGrid<T, ST> extends LSelectableCollection<T, ST> implements LContainer {
 
@@ -150,8 +152,7 @@ public abstract class LGrid<T, ST> extends LSelectableCollection<T, ST> implemen
 		} else {
 			label.setLayoutData(new RowData(cellWidth, cellHeight));
 		}
-		Menu menu = new Menu(label);
-		label.setMenu(menu);
+		LPopupMenu menu = new LPopupMenu(label);
 		menu.setData("label", label);
 		
 		if (placeholder) {
@@ -206,29 +207,33 @@ public abstract class LGrid<T, ST> extends LSelectableCollection<T, ST> implemen
 	// Button Handler
 	//-------------------------------------------------------------------------------------
 	
-	protected void onEditButton(Menu menu) {
-		LImage label = (LImage) menu.getData("label");
+	@Override
+	protected void onEditButton(lbase.gui.LMenu menu) {
+		LImage label = (LImage) ((LPopupMenu) menu).getData("label");
 		int i = indexOf(label);
 		LPath path = new LPath(i);
 		newEditAction(path);
 	}
 	
-	protected void onInsertNewButton(Menu menu) {
-		LImage label = (LImage) menu.getData("label");
+	@Override
+	protected void onInsertNewButton(lbase.gui.LMenu menu) {
+		LImage label = (LImage) ((LPopupMenu) menu).getData("label");
 		int i = indexOf(label) + 1;
 		LDataTree<T> newNode = emptyNode();
 		newInsertAction(null, i, newNode);
 	}
 	
-	protected void onDuplicateButton(Menu menu) {
-		LImage label = (LImage) menu.getData("label");
+	@Override
+	protected void onDuplicateButton(lbase.gui.LMenu menu) {
+		LImage label = (LImage) ((LPopupMenu) menu).getData("label");
 		int i = indexOf(label);
 		LDataTree<T> newNode = duplicateNode(new LPath(i));
 		newInsertAction(null, i, newNode);
 	}
 	
-	protected void onDeleteButton(Menu menu) {
-		LImage label = (LImage) menu.getData("label");
+	@Override
+	protected void onDeleteButton(lbase.gui.LMenu menu) {
+		LImage label = (LImage) ((LPopupMenu) menu).getData("label");
 		int i = indexOf(label);
 		newDeleteAction(null, i);
 	}
@@ -380,19 +385,19 @@ public abstract class LGrid<T, ST> extends LSelectableCollection<T, ST> implemen
 	}
 	
 	@Override
-	public void onCopyButton(Menu menu) {
+	public void onCopyButton(lbase.gui.LMenu menu) {
 		// TODO Auto-generated method stub
 		
 	}
 
 	@Override
-	public void onPasteButton(Menu menu) {
+	public void onPasteButton(lbase.gui.LMenu menu) {
 		// TODO Auto-generated method stub
 		
 	}
 	
 	@Override
-	public Composite getComposite() {
+	public Composite getContentComposite() {
 		return this;
 	}
 	

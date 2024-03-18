@@ -1,9 +1,9 @@
 package myeditor.gui;
 
+import lbase.data.LDataList;
 import lwt.container.LContainer;
-import lwt.container.LSashPanel;
+import lwt.container.LFlexPanel;
 import lwt.container.LView;
-import lwt.dataestructure.LDataList;
 import lwt.editor.LDefaultGridEditor;
 import myeditor.data.MyContent;
 import myeditor.project.MyProject;
@@ -24,7 +24,7 @@ public class MyContentGridEditor extends LView {
 		
 		createMenuInterface();
 		
-		LSashPanel sashForm = new LSashPanel(this, true);
+		LFlexPanel sashForm = new LFlexPanel(this, true);
 		
 		gridEditor = new MyContentGrid(sashForm);
 		gridEditor.getCollectionWidget().cellWidth = 40;

@@ -10,13 +10,13 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Menu;
 
-import lwt.LMenuInterface;
-import lwt.LVocab;
+import lbase.LVocab;
+import lbase.gui.LPastable;
 import lwt.container.LContainer;
 import lwt.container.LView;
 import lwt.widget.LWidget;
 
-public abstract class LEditor extends LView {
+public abstract class LEditor extends LView implements LPastable {
 
 	//////////////////////////////////////////////////
 	// {{ Constructors
@@ -62,8 +62,8 @@ public abstract class LEditor extends LView {
 		pasteButton.setText(LVocab.instance.PASTE);
 	}
 	
-	private Menu addMenu(Composite parent) {
-		Menu menu = new Menu(parent);
+	private LPopupMenu addMenu(Composite parent) {
+		LPopupMenu menu = new LPopupMenu(parent);
 		parent.setMenu(menu);
 		setCopyEnabled(menu, true);
 		setPasteEnabled(menu, true);
@@ -84,11 +84,11 @@ public abstract class LEditor extends LView {
 	}
 	
 	public void addMenu() {
-		addMenu(getComposite());
+		addMenu(getContentComposite());
 	}
 	
 	public void addMenu(LContainer frame) {
-		Composite c = frame.getComposite();
+		Composite c = frame.getContentComposite();
 		Menu menu = getMenu();
 		if (menu == null) {
 			menu = addMenu(c);
@@ -115,37 +115,18 @@ public abstract class LEditor extends LView {
 	public void addHeader(LContainer parent) {
 		if (parent == null)
 			parent = this;
-		Composite header = new Composite(parent.getComposite(), 0); 
+		Composite header = new Composite(parent.getContentComposite(), 0); 
 		header.setLayout(new RowLayout());
 		addHeaderButtons(header);
 	}
 	
-	
-	public void setCopyEnabled(Menu menu, boolean value) {
-		String str = toString();
-		LMenuInterface.setMenuButton(menu, value, LVocab.instance.COPY, "copy", new SelectionAdapter() {
-			@Override
-			public void widgetSelected(SelectionEvent arg0) {
-				System.out.println("Copied from " + str);
-				onCopyButton(menu);
-			}
-		}, 'C');
+	public void setCopyEnabled(lbase.gui.LMenu menu, boolean value) {
+		menu.setMenuButton(value, LVocab.instance.COPY, "copy", (d) -> onCopyButton(menu), "Ctrl+&C");
 	}
 
-	public void setPasteEnabled(Menu menu, boolean value) {
-		String str = toString();
-		LMenuInterface.setMenuButton(menu, value, LVocab.instance.PASTE, "paste", new SelectionAdapter() {
-			@Override
-			public void widgetSelected(SelectionEvent arg0) {
-				System.out.println("Pasted on " + str);
-				onPasteButton(menu);
-			}
-		}, 'V');
+	public void setPasteEnabled(lbase.gui.LMenu menu, boolean value) {
+		menu.setMenuButton(value, LVocab.instance.PASTE, "paste", (d) -> onPasteButton(menu), "Ctrl+&V");
 	}
-	
-	public abstract void onCopyButton(Menu menu);
-	public abstract void onPasteButton(Menu menu);
-	public abstract boolean canDecode(String str);
 	
 	// }}
 	

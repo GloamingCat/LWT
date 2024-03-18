@@ -1,9 +1,9 @@
 package lwt.editor;
 
+import lbase.data.LDataCollection;
+import lbase.data.LDataTree;
+import lbase.data.LPath;
 import lwt.container.LContainer;
-import lwt.dataestructure.LDataCollection;
-import lwt.dataestructure.LDataTree;
-import lwt.dataestructure.LPath;
 
 public abstract class LDefaultListEditor<T> extends LListEditor<T, T> {
 

@@ -16,13 +16,13 @@ public class LConfirmDialog {
 	
 	protected MessageBox msg;
 
-	public LConfirmDialog(LShell parent, String title, String message, int opts) {
+	public LConfirmDialog(LWindow parent, String title, String message, int opts) {
 		int style = SWT.YES | SWT.NO;
 		if (opts == YES_NO_CANCEL)
 			style |= SWT.CANCEL;
 		else if (opts == OK_CANCEL)
 			style = SWT.OK | SWT.CANCEL;
-		msg = new MessageBox(parent.getShell(), SWT.APPLICATION_MODAL | SWT.ICON_QUESTION | style);
+		msg = new MessageBox(parent.getWindow(), SWT.APPLICATION_MODAL | SWT.ICON_QUESTION | style);
 		msg.setText(title);
 		msg.setMessage(message);
 	}
